@@ -644,16 +644,15 @@ function Cad() {
         </ul>
       </div>
 
-      <h3 className="mt-16 font-display text-2xl tracking-wide text-fg">05 — Sport dishes, joints in the open</h3>
+      <h3 className="mt-16 font-display text-2xl tracking-wide text-fg">05 — Circular window, sheave in the hole</h3>
       <p className="mt-3 mb-8 max-w-2xl text-base leading-relaxed text-muted">
-        Overlapping plates — not tubes. Deltoid is a <strong className="text-fg">circular
-        window</strong> around a dual 3434T121 stack. Bicep floats and stops
-        before the elbow sheave. Forearm starts 55 mm past the hinge. Pack is a
-        formed plate with three drum windows. Gold pulleys stay in the hole.
+        Not a tube. Deltoid is a carbon panel with a <strong className="text-fg">circular
+        cutout</strong>. Dual 3434T121 stack sits in that hole. Bicep plate
+        stops before the elbow sheave. Forearm starts 55 mm past the hinge.
       </p>
       <img
-        src="/cad/armor/preview/worn.png"
-        alt="Carbon fairings over the cyan skeleton cuffs and pack frame"
+        src="/cad/armor/preview/joint.png?v=3"
+        alt="Circular carbon window around a dual McMaster sheave stack"
         className="mb-4 w-full rounded-lg border border-border"
       />
       <LazyCadViewer kit="armor" label="Orbit armor shells in 3D — tap Load 3D" />
@@ -666,9 +665,9 @@ function Cad() {
         ))}
       </ul>
       <div className="mb-10 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        {ARMOR_PREVIEWS.filter((p) => !p.title.startsWith("Worn")).map((p) => (
+        {ARMOR_PREVIEWS.filter((p) => !p.title.startsWith("Worn") && !p.title.startsWith("Joint")).map((p) => (
           <figure key={p.src} className="overflow-hidden rounded-lg border border-border bg-surface">
-            <img src={p.src} alt={p.title} className="aspect-[3/2] w-full object-cover" />
+            <img src={`${p.src}?v=3`} alt={p.title} className="aspect-[3/2] w-full object-cover" />
             <figcaption className="px-3 py-2 font-mono text-[10px] tracking-[0.16em] text-subtle uppercase">
               {p.title}
             </figcaption>

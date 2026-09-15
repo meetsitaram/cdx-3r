@@ -151,7 +151,7 @@ export const CAD_STAGES = [
   { n: "02", name: "Shoulder", status: "Done", blurb: "Flexion (lateral) + abduction (posterior)." },
   { n: "03", name: "Backpack", status: "Done", blurb: "3× D6374 + 10:1, Hailong 48 V, 3× ODrive S1." },
   { n: "04", name: "Connect", status: "Done", blurb: "One system. Saddle + hip belt take the weight, not the biceps." },
-  { n: "05", name: "Armor", status: "Now", blurb: "Overlapping sport dishes. Sheaves and drums stay in the open." },
+  { n: "05", name: "Armor", status: "Now", blurb: "Circular window around the sheave. Dual 3434T121 in the hole." },
 ] as const;
 
 export const ELBOW_HUMAN = [

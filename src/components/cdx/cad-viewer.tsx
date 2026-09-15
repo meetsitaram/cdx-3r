@@ -270,7 +270,7 @@ async function loadThree() {
 }
 
 async function stlGeometry(THREE: typeof import("three"), url: string) {
-  const res = await fetch(url);
+  const res = await fetch(url.includes("?") ? url : `${url}?v=3`);
   if (!res.ok) throw new Error(`STL ${res.status}`);
   const buf = await res.arrayBuffer();
   if (buf.byteLength < 84) throw new Error("STL too small");
@@ -295,7 +295,7 @@ const STILL: Record<Kit, string> = {
   shoulder: "/cad/shoulder/preview/worn.png",
   backpack: "/cad/backpack/preview/worn.png",
   system: "/cad/system/preview/worn.png",
-  armor: "/cad/armor/preview/worn.png",
+  armor: "/cad/armor/preview/joint.png?v=3",
 };
 
 export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
