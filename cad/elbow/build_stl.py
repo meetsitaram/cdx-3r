@@ -202,46 +202,45 @@ def strap_tabs(r_out, h=48) -> Mesh:
 
 
 def cuff_upper() -> Mesh:
-    # Around X (upper arm), parked 95 mm proximal. Opening medial (-Z).
+    # Around +Y (up to shoulder). Opening medial.
     body = cuff_c(HUMAN["upper_cuff_id"] / 2, CUFF_T, 52)
     body.add(strap_tabs(UA_OD, 52))
-    return body.ry(90).move(-95, 0, 0)
+    return body.rx(-90).move(0, 100, 0)
 
 
 def cuff_forearm() -> Mesh:
-    # Around Y (forearm at 90° flex), 80 mm distal of axis. Opening medial.
+    # Around -X (out to wrist). No cables on this limb.
     body = cuff_c(HUMAN["forearm_cuff_id"] / 2, CUFF_T, 48)
     body.add(strap_tabs(FA_OD, 48))
-    return body.rx(-90).move(0, 80, 0)
+    return body.ry(90).move(-90, 0, 0)
 
 
 def lateral_plate() -> Mesh:
-    """UPPER-ARM plate. Housing stops here. Does not cross the elbow."""
+    """UPPER-ARM plate. Housing runs UP this plate to the shoulder."""
     t0, t1 = Z_PLATE - 4, Z_PLATE + 4
     m = Mesh()
-    m.add(box(-130, 8, -16, 16, t0, t1))
+    m.add(box(-16, 16, 8, 140, t0, t1))
     m.add(annulus(28, SHAFT / 2 + 0.2, 8).move(0, 0, Z_PLATE))
-    m.add(box(-110, -80, -12, 12, FA_OD - 2, t1))
-    m.add(idler_cup().move(-95, 32, Z_PLATE + 6))
-    m.add(idler_cup().move(-40, -36, Z_PLATE + 6))
+    m.add(box(-12, 12, 80, 120, FA_OD - 2, t1))
+    m.add(idler_cup().move(24, 42, Z_PLATE + 6))
+    m.add(idler_cup().move(-24, 42, Z_PLATE + 6))
     return m
 
 
 def distal_plate() -> Mesh:
-    """FOREARM plate. Bolts to the sheave and rotates with it."""
+    """FOREARM plate. No Bowden. Rotates with the sheave toward the wrist."""
     t0, t1 = Z_PLATE - 4, Z_PLATE + 4
     m = Mesh()
-    m.add(box(-16, 16, 12, 120, t0, t1))
+    m.add(box(-130, -8, -16, 16, t0, t1))
     m.add(annulus(32, SHAFT / 2 + 0.4, 6).move(0, 0, Z_PLATE))
-    m.add(box(-12, 12, 64, 96, FA_OD - 2, t1))
+    m.add(box(-110, -70, -12, 12, FA_OD - 2, t1))
     return m
 
 
 def medial_plate() -> Mesh:
-    """Upper-arm medial hinge only."""
     z = -Z_PLATE
     m = Mesh()
-    m.add(box(-110, 8, -12, 12, z - 3, z + 3))
+    m.add(box(-12, 12, 8, 130, z - 3, z + 3))
     m.add(annulus(22, SHAFT / 2 + 0.2, 6).move(0, 0, z))
     return m
 
@@ -328,15 +327,15 @@ def arc_pts(radius, z, deg0, deg1, steps=14):
 
 
 def cable_flexor() -> Mesh:
-    """Inner: ferrule on upper plate → 608 → wrap sheave → clamp on forearm sheave."""
+    """Inner runs DOWN from the shoulder, wraps sheave, clamps on the forearm side."""
     z_g = Z_SHEAVE
     r = SHEAVE["pitch"] / 2
     pts = [
-        np.array([-160.0, 22.0, Z_PLATE + 10]),  # from backpack, still in housing
-        np.array([-78.0, 26.0, Z_PLATE + 10]),  # ferrule
-        np.array([-95.0, 32.0, Z_PLATE + 6]),  # 608
-        np.array([-r - 4, -8.0, z_g]),
-        *arc_pts(r, z_g, 185, 85),
+        np.array([18.0, 210.0, Z_PLATE + 10]),  # up at shoulder / pack
+        np.array([18.0, 58.0, Z_PLATE + 10]),  # ferrule
+        np.array([24.0, 42.0, Z_PLATE + 6]),  # 608
+        np.array([8.0, r + 2, z_g]),
+        *arc_pts(r, z_g, 85, -10),
     ]
     return polyline(pts, 1.6)
 
@@ -345,56 +344,48 @@ def cable_extensor() -> Mesh:
     z_g = Z_SHEAVE
     r = SHEAVE["pitch"] / 2
     pts = [
-        np.array([-160.0, -22.0, Z_PLATE + 10]),
-        np.array([-78.0, -26.0, Z_PLATE + 10]),
-        np.array([-40.0, -36.0, Z_PLATE + 6]),
-        np.array([-r - 2, 10.0, z_g]),
-        *arc_pts(r, z_g, 175, 260),
+        np.array([-18.0, 210.0, Z_PLATE + 10]),
+        np.array([-18.0, 58.0, Z_PLATE + 10]),
+        np.array([-24.0, 42.0, Z_PLATE + 6]),
+        np.array([-8.0, r + 2, z_g]),
+        *arc_pts(r, z_g, 95, 190),
     ]
     return polyline(pts, 1.6)
 
 
 def cable_clamp() -> Mesh:
-    """Stop on the sheave — inner is pinched here, not on the cuff."""
     r = SHEAVE["pitch"] / 2 + 4
     z = Z_SHEAVE
-    m = box(-6, 6, -5, 5, -5, 5).move(0, r, z)
-    m.add(box(-6, 6, -5, 5, -5, 5).move(-r * 0.2, -r * 0.95, z))
+    # clamps on the wrist side of the sheave (forearm), not the shoulder
+    m = box(-5, 5, -5, 5, -5, 5).move(-r, 0, z)
+    m.add(box(-5, 5, -5, 5, -5, 5).move(r * 0.15, -r * 0.9, z))
     return m
 
 
 def housing() -> Mesh:
-    """5 mm Bowden. Stops at the green anchors. Does not wrap the sheave."""
-    m = polyline(
-        [np.array([-200.0, 22.0, Z_PLATE + 10]), np.array([-78.0, 26.0, Z_PLATE + 10])],
-        r=2.6,
-    )
-    m.add(
-        polyline(
-            [np.array([-200.0, -22.0, Z_PLATE + 10]), np.array([-78.0, -26.0, Z_PLATE + 10])],
-            r=2.6,
-        )
-    )
+    """Bowden UP the upper arm to the backpack. Never down the forearm."""
+    z = Z_PLATE + 10
+    m = polyline([np.array([18.0, 230.0, z]), np.array([18.0, 58.0, z])], r=3.2)
+    m.add(polyline([np.array([-18.0, 230.0, z]), np.array([-18.0, 58.0, z])], r=3.2))
     return m
 
 
 def bowden() -> Mesh:
-    a = box(-16, 16, -10, 10, -8, 8)
-    a.add(cylinder(5.5, 14).ry(90).move(-8, 0, 0))
-    m = a.move(-70, 28, Z_PLATE + 12)
-    m.add(a.move(-70, -28, Z_PLATE + 12))
+    a = box(-10, 10, -16, 16, -8, 8)
+    a.add(cylinder(5.5, 14).rx(-90).move(0, 8, 0))
+    m = a.move(18, 58, Z_PLATE + 12)
+    m.add(a.move(-18, 58, Z_PLATE + 12))
     return m
 
 
 def hard_stop() -> Mesh:
-    return box(-8, 22, -36, -18, Z_PLATE - 6, Z_PLATE + 6)
+    return box(-22, 22, -8, 8, Z_PLATE - 6, Z_PLATE + 6).move(0, -28, 0)
 
 
 def ghost_arm() -> Mesh:
-    """Preview only. Soft-tissue stand-in so the hole is obvious."""
     m = Mesh()
-    m.add(cylinder(38, 200).ry(90).move(-100, 0, 0))  # upper arm
-    m.add(cylinder(34, 180).rx(90).move(0, 90, 0))  # forearm
+    m.add(cylinder(38, 220).rx(-90).move(0, 110, 0))  # upper arm UP to shoulder
+    m.add(cylinder(34, 180).ry(90).move(-90, 0, 0))  # forearm OUT to wrist
     return m
 
 
@@ -435,7 +426,7 @@ def assembly_layers(with_arm=False):
         ("nylock", nylock().move(0, 0, Z_PLATE - 10), PALETTE["nylock"]),
         (
             "bearing",
-            idler_bearing().move(-95, 32, Z_PLATE + 6).add(idler_bearing().move(-40, -36, Z_PLATE + 6)),
+            idler_bearing().move(24, 42, Z_PLATE + 6).add(idler_bearing().move(-24, 42, Z_PLATE + 6)),
             PALETTE["bearing"],
         ),
         ("anchor", bowden(), PALETTE["anchor"]),

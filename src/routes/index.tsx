@@ -311,16 +311,14 @@ function Cad() {
         a 3434T157 ball-bearing sheave later — do not reprint.
       </p>
       <p className="mb-8 max-w-2xl text-base leading-relaxed text-muted">
-        Cable path: dark Bowden from the backpack{" "}
-        <strong className="text-fg">stops in the green ferrules</strong> on the
-        upper-arm plate. Pink / violet inners exit, turn on the orange 608s,
-        wrap the gold sheave, and{" "}
-        <strong className="text-fg">pinch in the pink clamps on the sheave</strong>
-        — which is bolted to the forearm plate. The cuff is not a cable
-        attachment. Housing never wraps the joint.
+        Cable path: dark Bowden runs <strong className="text-fg">up the upper arm to the shoulder / backpack</strong>.
+        It stops in the green ferrules on the upper-arm plate — never down the
+        forearm toward the wrist. Pink / violet inners exit, turn on the orange
+        608s, wrap the gold sheave, and pinch on the pink clamps. The sheave
+        is bolted to the forearm plate. The cuff is not a cable attachment.
       </p>
       <img
-        src="/cad/elbow/preview/worn.png?v=3"
+        src="/cad/elbow/preview/worn.png?v=4"
         alt="Wearable elbow: ghost arm through cuffs, sheave outboard on the lateral plate"
         className="mb-4 w-full rounded-lg border border-border"
       />

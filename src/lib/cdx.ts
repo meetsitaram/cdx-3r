@@ -233,8 +233,8 @@ export const ELBOW_PRINT = [
 ] as const;
 
 export const ELBOW_PREVIEWS = [
-  { src: "/cad/elbow/preview/worn.png?v=3", title: "Worn — cables on the sheave" },
-  { src: "/cad/elbow/preview/assembly.png?v=3", title: "Brace only" },
+  { src: "/cad/elbow/preview/worn.png?v=4", title: "Worn — cables up to the shoulder" },
+  { src: "/cad/elbow/preview/assembly.png?v=4", title: "Brace only" },
   { src: "/cad/elbow/preview/sheave.png?v=2", title: "Buy — 3434T121 sheave" },
   { src: "/cad/elbow/preview/bearing.png?v=2", title: "Buy — 608-2RS" },
   { src: "/cad/elbow/preview/screw.png?v=2", title: "Buy — 3/4 in shoulder screw" },

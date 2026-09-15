@@ -76,7 +76,7 @@ def render_layers(names: list[str], out: Path, title: str):
                 facecolors=color,
                 edgecolors="#0a0a0c",
                 linewidths=0.2,
-                alpha=1.0,
+                alpha=0.35 if name == "arm" else 1.0,
                 shade=True,
             )
         )
@@ -120,7 +120,7 @@ def main():
     ]
     brace = [n for n in worn if n != "arm"]
     print("render worn (colored)")
-    render_layers(worn, OUT / "worn.png", "WORN  ·  color by part")
+    render_layers(worn, OUT / "worn.png", "SHOULDER  ↑   cables up the upper arm, not to the wrist")
     print("render assembly (colored)")
     render_layers(brace, OUT / "assembly.png", "BRACE  ·  color by part")
 
