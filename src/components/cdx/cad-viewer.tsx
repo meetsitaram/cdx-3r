@@ -388,6 +388,7 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
       }
       if (colored > 0) frameCam();
       setStatus("Drag to orbit · pinch to zoom");
+    };
 
     void boot().catch(fail);
     return () => {
