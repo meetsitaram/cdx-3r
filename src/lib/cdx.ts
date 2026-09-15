@@ -243,3 +243,17 @@ export const ELBOW_PREVIEWS = [
   { src: "/cad/elbow/preview/anchor.png", title: "Print — Bowden anchor" },
   { src: "/cad/elbow/preview/stop.png", title: "Print — hard stop" },
 ] as const;
+
+export const ELBOW_SWATCHES = [
+  { id: "arm", label: "Ghost arm", hex: "#c4b8a8" },
+  { id: "cuff_upper", label: "Upper cuff", hex: "#3d9aad" },
+  { id: "cuff_forearm", label: "Forearm cuff", hex: "#7eb8c9" },
+  { id: "lateral", label: "Lateral plate", hex: "#c8ccd4" },
+  { id: "medial", label: "Medial plate", hex: "#6b7380" },
+  { id: "sheave", label: "3434T121 sheave", hex: "#c4a35a" },
+  { id: "screw", label: "Shoulder screw", hex: "#2a2c30" },
+  { id: "nylock", label: "Nylock", hex: "#c45c4a" },
+  { id: "bearing", label: "608-2RS", hex: "#e07a3d" },
+  { id: "anchor", label: "Bowden anchor", hex: "#5b8c7a" },
+  { id: "stop", label: "Hard stop", hex: "#e2c044" },
+] as const;

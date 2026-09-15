@@ -12,6 +12,7 @@ import {
   ELBOW_PHYSICS,
   ELBOW_PREVIEWS,
   ELBOW_PRINT,
+  ELBOW_SWATCHES,
   GALLERY,
   MOTION,
   SPONSOR_SPLIT,
@@ -314,6 +315,14 @@ function Cad() {
         alt="Wearable elbow: ghost arm through cuffs, sheave outboard on the lateral plate"
         className="mb-4 w-full rounded-lg border border-border"
       />
+      <ul className="mb-8 flex flex-wrap gap-x-4 gap-y-2">
+        {ELBOW_SWATCHES.map((s) => (
+          <li key={s.id} className="flex items-center gap-2 font-mono text-[11px] tracking-[0.12em] text-muted uppercase">
+            <span className="h-3 w-3 rounded-sm border border-border" style={{ background: s.hex }} />
+            {s.label}
+          </li>
+        ))}
+      </ul>
       <div className="mb-10 grid grid-cols-2 gap-3 lg:grid-cols-4">
         {ELBOW_PREVIEWS.filter((p) => !p.title.startsWith("Worn")).map((p) => (
           <figure key={p.src} className="overflow-hidden rounded-lg border border-border bg-surface">

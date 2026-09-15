@@ -312,24 +312,48 @@ def sheave() -> Mesh:
     return annulus(SHEAVE["od"] / 2, SHEAVE["bore"] / 2, SHEAVE["width"]).move(0, 0, Z_SHEAVE)
 
 
+PALETTE = {
+    "cuff_upper": "#3d9aad",
+    "cuff_forearm": "#7eb8c9",
+    "lateral": "#c8ccd4",
+    "medial": "#6b7380",
+    "sheave": "#c4a35a",
+    "screw": "#2a2c30",
+    "nylock": "#c45c4a",
+    "bearing": "#e07a3d",
+    "anchor": "#5b8c7a",
+    "stop": "#e2c044",
+    "arm": "#c4b8a8",
+}
+
+
+def assembly_layers(with_arm=False):
+    screw_z = Z_SHEAVE + SHEAVE["width"] / 2 - SCREW["shoulder_len"] / 2 + 2
+    layers = [
+        ("cuff_upper", cuff_upper(), PALETTE["cuff_upper"]),
+        ("cuff_forearm", cuff_forearm(), PALETTE["cuff_forearm"]),
+        ("lateral", lateral_plate(), PALETTE["lateral"]),
+        ("medial", medial_plate(), PALETTE["medial"]),
+        ("sheave", sheave(), PALETTE["sheave"]),
+        ("screw", shoulder_screw().move(0, 0, screw_z), PALETTE["screw"]),
+        ("nylock", nylock().move(0, 0, Z_PLATE - 10), PALETTE["nylock"]),
+        (
+            "bearing",
+            idler_bearing().move(-95, 32, Z_PLATE + 6).add(idler_bearing().move(18, 95, Z_PLATE + 6)),
+            PALETTE["bearing"],
+        ),
+        ("anchor", bowden(), PALETTE["anchor"]),
+        ("stop", hard_stop(), PALETTE["stop"]),
+    ]
+    if with_arm:
+        layers.insert(0, ("arm", ghost_arm(), PALETTE["arm"]))
+    return layers
+
+
 def assembly(with_arm=False) -> Mesh:
     m = Mesh()
-    m.add(cuff_upper())
-    m.add(cuff_forearm())
-    m.add(lateral_plate())
-    m.add(medial_plate())
-    m.add(sheave())
-    # Shoulder screw: head outboard of sheave, nut inboard of plate
-    screw_z = Z_SHEAVE + SHEAVE["width"] / 2 - SCREW["shoulder_len"] / 2 + 2
-    m.add(shoulder_screw().move(0, 0, screw_z))
-    m.add(nylock().move(0, 0, Z_PLATE - 10))
-    # Real 608-2RS in the cups
-    m.add(idler_bearing().move(-95, 32, Z_PLATE + 6))
-    m.add(idler_bearing().move(18, 95, Z_PLATE + 6))
-    m.add(bowden())
-    m.add(hard_stop())
-    if with_arm:
-        m.add(ghost_arm())
+    for _, mesh, _ in assembly_layers(with_arm):
+        m.add(mesh)
     return m
 
 
@@ -356,7 +380,18 @@ def main():
     for name, mesh in parts.items():
         write_stl(OUT / f"{name}.stl", mesh, name)
         write_stl(PUB / f"{name}.stl", mesh, name)
-        print(f"  {name:32s} {len(mesh.tris):5d} tris")
+    asm_pub = PUB / "asm"
+    asm_out = OUT / "asm"
+    asm_pub.mkdir(parents=True, exist_ok=True)
+    asm_out.mkdir(parents=True, exist_ok=True)
+    colors = {}
+    for name, mesh, hex_color in assembly_layers(True):
+        write_stl(asm_out / f"{name}.stl", mesh, name)
+        write_stl(asm_pub / f"{name}.stl", mesh, name)
+        colors[name] = hex_color
+        print(f"  asm/{name:20s} {len(mesh.tris):5d}  {hex_color}")
+    (asm_pub / "colors.json").write_text(json.dumps({"palette": PALETTE, "layers": colors}, indent=2))
+    (asm_out / "colors.json").write_text(json.dumps({"palette": PALETTE, "layers": colors}, indent=2))
 
 
 if __name__ == "__main__":

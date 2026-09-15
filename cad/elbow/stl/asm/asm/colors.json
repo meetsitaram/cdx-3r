@@ -1,0 +1,28 @@
+{
+  "palette": {
+    "cuff_upper": "#3d9aad",
+    "cuff_forearm": "#7eb8c9",
+    "lateral": "#c8ccd4",
+    "medial": "#6b7380",
+    "sheave": "#c4a35a",
+    "screw": "#2a2c30",
+    "nylock": "#c45c4a",
+    "bearing": "#e07a3d",
+    "anchor": "#5b8c7a",
+    "stop": "#e2c044",
+    "arm": "#c4b8a8"
+  },
+  "layers": {
+    "arm": "#c4b8a8",
+    "cuff_upper": "#3d9aad",
+    "cuff_forearm": "#7eb8c9",
+    "lateral": "#c8ccd4",
+    "medial": "#6b7380",
+    "sheave": "#c4a35a",
+    "screw": "#2a2c30",
+    "nylock": "#c45c4a",
+    "bearing": "#e07a3d",
+    "anchor": "#5b8c7a",
+    "stop": "#e2c044"
+  }
+}
