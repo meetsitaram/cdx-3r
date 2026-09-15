@@ -62,6 +62,40 @@ Not a 7-DOF industrial arm.
 2. Shoulder abduction
 3. Elbow flexion
 
+## CAD models
+
+Printable plates and cuffs, McMaster sheaves/bearings, pack winches, then the four kits assembled. Open **Build** on the site for orbit. GitHub itself does not play STLs.
+
+**Full system — rest pose.** Amber saddle on the trapezius. Pack on the back. Forearm in the orange cradle. Exo weight is not on the biceps.
+
+![Full CDX-3R system](public/cad/system/preview/worn.png)
+
+**Load path.** Saddle → yoke → pack → hip belt. Cradle is a rest, not a lock.
+
+![Load path](public/cad/system/preview/loadpath.png)
+
+| Elbow (wearable, sheave outboard) | Shoulder 2R |
+|---|---|
+| ![Elbow worn](public/cad/elbow/preview/worn.png) | ![Shoulder worn](public/cad/shoulder/preview/worn.png) |
+
+| 20 L backpack | Shoulder saddle (print) |
+|---|---|
+| ![Backpack](public/cad/backpack/preview/worn.png) | ![Saddle](public/cad/system/preview/saddle.png) |
+
+| Sheave (buy 3434T121) | 608-2RS | Lateral fork (print) |
+|---|---|---|
+| ![sheave](public/cad/elbow/preview/sheave.png) | ![bearing](public/cad/elbow/preview/bearing.png) | ![fork](public/cad/elbow/preview/fork.png) |
+
+Do not print `ref_*_DO_NOT_PRINT.stl`. Buy the McMaster parts.
+
+Folders:
+
+- [cad/README.md](cad/README.md) — order of work
+- [cad/elbow/](cad/elbow/) — 3434T121 sheave, printable forks/cuffs
+- [cad/shoulder/](cad/shoulder/) — flexion + abduction
+- [cad/backpack/](cad/backpack/) — D6374 + 10:1 + 48 V brick
+- [cad/system/](cad/system/) — saddle, yoke, UA beam, belt, cradle
+
 ## Run locally
 
 ```bash
@@ -75,30 +109,11 @@ Open [http://localhost:8080](http://localhost:8080).
 npm run build
 ```
 
-## CAD
-
-Piece by piece. **Elbow is first.**
-
-- [cad/README.md](cad/README.md) — order of work
-- [cad/elbow/](cad/elbow/) — McMaster sheave, printable forks/cuffs, physics
-Open the site **Build** section for stills (and an optional 3D orbit). GitHub itself does not play STLs.
-
-![Elbow worn — arm through cuffs, sheave outboard](public/cad/elbow/preview/worn.png)
-
-The sheave sits on the **lateral plate**, outside the cuff wall. The wearer occupies the rings. Two hinge stubs — nothing through the arm.
-
-
-| Sheave (buy) | Fork (print) | Cuff (print) |
-|---|---|---|
-| ![sheave](public/cad/elbow/preview/sheave.png) | ![fork](public/cad/elbow/preview/fork.png) | ![cuff](public/cad/elbow/preview/cuff.png) |
-
-
-
-Do not print `ref_sheave_DO_NOT_PRINT.stl`. Buy [3434T121](https://www.mcmaster.com/3434T121/).
-
+## Layout
 
 | Path | What |
 |---|---|
 | `src/routes/index.tsx` | The site |
 | `src/lib/cdx.ts` | Specs, gallery, BOM, cost tiers |
 | `public/gallery/` | Stills and motion clips |
+| `public/cad/` | STL + preview stills |
