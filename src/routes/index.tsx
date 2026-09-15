@@ -345,9 +345,9 @@ function Cad() {
           </figure>
         ))}
       </div>
-      <details className="mb-10 rounded-lg border border-border bg-surface p-4">
+      <details open className="mb-10 rounded-lg border border-border bg-surface p-4">
         <summary className="cursor-pointer font-mono text-xs tracking-[0.18em] text-muted uppercase">
-          Orbit in 3D (WebGL)
+          Orbit elbow in 3D — drag to rotate
         </summary>
         <div className="mt-4">
           <CadViewer kit="elbow" />
@@ -442,9 +442,9 @@ function Cad() {
         alt="Shoulder 2R: flexion sheave lateral, abduction sheave posterior, elbow cables passing the comb"
         className="mb-4 w-full rounded-lg border border-border"
       />
-      <details className="mb-8 rounded-lg border border-border bg-surface p-4">
+      <details open className="mb-8 rounded-lg border border-border bg-surface p-4">
         <summary className="cursor-pointer font-mono text-xs tracking-[0.18em] text-muted uppercase">
-          Orbit shoulder in 3D (WebGL)
+          Orbit shoulder in 3D — drag to rotate
         </summary>
         <div className="mt-4">
           <CadViewer kit="shoulder" />

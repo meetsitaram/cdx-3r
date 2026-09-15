@@ -69,6 +69,7 @@ const KITS = {
     prefix: "/cad/elbow",
     worn: ELBOW_WORN,
     brace: ELBOW_WORN.filter((n) => n !== "arm"),
+    fallback: "/cad/elbow/assembly_worn.stl",
     swatches: Object.fromEntries(ELBOW_SWATCHES.map((s) => [s.id, s.hex])),
     ghost: new Set(["arm"]),
     solo: [
@@ -82,6 +83,7 @@ const KITS = {
     prefix: "/cad/shoulder",
     worn: SHOULDER_WORN,
     brace: SHOULDER_WORN.filter((n) => n !== "arm" && n !== "torso"),
+    fallback: "/cad/shoulder/assembly_worn.stl",
     swatches: { ...SHOULDER_COLORS, ...Object.fromEntries(SHOULDER_SWATCHES.map((s) => [s.id, s.hex])) },
     ghost: new Set(["arm", "torso"]),
     solo: [
@@ -101,95 +103,125 @@ function hexToInt(hex: string) {
   return parseInt(hex.replace("#", ""), 16);
 }
 
+async function loadThree() {
+  const THREE = await import("three");
+  try {
+    const { OrbitControls } = await import("three/addons/controls/OrbitControls.js");
+    const { STLLoader } = await import("three/addons/loaders/STLLoader.js");
+    return { THREE, OrbitControls, STLLoader };
+  } catch {
+    const { OrbitControls } = await import("three/examples/jsm/controls/OrbitControls.js");
+    const { STLLoader } = await import("three/examples/jsm/loaders/STLLoader.js");
+    return { THREE, OrbitControls, STLLoader };
+  }
+}
+
 export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
   const spec = KITS[kit];
   const host = useRef<HTMLDivElement>(null);
-  const [part, setPart] = useState<string>("worn");
+  const [part, setPart] = useState("worn");
   const [status, setStatus] = useState("Loading STL…");
-
-  useEffect(() => {
-    setPart("worn");
-    setStatus("Loading STL…");
-  }, [kit]);
 
   useEffect(() => {
     const el = host.current;
     if (!el) return;
     let dead = false;
+    let started = false;
     let renderer: import("three").WebGLRenderer | undefined;
-    let controls: import("three/examples/jsm/controls/OrbitControls.js").OrbitControls | undefined;
+    let controls: InstanceType<typeof import("three/examples/jsm/controls/OrbitControls.js").OrbitControls> | undefined;
     let frame = 0;
-    let ro: ResizeObserver | undefined;
     const disposers: Array<() => void> = [];
 
-    (async () => {
-      const THREE = await import("three");
-      const { OrbitControls } = await import("three/examples/jsm/controls/OrbitControls.js");
-      const { STLLoader } = await import("three/examples/jsm/loaders/STLLoader.js");
-      if (dead || !el) return;
+    const boot = async () => {
+      if (dead || started) return;
+      if (el.clientWidth < 16 || el.clientHeight < 16) return;
+      started = true;
+      setStatus("Loading STL…");
+
+      const { THREE, OrbitControls, STLLoader } = await loadThree();
+      if (dead) return;
 
       const scene = new THREE.Scene();
       scene.background = new THREE.Color(0x121214);
-      const camera = new THREE.PerspectiveCamera(42, 1, 0.5, 4000);
-      renderer = new THREE.WebGLRenderer({ antialias: true });
+      const camera = new THREE.PerspectiveCamera(42, 1, 0.5, 8000);
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       el.innerHTML = "";
       el.appendChild(renderer.domElement);
 
+      scene.add(new THREE.AmbientLight(0xffffff, 0.4));
       const key = new THREE.DirectionalLight(0xffffff, 1.15);
-      key.position.set(120, 180, 90);
-      const fill = new THREE.DirectionalLight(0x7eb8c9, 0.4);
-      fill.position.set(-80, 40, -120);
-      scene.add(key, fill, new THREE.AmbientLight(0xffffff, 0.32));
+      key.position.set(160, 200, 120);
+      const fill = new THREE.DirectionalLight(0x7eb8c9, 0.45);
+      fill.position.set(-100, 40, -140);
+      scene.add(key, fill);
 
       controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
 
       const resize = () => {
         if (!el || !renderer) return;
-        const w = el.clientWidth;
-        const h = el.clientHeight;
-        camera.aspect = w / Math.max(h, 1);
+        const w = Math.max(el.clientWidth, 16);
+        const h = Math.max(el.clientHeight, 16);
+        camera.aspect = w / h;
         camera.updateProjectionMatrix();
         renderer.setSize(w, h, false);
       };
       resize();
-      ro = new ResizeObserver(resize);
-      ro.observe(el);
 
       const loader = new STLLoader();
       const group = new THREE.Group();
       const layerNames = part === "worn" ? spec.worn : part === "brace" ? spec.brace : null;
+      let loaded = 0;
+
+      const addGeo = (
+        geo: import("three").BufferGeometry,
+        color: number,
+        extra?: { metal?: boolean; ghost?: boolean },
+      ) => {
+        geo.computeVertexNormals();
+        const mat = new THREE.MeshStandardMaterial({
+          color,
+          metalness: extra?.metal ? 0.7 : 0.18,
+          roughness: extra?.metal ? 0.35 : 0.55,
+          transparent: extra?.ghost ?? false,
+          opacity: extra?.ghost ? 0.42 : 1,
+          depthWrite: !extra?.ghost,
+        });
+        group.add(new THREE.Mesh(geo, mat));
+        disposers.push(() => {
+          geo.dispose();
+          mat.dispose();
+        });
+      };
 
       if (layerNames) {
-        for (const name of layerNames) {
-          const geo = await loader.loadAsync(`${spec.prefix}/asm/${name}.stl`);
+        const results = await Promise.allSettled(
+          layerNames.map(async (name) => {
+            const geo = await loader.loadAsync(`${spec.prefix}/asm/${name}.stl`);
+            return { name, geo };
+          }),
+        );
+        if (dead) return;
+        for (const r of results) {
+          if (r.status !== "fulfilled") continue;
+          const { name, geo } = r.value;
+          addGeo(geo, hexToInt(spec.swatches[name] ?? "#8aa0a8"), {
+            metal: name.includes("sheave") || name === "screw",
+            ghost: spec.ghost.has(name as never),
+          });
+          loaded += 1;
+        }
+        if (loaded === 0) {
+          const geo = await loader.loadAsync(spec.fallback);
           if (dead) {
             geo.dispose();
             return;
           }
-          geo.computeVertexNormals();
-          const ghost = spec.ghost.has(name as never);
-          const mat = new THREE.MeshStandardMaterial({
-            color: hexToInt(spec.swatches[name] ?? "#8aa0a8"),
-            metalness: name.includes("sheave") || name === "screw" ? 0.7 : 0.2,
-            roughness: name.includes("sheave") ? 0.35 : 0.55,
-            transparent: ghost,
-            opacity: ghost ? 0.42 : 1,
-            depthWrite: !ghost,
-          });
-          group.add(new THREE.Mesh(geo, mat));
-          disposers.push(() => {
-            geo.dispose();
-            mat.dispose();
-          });
+          geo.center();
+          addGeo(geo, 0x8aa0a8);
+          loaded = 1;
         }
-        scene.add(group);
-        const box = new THREE.Box3().setFromObject(group);
-        const center = box.getCenter(new THREE.Vector3());
-        const size = box.getSize(new THREE.Vector3()).length() || 120;
-        group.position.sub(center);
-        camera.position.set(size * 0.55, size * 0.4, size * 0.7);
       } else {
         const solo = spec.solo.find((p) => p.id === part) ?? spec.solo[0];
         const geo = await loader.loadAsync(solo.file);
@@ -197,27 +229,26 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
           geo.dispose();
           return;
         }
-        geo.computeVertexNormals();
         geo.center();
-        const mat = new THREE.MeshStandardMaterial({
-          color: solo.color,
-          metalness: solo.id.includes("sheave") ? 0.7 : 0.2,
-          roughness: 0.45,
-        });
-        group.add(new THREE.Mesh(geo, mat));
-        scene.add(group);
-        geo.computeBoundingSphere();
-        const r = geo.boundingSphere?.radius ?? 80;
-        camera.position.set(r * 1.6, r * 1.1, r * 1.8);
-        disposers.push(() => {
-          geo.dispose();
-          mat.dispose();
-        });
+        addGeo(geo, solo.color, { metal: solo.id.includes("sheave") });
+        loaded = 1;
       }
 
+      scene.add(group);
+      if (layerNames) {
+        const box = new THREE.Box3().setFromObject(group);
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3()).length() || 180;
+        group.position.sub(center);
+        camera.position.set(size * 0.55, size * 0.4, size * 0.75);
+      } else {
+        const box = new THREE.Box3().setFromObject(group);
+        const r = box.getSize(new THREE.Vector3()).length() || 80;
+        camera.position.set(r * 0.8, r * 0.55, r * 0.9);
+      }
       controls.target.set(0, 0, 0);
       controls.update();
-      setStatus("Drag to orbit · scroll to zoom");
+      setStatus(loaded ? "Drag to orbit · scroll to zoom" : "Could not load STL");
 
       const tick = () => {
         if (dead) return;
@@ -226,14 +257,22 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
         frame = requestAnimationFrame(tick);
       };
       tick();
-    })().catch((err) => {
-      if (!dead) setStatus(err instanceof Error ? err.message : "Could not load STL");
+    };
+
+    const ro = new ResizeObserver(() => {
+      void boot();
+      if (!renderer || !el) return;
+      const w = Math.max(el.clientWidth, 16);
+      const h = Math.max(el.clientHeight, 16);
+      renderer.setSize(w, h, false);
     });
+    ro.observe(el);
+    void boot();
 
     return () => {
       dead = true;
       cancelAnimationFrame(frame);
-      ro?.disconnect();
+      ro.disconnect();
       disposers.forEach((d) => d());
       controls?.dispose();
       renderer?.dispose();
@@ -242,7 +281,7 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
   }, [part, kit, spec]);
 
   return (
-    <div className="mb-10">
+    <div className="mb-4">
       <div className="mb-3 flex flex-wrap gap-2">
         {(["worn", "brace"] as const).map((id) => (
           <button
@@ -282,7 +321,7 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
         ))}
       </div>
       <div className="overflow-hidden rounded-lg border border-border bg-elevated">
-        <div ref={host} className="h-[420px] w-full" />
+        <div ref={host} className="h-[460px] w-full" />
         <div className="border-t border-border px-4 py-2 font-mono text-[11px] tracking-[0.14em] text-subtle uppercase">
           {status}
         </div>
