@@ -350,7 +350,7 @@ function Cad() {
           Orbit in 3D (WebGL)
         </summary>
         <div className="mt-4">
-          <CadViewer />
+          <CadViewer kit="elbow" />
         </div>
       </details>
       <ol className="mb-10 grid gap-3 sm:grid-cols-5">
@@ -442,6 +442,14 @@ function Cad() {
         alt="Shoulder 2R: flexion sheave lateral, abduction sheave posterior, elbow cables passing the comb"
         className="mb-4 w-full rounded-lg border border-border"
       />
+      <details className="mb-8 rounded-lg border border-border bg-surface p-4">
+        <summary className="cursor-pointer font-mono text-xs tracking-[0.18em] text-muted uppercase">
+          Orbit shoulder in 3D (WebGL)
+        </summary>
+        <div className="mt-4">
+          <CadViewer kit="shoulder" />
+        </div>
+      </details>
       <ul className="mb-8 flex flex-wrap gap-x-4 gap-y-2">
         {SHOULDER_SWATCHES.map((s) => (
           <li key={s.id} className="flex items-center gap-2 font-mono text-[11px] tracking-[0.12em] text-muted uppercase">

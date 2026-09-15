@@ -1,64 +1,116 @@
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { ELBOW_SWATCHES } from "@/lib/cdx";
+import { ELBOW_SWATCHES, SHOULDER_SWATCHES } from "@/lib/cdx";
 
-const LAYERS = {
-  worn: [
-    "arm",
-    "cuff_upper",
-    "cuff_forearm",
-    "lateral",
-    "distal",
-    "medial",
-    "sheave",
-    "screw",
-    "nylock",
-    "bearing",
-    "anchor",
-    "housing",
-    "cable_flex",
-    "cable_ext",
-    "clamp",
-    "stop",
-  ],
-  brace: [
-    "cuff_upper",
-    "cuff_forearm",
-    "lateral",
-    "distal",
-    "medial",
-    "sheave",
-    "screw",
-    "nylock",
-    "bearing",
-    "anchor",
-    "housing",
-    "cable_flex",
-    "cable_ext",
-    "clamp",
-    "stop",
-  ],
-} as const;
-
-const SOLO = [
-  { id: "print_fork_lateral", label: "Lateral plate", file: "/cad/elbow/print_fork_lateral.stl", color: 0xf2f4f7 },
-  { id: "print_fork_medial", label: "Medial plate", file: "/cad/elbow/print_fork_medial.stl", color: 0x4b5568 },
-  { id: "print_cuff_forearm", label: "Cuff", file: "/cad/elbow/print_cuff_forearm.stl", color: 0x5ee0ff },
-  { id: "ref_sheave", label: "Sheave", file: "/cad/elbow/ref_sheave_DO_NOT_PRINT.stl", color: 0xffc93c },
-  { id: "ref_608", label: "608-2RS", file: "/cad/elbow/ref_608_DO_NOT_PRINT.stl", color: 0xff6a1a },
-  { id: "ref_screw", label: "Shoulder screw", file: "/cad/elbow/ref_shoulder_screw_DO_NOT_PRINT.stl", color: 0x111215 },
+const ELBOW_WORN = [
+  "arm",
+  "cuff_upper",
+  "cuff_forearm",
+  "lateral",
+  "distal",
+  "medial",
+  "sheave",
+  "screw",
+  "nylock",
+  "bearing",
+  "anchor",
+  "housing",
+  "cable_flex",
+  "cable_ext",
+  "clamp",
+  "stop",
 ] as const;
 
-type View = "worn" | "brace" | (typeof SOLO)[number]["id"];
+const SHOULDER_WORN = [
+  "torso",
+  "arm",
+  "cuff",
+  "scapula",
+  "abd_yoke",
+  "flex_yoke",
+  "sheave_flex",
+  "sheave_abd",
+  "screw",
+  "bearing",
+  "anchor",
+  "comb",
+  "housing",
+  "cable_flex",
+  "cable_abd",
+  "cable_elbow",
+  "clamp",
+  "stop",
+] as const;
+
+const SHOULDER_COLORS: Record<string, string> = {
+  torso: "#e7d3c0",
+  arm: "#f3c6a5",
+  cuff: "#5ee0ff",
+  scapula: "#f2f4f7",
+  abd_yoke: "#94a3b8",
+  flex_yoke: "#cbd5e1",
+  sheave_flex: "#ffc93c",
+  sheave_abd: "#f97316",
+  screw: "#111215",
+  bearing: "#ff6a1a",
+  cups: "#f2f4f7",
+  anchor: "#22c55e",
+  comb: "#14b8a6",
+  housing: "#1f2937",
+  cable_flex: "#e879f9",
+  cable_abd: "#818cf8",
+  cable_elbow: "#38bdf8",
+  clamp: "#fb7185",
+  stop: "#facc15",
+};
+
+const KITS = {
+  elbow: {
+    prefix: "/cad/elbow",
+    worn: ELBOW_WORN,
+    brace: ELBOW_WORN.filter((n) => n !== "arm"),
+    swatches: Object.fromEntries(ELBOW_SWATCHES.map((s) => [s.id, s.hex])),
+    ghost: new Set(["arm"]),
+    solo: [
+      { id: "print_fork_lateral", label: "Lateral plate", file: "/cad/elbow/print_fork_lateral.stl", color: 0xf2f4f7 },
+      { id: "print_cuff_forearm", label: "Cuff", file: "/cad/elbow/print_cuff_forearm.stl", color: 0x5ee0ff },
+      { id: "ref_sheave", label: "Sheave", file: "/cad/elbow/ref_sheave_DO_NOT_PRINT.stl", color: 0xffc93c },
+      { id: "ref_608", label: "608-2RS", file: "/cad/elbow/ref_608_DO_NOT_PRINT.stl", color: 0xff6a1a },
+    ],
+  },
+  shoulder: {
+    prefix: "/cad/shoulder",
+    worn: SHOULDER_WORN,
+    brace: SHOULDER_WORN.filter((n) => n !== "arm" && n !== "torso"),
+    swatches: { ...SHOULDER_COLORS, ...Object.fromEntries(SHOULDER_SWATCHES.map((s) => [s.id, s.hex])) },
+    ghost: new Set(["arm", "torso"]),
+    solo: [
+      { id: "print_scapula", label: "Scapula", file: "/cad/shoulder/print_scapula.stl", color: 0xf2f4f7 },
+      { id: "print_flex_yoke", label: "Flex yoke", file: "/cad/shoulder/print_flex_yoke.stl", color: 0xcbd5e1 },
+      { id: "print_deltoid_cuff", label: "Deltoid cuff", file: "/cad/shoulder/print_deltoid_cuff.stl", color: 0x5ee0ff },
+      { id: "ref_sheave_flex", label: "Flexion sheave", file: "/cad/shoulder/ref_sheave_flex_DO_NOT_PRINT.stl", color: 0xffc93c },
+      { id: "ref_sheave_abd", label: "Abduction sheave", file: "/cad/shoulder/ref_sheave_abd_DO_NOT_PRINT.stl", color: 0xf97316 },
+      { id: "print_cable_comb", label: "Comb", file: "/cad/shoulder/print_cable_comb.stl", color: 0x14b8a6 },
+    ],
+  },
+} as const;
+
+type Kit = keyof typeof KITS;
 
 function hexToInt(hex: string) {
   return parseInt(hex.replace("#", ""), 16);
 }
 
-export function CadViewer() {
+export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
+  const spec = KITS[kit];
   const host = useRef<HTMLDivElement>(null);
-  const [part, setPart] = useState<View>("worn");
+  const [part, setPart] = useState<string>("worn");
   const [status, setStatus] = useState("Loading STL…");
+
+  useEffect(() => {
+    setPart("worn");
+    setStatus("Loading STL…");
+  }, [kit]);
 
   useEffect(() => {
     const el = host.current;
@@ -107,22 +159,24 @@ export function CadViewer() {
 
       const loader = new STLLoader();
       const group = new THREE.Group();
-      const layerNames = part === "worn" ? LAYERS.worn : part === "brace" ? LAYERS.brace : null;
+      const layerNames = part === "worn" ? spec.worn : part === "brace" ? spec.brace : null;
 
       if (layerNames) {
-        const swatch = Object.fromEntries(ELBOW_SWATCHES.map((s) => [s.id, s.hex]));
         for (const name of layerNames) {
-          const geo = await loader.loadAsync(`/cad/elbow/asm/${name}.stl`);
+          const geo = await loader.loadAsync(`${spec.prefix}/asm/${name}.stl`);
           if (dead) {
             geo.dispose();
             return;
           }
           geo.computeVertexNormals();
-          const hex = swatch[name] ?? "#8aa0a8";
+          const ghost = spec.ghost.has(name as never);
           const mat = new THREE.MeshStandardMaterial({
-            color: hexToInt(hex),
-            metalness: name === "sheave" || name === "screw" ? 0.7 : 0.2,
-            roughness: name === "sheave" ? 0.35 : 0.55,
+            color: hexToInt(spec.swatches[name] ?? "#8aa0a8"),
+            metalness: name.includes("sheave") || name === "screw" ? 0.7 : 0.2,
+            roughness: name.includes("sheave") ? 0.35 : 0.55,
+            transparent: ghost,
+            opacity: ghost ? 0.42 : 1,
+            depthWrite: !ghost,
           });
           group.add(new THREE.Mesh(geo, mat));
           disposers.push(() => {
@@ -137,8 +191,8 @@ export function CadViewer() {
         group.position.sub(center);
         camera.position.set(size * 0.55, size * 0.4, size * 0.7);
       } else {
-        const spec = SOLO.find((p) => p.id === part) ?? SOLO[0];
-        const geo = await loader.loadAsync(spec.file);
+        const solo = spec.solo.find((p) => p.id === part) ?? spec.solo[0];
+        const geo = await loader.loadAsync(solo.file);
         if (dead) {
           geo.dispose();
           return;
@@ -146,8 +200,8 @@ export function CadViewer() {
         geo.computeVertexNormals();
         geo.center();
         const mat = new THREE.MeshStandardMaterial({
-          color: spec.color,
-          metalness: spec.id.startsWith("ref_") ? 0.7 : 0.2,
+          color: solo.color,
+          metalness: solo.id.includes("sheave") ? 0.7 : 0.2,
           roughness: 0.45,
         });
         group.add(new THREE.Mesh(geo, mat));
@@ -185,7 +239,7 @@ export function CadViewer() {
       renderer?.dispose();
       renderer?.domElement.remove();
     };
-  }, [part]);
+  }, [part, kit, spec]);
 
   return (
     <div className="mb-10">
@@ -208,7 +262,7 @@ export function CadViewer() {
             {id}
           </button>
         ))}
-        {SOLO.map((p) => (
+        {spec.solo.map((p) => (
           <button
             key={p.id}
             type="button"
