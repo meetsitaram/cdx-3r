@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""CDX-3R full system: pack + shoulder + elbow. Weight in the saddle and hip belt."""
+"""CDX-3R worn system. Standing rest pose. Load on saddle + hip belt."""
 from __future__ import annotations
 
 import json
-import math
 import sys
 from pathlib import Path
 
@@ -30,8 +29,11 @@ pk = _load("backpack_mod", CAD / "backpack" / "build_stl.py")
 OUT = ROOT / "stl"
 PUB = Path("/workspace/public/cad/system")
 
-# World: GH origin. +Y up. +X anterior. +Z right/lateral.
-UA = 290.0  # GH to elbow
+# World: right GH. +Y up, +X forward, +Z right.
+# Person standing. Arm down. Elbow 90°. Forearm forward. Pack on the back.
+UA = 290.0
+MID_Z = -180.0  # spine
+BACK_X = -110.0
 
 PALETTE = {
     "human": "#f3c6a5",
@@ -43,87 +45,101 @@ PALETTE = {
     "strap": "#a8a29e",
 }
 
-# Pack: packX→world Z, packY→world Y, packZ→world −X (posterior)
+# Pack local: +X right, +Y up, +Z out the back.
+# World: packX → +Z, packY → +Y, packZ → −X.
 R_PACK = np.array([[0.0, 0.0, -1.0], [0.0, 1.0, 0.0], [1.0, 0.0, 0.0]])
-T_PACK = np.array([-150.0, -80.0, -30.0])
+T_PACK = np.array([-200.0, -100.0, MID_Z])
+
+ARM_SHOULDER = {"cuff", "flex_yoke", "sheave_flex"}
+SKIP = {"arm", "torso", "strap"}
 
 
-def xf(mesh: Mesh, R=None, t=None) -> Mesh:
-    return mesh.transformed(R, t)
+def flip_x(mesh: Mesh) -> Mesh:
+    """Mirror in X and reverse winding. Elbow wrist −X becomes +X (forward)."""
+    m = Mesh()
+    for tri in mesh.tris:
+        t = np.asarray(tri, float).copy()
+        t[:, 0] *= -1
+        m.tris.append(t[::-1])
+    return m
 
 
 def human() -> Mesh:
-    """Torso + head + right arm. Arm occupies cuffs. Does not carry the exo."""
+    """Vertical person. Torso along +Y. Right arm down, forearm forward."""
     m = Mesh()
-    m.add(cylinder(95, 420).move(-25, -40, -95))  # torso
-    m.add(cylinder(58, 90).move(-15, 210, -90))  # neck/head
-    m.add(cylinder(36, UA, z0=20).ry(90).move(20, -15, 0))  # upper arm +X
-    m.add(cylinder(32, 200, z0=0).move(UA, -100, 0))  # forearm down −Y
+    m.add(cylinder(92, 380).rx(90).move(0, -40, MID_Z))  # torso
+    m.add(cylinder(55, 70).rx(90).move(0, 180, MID_Z))  # neck
+    m.add(cylinder(62, 110).rx(90).move(10, 250, MID_Z))  # head
+    m.add(box(-40, 30, -25, 35, MID_Z - 40, 35))  # shoulder girdle
+    m.add(cylinder(34, 250).rx(90).move(15, -130, 22))  # upper arm down
+    m.add(cylinder(30, 220).ry(90).move(20, -UA, 22))  # forearm forward
     return m
 
 
 def saddle() -> Mesh:
-    """Rests ON the trapezius / acromion. This is where the exo sits."""
-    m = box(-55, 35, 42, 92, -50, 58)
-    m.add(box(-40, 25, 70, 98, -30, 48))
-    # axillary hook — does not crush the armpit; load is on top of the shoulder
-    m.add(box(-20, 20, 8, 48, 28, 52))
+    """Pad ON the right trapezius / acromion. Exo sits here."""
+    m = box(-50, 35, 28, 78, -40, 58)
+    m.add(box(-35, 25, 55, 88, -25, 48))
     return m
 
 
 def yoke() -> Mesh:
-    """Pack → saddle. Gravity of the arm structure goes this way, not into the biceps."""
-    m = box(-150, -40, 70, 92, -20, -6)
-    m.add(box(-150, -40, 70, 92, 10, 24))
-    m.add(box(-55, -35, 50, 95, -20, 24))
+    """Two beams: pack top → saddle. This is the hangar, not the biceps."""
+    # pack top ~ (-140, 80, -180)
+    m = box(-180, -20, 55, 78, MID_Z - 20, MID_Z + 20)
+    m.add(box(-40, 10, 48, 78, -20, 40))
+    m.add(box(-180, -140, 55, 90, MID_Z - 30, 20))
     return m
 
 
 def ua_beam() -> Mesh:
-    """Lateral structural tube. GH to elbow. Outside the arm."""
-    return cylinder(12, 240, z0=30).ry(90).move(30, 8, 52)
+    """Lateral tube, GH down to elbow. Outside the arm."""
+    return cylinder(11, 250).rx(90).move(8, -130, 58)
 
 
 def hip_belt() -> Mesh:
-    m = annulus(115, 95, 28).move(-25, -250, -95)
-    m.add(box(-40, 40, -268, -232, -20, 20))
-    return m
+    """Around the waist. Ring in the XZ plane."""
+    return annulus(118, 96, 26).rx(90).move(0, -250, MID_Z)
 
 
 def park_rest() -> Mesh:
-    """Shelf the forearm beam sits on in rest. Biceps do nothing."""
-    m = box(240, 340, -130, -95, 20, 70)
-    m.add(box(150, 250, -250, -230, -10, 20))  # from belt
-    m.add(box(240, 260, -250, -95, 20, 40))  # riser
+    """Forearm shelf at the right hip, tied back to the belt."""
+    m = box(40, 200, -UA - 28, -UA - 6, 0, 48)
+    m.add(box(40, 58, -260, -UA - 6, 8, 36))  # riser
+    m.add(box(-20, 58, -262, -238, MID_Z + 90, 20))  # boom from belt
     return m
 
 
 def straps() -> Mesh:
-    m = box(-130, -100, -40, 160, -8, 8).transformed(R_PACK, T_PACK)
-    m.add(box(100, 130, -40, 160, -8, 8).transformed(R_PACK, T_PACK))
-    # left shoulder strap over the other trap
-    m.add(box(-40, 20, 40, 90, -160, -140))
+    """Over both shoulders into the pack."""
+    m = Mesh()
+    m.add(polyline(
+        [np.array([-140.0, 70.0, MID_Z - 80]), np.array([0.0, 90.0, MID_Z - 80]), np.array([20.0, 40.0, 10.0])],
+        8,
+    ))
+    m.add(polyline(
+        [np.array([-140.0, 70.0, MID_Z + 40]), np.array([10.0, 80.0, 10.0]), np.array([5.0, 40.0, 20.0])],
+        8,
+    ))
     return m
-
-
-def skip(name: str) -> bool:
-    return name in {"arm", "torso", "strap"}
 
 
 def elbow_layers():
     out = []
     for name, mesh, color in elbow_mod.assembly_layers(False):
-        if skip(name):
+        if name in SKIP:
             continue
-        out.append((f"el_{name}", mesh.rz(90).move(UA, 0, 0), color))
+        out.append((f"el_{name}", flip_x(mesh).move(15, -UA, 22), color))
     return out
 
 
 def shoulder_layers():
     out = []
     for name, mesh, color in sh.assembly_layers(False):
-        if skip(name):
+        if name in SKIP:
             continue
+        if name in ARM_SHOULDER:
+            mesh = mesh.rz(-90)
         out.append((f"sh_{name}", mesh, color))
     return out
 
@@ -131,9 +147,9 @@ def shoulder_layers():
 def pack_layers():
     out = []
     for name, mesh, color in pk.assembly_layers(False):
-        if skip(name):
+        if name in SKIP or name in {"bullet", "housing"}:
             continue
-        out.append((f"pk_{name}", xf(mesh, R_PACK, T_PACK), color))
+        out.append((f"pk_{name}", mesh.transformed(R_PACK, T_PACK), color))
     return out
 
 
@@ -158,11 +174,10 @@ def assembly_layers(with_human=True):
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     PUB.mkdir(parents=True, exist_ok=True)
-    worn = Mesh()
-    brace = Mesh()
-    for name, mesh, _ in assembly_layers(True):
+    worn, brace = Mesh(), Mesh()
+    for _, mesh, _ in assembly_layers(True):
         worn.add(mesh)
-    for name, mesh, _ in assembly_layers(False):
+    for _, mesh, _ in assembly_layers(False):
         brace.add(mesh)
     parts = {
         "print_saddle": saddle(),
@@ -187,7 +202,7 @@ def main():
         write_stl(asm_pub / f"{name}.stl", mesh, name)
         colors[name] = hex_color
         print(f"  asm/{name:24s} {len(mesh.tris):5d}  {hex_color}")
-    payload = json.dumps({"palette": {**PALETTE}, "layers": colors}, indent=2)
+    payload = json.dumps({"palette": PALETTE, "layers": colors}, indent=2)
     (asm_pub / "colors.json").write_text(payload)
     (asm_out / "colors.json").write_text(payload)
 

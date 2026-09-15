@@ -42,6 +42,7 @@ def render_layers(names, out, title, elev=18, azim=40):
         if not path.exists():
             continue
         tris = read_stl(path)
+        tris = tris[:, :, [0, 2, 1]]  # CAD Y-up → plot Z-up
         color = PALETTE.get(name, "#888")
         ghost = name == "human"
         ax.add_collection3d(
@@ -62,7 +63,7 @@ def render_layers(names, out, title, elev=18, azim=40):
     ax.set_xlim(c[0] - r, c[0] + r)
     ax.set_ylim(c[1] - r, c[1] + r)
     ax.set_zlim(c[2] - r, c[2] + r)
-    ax.view_init(elev=elev, azim=azim)
+    ax.view_init(elev=12, azim=-55)
     ax.set_axis_off()
     ax.set_facecolor(BG)
     ax.legend(handles=legend[:12], loc="upper left", fontsize=6, frameon=False, labelcolor="#e8e8e4")
@@ -74,6 +75,7 @@ def render_layers(names, out, title, elev=18, azim=40):
 
 def render(path, color, out, title):
     tris = read_stl(path)
+    tris = tris[:, :, [0, 2, 1]]
     fig = plt.figure(figsize=(9.6, 6.4), dpi=120, facecolor=BG)
     ax = fig.add_subplot(111, projection="3d")
     ax.add_collection3d(Poly3DCollection(tris, facecolors=color, edgecolors="#0a0a0c", linewidths=0.15, shade=True))
@@ -83,7 +85,7 @@ def render(path, color, out, title):
     ax.set_xlim(c[0] - r, c[0] + r)
     ax.set_ylim(c[1] - r, c[1] + r)
     ax.set_zlim(c[2] - r, c[2] + r)
-    ax.view_init(elev=18, azim=40)
+    ax.view_init(elev=12, azim=-55)
     ax.set_axis_off()
     fig.text(0.03, 0.04, title, color="#e8e8e4", fontsize=9, fontfamily="monospace")
     fig.subplots_adjust(0, 0, 1, 1)
@@ -98,8 +100,6 @@ def main():
         "pk_frame",
         "pk_battery",
         "pk_motor",
-        "pk_s1",
-        "pk_bulkhead",
         "sh_sheave_flex",
         "sh_sheave_abd",
         "sh_cuff",
@@ -107,7 +107,6 @@ def main():
         "el_cuff_forearm",
         "el_sheave",
         "el_lateral",
-        "el_distal",
     ]
     print("load path")
     render_layers(load, OUT / "loadpath.png", "LOAD PATH  ·  amber saddle + red park rest  ·  not the biceps")

@@ -358,7 +358,8 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3()).length() || 180;
         group.position.sub(center);
-        camera.position.set(size * 0.55, size * 0.4, size * 0.75);
+        if (kit === "system") camera.position.set(size * 0.9, size * 0.18, size * 0.4);
+        else camera.position.set(size * 0.55, size * 0.4, size * 0.75);
       } else {
         const box = new THREE.Box3().setFromObject(group);
         const r = box.getSize(new THREE.Vector3()).length() || 80;
