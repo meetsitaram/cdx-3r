@@ -271,7 +271,12 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
       const scene = new THREE.Scene();
       scene.background = new THREE.Color(0x121214);
       const camera = new THREE.PerspectiveCamera(42, 1, 0.5, 8000);
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+      try {
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+      } catch {
+        setStatus("WebGL failed — close other 3D views and retry");
+        return;
+      }
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       el.innerHTML = "";
       el.appendChild(renderer.domElement);
@@ -325,7 +330,8 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
       if (layerNames) {
         const results = await Promise.allSettled(
           layerNames.map(async (name) => {
-            const geo = await loader.loadAsync(`${spec.prefix}/asm/${name}.stl`);
+            const one = new STLLoader();
+            const geo = await one.loadAsync(`${spec.prefix}/asm/${name}.stl`);
             return { name, geo };
           }),
         );
@@ -388,14 +394,18 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
     };
 
     const ro = new ResizeObserver(() => {
-      void boot();
+      void boot().catch((err) => {
+        if (!dead) setStatus(err instanceof Error ? err.message : "Could not load STL");
+      });
       if (!renderer || !el) return;
       const w = Math.max(el.clientWidth, 16);
       const h = Math.max(el.clientHeight, 16);
       renderer.setSize(w, h, false);
     });
     ro.observe(el);
-    void boot();
+    void boot().catch((err) => {
+      if (!dead) setStatus(err instanceof Error ? err.message : "Could not load STL");
+    });
 
     return () => {
       dead = true;
@@ -455,5 +465,27 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
         </div>
       </div>
     </div>
+  );
+}
+
+export function LazyCadViewer({
+  kit,
+  startOpen = false,
+  label,
+}: {
+  kit: Kit;
+  startOpen?: boolean;
+  label: string;
+}) {
+  const [live, setLive] = useState(startOpen);
+  return (
+    <details
+      open={startOpen}
+      onToggle={(e) => setLive((e.currentTarget as HTMLDetailsElement).open)}
+      className="mb-8 rounded-lg border border-border bg-surface p-4"
+    >
+      <summary className="cursor-pointer font-mono text-xs tracking-[0.18em] text-muted uppercase">{label}</summary>
+      <div className="mt-4">{live ? <CadViewer kit={kit} /> : null}</div>
+    </details>
   );
 }

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import { SiteNav } from "@/components/cdx/nav";
-import { CadViewer } from "@/components/cdx/cad-viewer";
+import { LazyCadViewer } from "@/components/cdx/cad-viewer";
 import { Button } from "@/components/ui/button";
 import {
   BOM,
@@ -354,14 +354,7 @@ function Cad() {
           </figure>
         ))}
       </div>
-      <details open className="mb-10 rounded-lg border border-border bg-surface p-4">
-        <summary className="cursor-pointer font-mono text-xs tracking-[0.18em] text-muted uppercase">
-          Orbit elbow in 3D — drag to rotate
-        </summary>
-        <div className="mt-4">
-          <CadViewer kit="elbow" />
-        </div>
-      </details>
+      <LazyCadViewer kit="elbow" label="Orbit elbow in 3D — tap to load, then drag" />
       <ol className="mb-10 grid gap-3 sm:grid-cols-5">
         {CAD_STAGES.map((s) => (
           <li key={s.n} className="rounded-lg border border-border bg-surface p-4">
@@ -451,14 +444,7 @@ function Cad() {
         alt="Shoulder 2R: flexion sheave lateral, abduction sheave posterior, elbow cables passing the comb"
         className="mb-4 w-full rounded-lg border border-border"
       />
-      <details open className="mb-8 rounded-lg border border-border bg-surface p-4">
-        <summary className="cursor-pointer font-mono text-xs tracking-[0.18em] text-muted uppercase">
-          Orbit shoulder in 3D — drag to rotate
-        </summary>
-        <div className="mt-4">
-          <CadViewer kit="shoulder" />
-        </div>
-      </details>
+      <LazyCadViewer kit="shoulder" label="Orbit shoulder in 3D — tap to load, then drag" />
       <ul className="mb-8 flex flex-wrap gap-x-4 gap-y-2">
         {SHOULDER_SWATCHES.map((s) => (
           <li key={s.id} className="flex items-center gap-2 font-mono text-[11px] tracking-[0.12em] text-muted uppercase">
@@ -530,14 +516,7 @@ function Cad() {
         alt="Backpack: Hailong battery, three D6374 winches, ODrive S1, cable bulkhead"
         className="mb-4 w-full rounded-lg border border-border"
       />
-      <details open className="mb-8 rounded-lg border border-border bg-surface p-4">
-        <summary className="cursor-pointer font-mono text-xs tracking-[0.18em] text-muted uppercase">
-          Orbit backpack in 3D — drag to rotate
-        </summary>
-        <div className="mt-4">
-          <CadViewer kit="backpack" />
-        </div>
-      </details>
+      <LazyCadViewer kit="backpack" label="Orbit backpack in 3D — tap to load, then drag" />
       <ul className="mb-8 flex flex-wrap gap-x-4 gap-y-2">
         {PACK_SWATCHES.map((s) => (
           <li key={s.id} className="flex items-center gap-2 font-mono text-[11px] tracking-[0.12em] text-muted uppercase">
@@ -618,14 +597,7 @@ function Cad() {
         alt="Full CDX-3R system on a ghost wearer"
         className="mb-4 w-full rounded-lg border border-border"
       />
-      <details open className="mb-8 rounded-lg border border-border bg-surface p-4">
-        <summary className="cursor-pointer font-mono text-xs tracking-[0.18em] text-muted uppercase">
-          Orbit full system in 3D — drag to rotate
-        </summary>
-        <div className="mt-4">
-          <CadViewer kit="system" />
-        </div>
-      </details>
+      <LazyCadViewer kit="system" startOpen label="Orbit full system in 3D — drag to rotate" />
       <ul className="mb-8 flex flex-wrap gap-x-4 gap-y-2">
         {SYSTEM_SWATCHES.map((s) => (
           <li key={s.id} className="flex items-center gap-2 font-mono text-[11px] tracking-[0.12em] text-muted uppercase">
