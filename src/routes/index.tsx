@@ -507,7 +507,8 @@ function Cad() {
       <h3 className="mt-16 font-display text-2xl tracking-wide text-fg">03 — Backpack, three winches</h3>
       <p className="mt-3 mb-8 max-w-2xl text-base leading-relaxed text-muted">
         Real motors and a real battery. 3× ODrive D6374 through 10:1
-        planetaries onto printed drums. Hailong 48 V 13 Ah in a printed sled.
+        planetaries onto printed drums. 48 V brick in a 20 L shell (220 × 280 × 80 mm)
+        — not a 367 mm Hailong downtube hung as a wardrobe.
         3× S1 on a heat spreader. Six M5 barrel adjusters at the bulkhead —
         antagonist pair per axis. Housing stops here. Inners go to the drums.
       </p>

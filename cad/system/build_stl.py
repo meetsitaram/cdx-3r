@@ -32,7 +32,7 @@ PUB = Path("/workspace/public/cad/system")
 
 # World: right GH. +Y up, +X forward, +Z right.
 UA = 290.0
-MID_Z = -180.0
+MID_Z = -200.0
 # Elbow in rest: arm down, hand in front of the belt (not out to the side).
 ELBOW = np.array([55.0, -UA, 8.0])
 # Forearm points forward-and-in, 45° toward the belly.
@@ -54,7 +54,7 @@ PALETTE = {
 }
 
 R_PACK = np.array([[0.0, 0.0, -1.0], [0.0, 1.0, 0.0], [1.0, 0.0, 0.0]])
-T_PACK = np.array([-200.0, -100.0, MID_Z])
+T_PACK = np.array([-145.0, -80.0, MID_Z])
 
 ARM_SHOULDER = {"cuff", "flex_yoke", "sheave_flex"}
 SKIP = {"arm", "torso", "strap"}
@@ -77,13 +77,11 @@ def place_elbow(mesh: Mesh) -> Mesh:
 
 def human() -> Mesh:
     m = Mesh()
-    m.add(cylinder(92, 380).rx(90).move(0, -40, MID_Z))
-    m.add(cylinder(55, 70).rx(90).move(0, 180, MID_Z))
-    m.add(cylinder(62, 110).rx(90).move(10, 250, MID_Z))
-    m.add(box(-40, 30, -25, 35, MID_Z - 40, 35))
-    # upper arm GH → elbow
-    m.add(cylinder(34, 250).rx(90).move(28, -130, 12))
-    # forearm along 45° toward belly
+    m.add(cylinder(145, 420).rx(90).move(15, -50, MID_Z))
+    m.add(cylinder(62, 70).rx(90).move(15, 185, MID_Z))
+    m.add(cylinder(88, 120).rx(90).move(20, 255, MID_Z))
+    m.add(box(-50, 40, -30, 40, MID_Z - 50, 40))
+    m.add(cylinder(36, 250).rx(90).move(28, -130, 12))
     fa = cylinder(30, 200).ry(90).ry(45).move(*ELBOW)
     m.add(fa)
     return m
@@ -115,7 +113,7 @@ def ua_beam() -> Mesh:
 
 
 def hip_belt() -> Mesh:
-    return annulus(118, 96, 26).rx(90).move(0, -250, MID_Z)
+    return annulus(168, 148, 26).rx(90).move(15, -250, MID_Z)
 
 
 def park_rest() -> Mesh:

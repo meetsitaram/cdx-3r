@@ -322,7 +322,7 @@ export const PACK_PHYSICS = [
   { k: "Drum r", v: "20 mm", d: "Printed, on the 14 mm planetary output" },
   { k: "Elbow 5 kg", v: "9 N·m → 0.9 N·m", d: "After 10:1. D6374 is fine." },
   { k: "Shoulder 5 kg", v: "17 N·m → 1.7 N·m", d: "Peak. Not 15 kg." },
-  { k: "Bus", v: "48 V · 3× S1", d: "Hailong 13 Ah. XT90." },
+  { k: "Bus", v: "48 V · 3× S1", d: "Pack brick ~220×80×70. Hailong downtube is 367 mm — too tall." },
 ] as const;
 
 export const PACK_BUY = [

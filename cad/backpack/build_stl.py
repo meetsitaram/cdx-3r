@@ -53,25 +53,26 @@ PALETTE = {
 
 
 def frame() -> Mesh:
-    m = box(-140, 140, -200, 200, 0, 12)
-    m.add(box(-140, -128, -200, 200, 0, 120))
-    m.add(box(128, 140, -200, 200, 0, 120))
-    m.add(box(-140, 140, 188, 200, 0, 120))
-    m.add(box(-140, 140, -200, -188, 0, 80))
+    """20 L shell. 220 W × 280 H × 80 D — a pack, not a wardrobe."""
+    m = box(-110, 110, -140, 140, 0, 5)
+    m.add(box(-110, 110, -140, 140, 75, 80))
+    m.add(box(-110, -105, -140, 140, 0, 80))
+    m.add(box(105, 110, -140, 140, 0, 80))
+    m.add(box(-110, 110, 135, 140, 0, 80))
+    m.add(box(-110, 110, -140, -135, 0, 80))
     return m
 
 
 def sled() -> Mesh:
-    """Hailong dovetail cradle. Battery slides in from +Y."""
-    m = box(-50, 50, -180, 20, 16, 28)
-    m.add(box(-50, -38, -180, 20, 16, 130))
-    m.add(box(38, 50, -180, 20, 16, 130))
+    m = box(-42, 42, -120, 40, 8, 18)
+    m.add(box(-42, -34, -120, 40, 8, 72))
+    m.add(box(34, 42, -120, 40, 8, 72))
     return m
 
 
 def battery() -> Mesh:
-    # 367 x 90 x 111, long axis +Y
-    return box(-45, 45, -175, 192, 28, 139)
+    """48 V brick that actually fits a pack. Hailong downtube is 367 mm — too tall to wear."""
+    return box(-38, 38, -125, 95, 18, 70)
 
 
 def motor() -> Mesh:
@@ -107,25 +108,24 @@ def winch() -> Mesh:
 
 
 def winch_at(x: float) -> Mesh:
-    # drums face +Y (up, toward shoulder cables)
-    return winch().rx(-90).move(x, 70, 70)
+    return winch().rx(-90).move(x, 55, 42)
 
 
 def s1() -> Mesh:
-    m = box(-52, 52, -38, 38, 0, 10)
-    m.add(box(-48, 48, -34, 34, 10, 22))
+    m = box(-40, 40, -28, 28, 0, 8)
+    m.add(box(-36, 36, -24, 24, 8, 16))
     return m
 
 
 def drives() -> Mesh:
     m = Mesh()
-    for i, x in enumerate((-90.0, 0.0, 90.0)):
-        m.add(s1().move(x, 165, 18))
+    for x in (-65.0, 0.0, 65.0):
+        m.add(s1().move(x, 105, 10))
     return m
 
 
 def spreader() -> Mesh:
-    return box(-140, 140, 120, 205, 12, 18)
+    return box(-100, 100, 80, 125, 6, 12)
 
 
 def xt90() -> Mesh:
@@ -137,73 +137,53 @@ def xt90() -> Mesh:
 
 def bullets() -> Mesh:
     m = Mesh()
-    for x in (-90.0, 0.0, 90.0):
-        for dy in (-8.0, 0.0, 8.0):
-            m.add(cylinder(2.2, 14).ry(90).move(x + 40, 70 + dy, 70))
+    for x in (-65.0, 0.0, 65.0):
+        for dy in (-6.0, 6.0):
+            m.add(cylinder(2.2, 12).ry(90).move(x + 28, 55 + dy, 42))
     return m
 
 
 def bulkhead() -> Mesh:
-    """6× M5 barrel adjusters — antagonist pair per axis."""
-    m = box(-110, 110, 175, 198, 40, 55)
-    for i, x in enumerate((-90.0, -70.0, -10.0, 10.0, 70.0, 90.0)):
-        m.add(cylinder(6.0, 22).move(x, 186, 62))
-        m.add(cylinder(3.0, 10).move(x, 186, 78))
+    m = box(-95, 95, 118, 132, 48, 58)
+    for x in (-65.0, -50.0, -8.0, 8.0, 50.0, 65.0):
+        m.add(cylinder(5.5, 16).move(x, 125, 64))
+        m.add(cylinder(2.8, 8).move(x, 125, 74))
     return m
 
 
 def housing() -> Mesh:
     m = Mesh()
-    # six Bowdens up to the shoulder
-    cols = [(-90, "#"), (-70, "#"), (-10, "#"), (10, "#"), (70, "#"), (90, "#")]
-    for x, _ in cols:
-        m.add(polyline([np.array([x, 186.0, 78]), np.array([x * 0.4, 280.0, 40]), np.array([20.0, 360.0, 10])], 2.8))
+    for x in (-65.0, -50.0, -8.0, 8.0, 50.0, 65.0):
+        m.add(polyline([np.array([x, 125.0, 74]), np.array([x * 0.3, 200.0, 30]), np.array([18.0, 250.0, 8])], 2.6))
     return m
 
 
 def cables() -> dict[str, Mesh]:
-    el = polyline(
-        [np.array([-90.0, 130.0, 90]), np.array([-90.0, 186.0, 70]), np.array([-36.0, 280.0, 40]), np.array([20.0, 360.0, 10])],
-        1.5,
-    )
-    el.add(
-        polyline(
-            [np.array([-70.0, 130.0, 90]), np.array([-70.0, 186.0, 70]), np.array([-28.0, 280.0, 40]), np.array([16.0, 360.0, 10])],
-            1.5,
+    def pair(a, b):
+        m = polyline(
+            [np.array([a, 70.0, 55]), np.array([a, 125.0, 64]), np.array([a * 0.3, 200.0, 30]), np.array([18.0, 250.0, 8])],
+            1.4,
         )
-    )
-    fl = polyline(
-        [np.array([-10.0, 130.0, 90]), np.array([-10.0, 186.0, 70]), np.array([0.0, 280.0, 40]), np.array([20.0, 360.0, 10])],
-        1.5,
-    )
-    fl.add(
-        polyline(
-            [np.array([10.0, 130.0, 90]), np.array([10.0, 186.0, 70]), np.array([8.0, 280.0, 40]), np.array([24.0, 360.0, 10])],
-            1.5,
+        m.add(
+            polyline(
+                [np.array([b, 70.0, 55]), np.array([b, 125.0, 64]), np.array([b * 0.3, 200.0, 30]), np.array([22.0, 250.0, 8])],
+                1.4,
+            )
         )
-    )
-    ab = polyline(
-        [np.array([70.0, 130.0, 90]), np.array([70.0, 186.0, 70]), np.array([40.0, 280.0, 40]), np.array([20.0, 360.0, 10])],
-        1.5,
-    )
-    ab.add(
-        polyline(
-            [np.array([90.0, 130.0, 90]), np.array([90.0, 186.0, 70]), np.array([48.0, 280.0, 40]), np.array([28.0, 360.0, 10])],
-            1.5,
-        )
-    )
-    return {"cable_el": el, "cable_flex": fl, "cable_abd": ab}
+        return m
+
+    return {"cable_el": pair(-65, -50), "cable_flex": pair(-8, 8), "cable_abd": pair(50, 65)}
 
 
 def straps() -> Mesh:
-    m = box(-130, -100, -40, 160, -8, 8)
-    m.add(box(100, 130, -40, 160, -8, 8))
+    m = box(-100, -78, -30, 110, -6, 6)
+    m.add(box(78, 100, -30, 110, -6, 6))
     return m
 
 
 def ghost_torso() -> Mesh:
-    m = cylinder(90, 380).move(0, 0, -70)
-    m.add(cylinder(55, 80).move(0, 210, -70))
+    m = cylinder(140, 400).move(0, 0, -90)
+    m.add(cylinder(70, 90).move(0, 220, -90))
     return m
 
 
@@ -215,10 +195,10 @@ def assembly_layers(with_body=True):
         ("frame", frame(), PALETTE["frame"]),
         ("sled", sled(), PALETTE["sled"]),
         ("battery", battery(), PALETTE["battery"]),
-        ("motor", winch_at(-90).add(winch_at(0)).add(winch_at(90)), PALETTE["motor"]),
+        ("motor", winch_at(-65).add(winch_at(0)).add(winch_at(65)), PALETTE["motor"]),
         ("s1", drives(), PALETTE["s1"]),
         ("spreader", spreader(), PALETTE["spreader"]),
-        ("xt90", xt90().move(0, -160, 140).add(xt90().move(40, -160, 140)), PALETTE["xt90"]),
+        ("xt90", xt90().move(0, -100, 40).add(xt90().move(28, -100, 40)), PALETTE["xt90"]),
         ("bullet", bullets(), PALETTE["bullet"]),
         ("bulkhead", bulkhead(), PALETTE["bulkhead"]),
         ("housing", housing(), PALETTE["housing"]),
