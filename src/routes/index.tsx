@@ -601,9 +601,12 @@ function Cad() {
       <p className="mt-3 mb-8 max-w-2xl text-base leading-relaxed text-muted">
         Elbow + shoulder + pack as one structure. The exo{" "}
         <strong className="text-fg">sits on the amber saddle</strong> (trapezius /
-        acromion). A yoke takes that load into the pack and hip belt. The
-        red park rest holds the forearm in the rest pose. Cuffs couple torque.
-        They do not hang 8 kg on your biceps.
+        acromion). Grey yoke tubes bolt the saddle to the pack. The silver
+        beam runs from that socket down to the elbow. Orange U-cradle under
+        the forearm is a <strong className="text-fg">rest, not a lock</strong> —
+        lift out to move. Black Bowden + green M5 barrels from the pack
+        bulkhead over the saddle to each sheave. Cuffs couple torque. They
+        do not hang the suit.
       </p>
       <img
         src="/cad/system/preview/loadpath.png"

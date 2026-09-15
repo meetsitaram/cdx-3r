@@ -95,7 +95,7 @@ def render(path, color, out, title):
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
-    load = ["human", "saddle", "yoke", "beam", "belt", "park", "strap"]
+    load = ["human", "saddle", "yoke", "beam", "belt", "park", "strap", "ferrule", "housing", "cable_el", "cable_flex", "cable_abd"]
     worn = load + [
         "pk_frame",
         "pk_battery",

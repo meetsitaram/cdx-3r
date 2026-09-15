@@ -402,7 +402,7 @@ export const PACK_SWATCHES = [
 export const SYSTEM_PHYSICS = [
   { k: "Exo mass path", v: "Saddle + belt", d: "Not the cuffs. Not the biceps." },
   { k: "Saddle", v: "Trapezius / acromion", d: "Amber pad. This is where it sits." },
-  { k: "Park rest", v: "Forearm shelf", d: "Red. Rest pose. Arm can leave the cuffs." },
+  { k: "Park rest", v: "U-cradle, open up", d: "Forearm sits in it. Lift out to move. Not a lock." },
   { k: "UA beam", v: "Lateral tube", d: "GH to elbow. Outside the arm." },
 ] as const;
 
@@ -411,7 +411,7 @@ export const SYSTEM_PRINT = [
   { file: "print_yoke.stl", note: "Pack to saddle. Load path." },
   { file: "print_ua_beam.stl", note: "Lateral upper-arm beam. Not through flesh." },
   { file: "print_hip_belt.stl", note: "Pack weight to the hips." },
-  { file: "print_park_rest.stl", note: "Forearm sits here in rest. Biceps idle." },
+  { file: "print_park_rest.stl", note: "U-cradle. Open up. Not a lock." },
 ] as const;
 
 export const SYSTEM_PREVIEWS = [
@@ -426,8 +426,12 @@ export const SYSTEM_PREVIEWS = [
 
 export const SYSTEM_SWATCHES = [
   { id: "saddle", label: "Shoulder saddle", hex: "#f59e0b" },
-  { id: "park", label: "Park rest", hex: "#ef4444" },
+  { id: "park", label: "Park cradle (not a lock)", hex: "#f97316" },
   { id: "yoke", label: "Pack yoke", hex: "#e2e8f0" },
   { id: "beam", label: "UA beam", hex: "#94a3b8" },
-  { id: "belt", label: "Hip belt", hex: "#78716c" },
+  { id: "ferrule", label: "M5 barrels", hex: "#22c55e" },
+  { id: "cable_el", label: "Elbow cables", hex: "#38bdf8" },
+  { id: "cable_flex", label: "Flexion cables", hex: "#e879f9" },
+  { id: "housing", label: "Bowden housing", hex: "#1f2937" },
 ] as const;
+
