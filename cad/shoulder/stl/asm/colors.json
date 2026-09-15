@@ -1,0 +1,43 @@
+{
+  "palette": {
+    "arm": "#f3c6a5",
+    "torso": "#e7d3c0",
+    "cuff": "#5ee0ff",
+    "scapula": "#f2f4f7",
+    "abd_yoke": "#94a3b8",
+    "flex_yoke": "#cbd5e1",
+    "sheave_flex": "#ffc93c",
+    "sheave_abd": "#f97316",
+    "screw": "#111215",
+    "bearing": "#ff6a1a",
+    "anchor": "#22c55e",
+    "comb": "#14b8a6",
+    "housing": "#1f2937",
+    "cable_flex": "#e879f9",
+    "cable_abd": "#818cf8",
+    "cable_elbow": "#38bdf8",
+    "clamp": "#fb7185",
+    "stop": "#facc15"
+  },
+  "layers": {
+    "torso": "#e7d3c0",
+    "arm": "#f3c6a5",
+    "cuff": "#5ee0ff",
+    "scapula": "#f2f4f7",
+    "abd_yoke": "#94a3b8",
+    "flex_yoke": "#cbd5e1",
+    "sheave_flex": "#ffc93c",
+    "sheave_abd": "#f97316",
+    "screw": "#111215",
+    "bearing": "#ff6a1a",
+    "cups": "#f2f4f7",
+    "anchor": "#22c55e",
+    "comb": "#14b8a6",
+    "housing": "#1f2937",
+    "cable_flex": "#e879f9",
+    "cable_abd": "#818cf8",
+    "cable_elbow": "#38bdf8",
+    "clamp": "#fb7185",
+    "stop": "#facc15"
+  }
+}

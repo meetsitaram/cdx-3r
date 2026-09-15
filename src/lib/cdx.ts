@@ -147,9 +147,9 @@ export const SPONSOR_SPLIT = [
 ] as const;
 
 export const CAD_STAGES = [
-  { n: "01", name: "Elbow", status: "Now", blurb: "Hinge, McMaster sheave, printed forks and cuffs." },
-  { n: "02", name: "Shoulder", status: "Next", blurb: "Flexion + abduction sheaves. Same cable rules." },
-  { n: "03", name: "Backpack", status: "After", blurb: "Three winches, Hailong 48 V, ODrive S1." },
+  { n: "01", name: "Elbow", status: "Done", blurb: "Hinge, McMaster sheave, printed forks and cuffs." },
+  { n: "02", name: "Shoulder", status: "Now", blurb: "Flexion (lateral) + abduction (posterior). Same cable rules." },
+  { n: "03", name: "Backpack", status: "Next", blurb: "Three winches, Hailong 48 V, ODrive S1." },
   { n: "04", name: "Connect", status: "After", blurb: "Bowden runs, comb, system hard stops." },
   { n: "05", name: "Armor", status: "Last", blurb: "Plates on the structure. Straps. Not costume first." },
 ] as const;
@@ -259,4 +259,61 @@ export const ELBOW_SWATCHES = [
   { id: "clamp", label: "Cable clamp on sheave", hex: "#fb7185" },
   { id: "anchor", label: "Housing ferrule (stops here)", hex: "#22c55e" },
   { id: "bearing", label: "608 fairlead", hex: "#ff6a1a" },
+] as const;
+
+export const SHOULDER_PHYSICS = [
+  { k: "Flexion sheave", v: "Lateral · gold", d: "3434T121, ML axis, like the elbow" },
+  { k: "Abduction sheave", v: "Posterior · orange", d: "3434T121, AP axis, toward the pack" },
+  { k: "5 kg at 0.65 m", v: "32 N·m → 840 N", d: "Longer lever than the elbow. Jagwire is tight." },
+  { k: "15 kg at 0.65 m", v: "96 N·m → 2500 N", d: "1/8 in 7×19. Not PETG." },
+] as const;
+
+export const SHOULDER_BUY = [
+  {
+    qty: "2",
+    item: "McMaster 3434T121 sheave",
+    why: "One flexion (lateral), one abduction (posterior)",
+    href: "https://www.mcmaster.com/3434T121/",
+  },
+  {
+    qty: "2",
+    item: "McMaster 91273A274 shoulder screw",
+    why: "3/4 in × 1.5 in. Same stack as the elbow.",
+    href: "https://www.mcmaster.com/91273A274/",
+  },
+  {
+    qty: "4",
+    item: "McMaster 6455K44 608-2RS",
+    why: "Fairleads on both sheaves",
+    href: "https://www.mcmaster.com/6455K44/",
+  },
+] as const;
+
+export const SHOULDER_PRINT = [
+  { file: "print_scapula.stl", note: "Scapula pad. Pack straps bolt here." },
+  { file: "print_abd_yoke.stl", note: "Abduction yoke. Carries the flexion sheave." },
+  { file: "print_flex_yoke.stl", note: "Flexion yoke. Beam toward the elbow." },
+  { file: "print_deltoid_cuff.stl", note: "Deltoid C-cuff. Arm goes through." },
+  { file: "print_cable_comb.stl", note: "Elbow Bowden passes. Does not wrap the shoulder." },
+] as const;
+
+export const SHOULDER_PREVIEWS = [
+  { src: "/cad/shoulder/preview/worn.png", title: "Worn — 2R shoulder" },
+  { src: "/cad/shoulder/preview/assembly.png", title: "Brace only" },
+  { src: "/cad/shoulder/preview/flex.png", title: "Buy — flexion sheave (lateral)" },
+  { src: "/cad/shoulder/preview/abd.png", title: "Buy — abduction sheave (posterior)" },
+  { src: "/cad/shoulder/preview/scapula.png", title: "Print — scapula pad" },
+  { src: "/cad/shoulder/preview/yoke.png", title: "Print — flexion yoke" },
+  { src: "/cad/shoulder/preview/cuff.png", title: "Print — deltoid cuff" },
+  { src: "/cad/shoulder/preview/comb.png", title: "Print — elbow cable comb" },
+] as const;
+
+export const SHOULDER_SWATCHES = [
+  { id: "sheave_flex", label: "Flexion sheave", hex: "#ffc93c" },
+  { id: "sheave_abd", label: "Abduction sheave", hex: "#f97316" },
+  { id: "cable_flex", label: "Flexion inner", hex: "#e879f9" },
+  { id: "cable_abd", label: "Abduction inner", hex: "#818cf8" },
+  { id: "cable_elbow", label: "Elbow pass-through", hex: "#38bdf8" },
+  { id: "comb", label: "Comb", hex: "#14b8a6" },
+  { id: "cuff", label: "Deltoid cuff", hex: "#5ee0ff" },
 ] as const;

@@ -13,6 +13,11 @@ import {
   ELBOW_PREVIEWS,
   ELBOW_PRINT,
   ELBOW_SWATCHES,
+  SHOULDER_BUY,
+  SHOULDER_PHYSICS,
+  SHOULDER_PREVIEWS,
+  SHOULDER_PRINT,
+  SHOULDER_SWATCHES,
   GALLERY,
   MOTION,
   SPONSOR_SPLIT,
@@ -421,6 +426,78 @@ function Cad() {
           >
             Preview assembly STL →
           </a>
+        </div>
+      </div>
+
+      <h3 className="mt-16 font-display text-2xl tracking-wide text-fg">02 — Shoulder, two revolute</h3>
+      <p className="mt-3 mb-8 max-w-2xl text-base leading-relaxed text-muted">
+        Gold sheave is <strong className="text-fg">flexion</strong>, lateral,
+        same idea as the elbow. Orange sheave is{" "}
+        <strong className="text-fg">abduction</strong>, posterior, on the way
+        to the pack. Cyan cables are the elbow pair — they pass the teal comb
+        and do not wrap either shoulder sheave.
+      </p>
+      <img
+        src="/cad/shoulder/preview/worn.png"
+        alt="Shoulder 2R: flexion sheave lateral, abduction sheave posterior, elbow cables passing the comb"
+        className="mb-4 w-full rounded-lg border border-border"
+      />
+      <ul className="mb-8 flex flex-wrap gap-x-4 gap-y-2">
+        {SHOULDER_SWATCHES.map((s) => (
+          <li key={s.id} className="flex items-center gap-2 font-mono text-[11px] tracking-[0.12em] text-muted uppercase">
+            <span className="h-3 w-3 rounded-sm border border-border" style={{ background: s.hex }} />
+            {s.label}
+          </li>
+        ))}
+      </ul>
+      <div className="mb-10 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {SHOULDER_PREVIEWS.filter((p) => !p.title.startsWith("Worn")).map((p) => (
+          <figure key={p.src} className="overflow-hidden rounded-lg border border-border bg-surface">
+            <img src={p.src} alt={p.title} className="aspect-[3/2] w-full object-cover" />
+            <figcaption className="px-3 py-2 font-mono text-[10px] tracking-[0.16em] text-subtle uppercase">
+              {p.title}
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+      <div className="mb-10 grid gap-3 lg:grid-cols-4">
+        {SHOULDER_PHYSICS.map((r) => (
+          <div key={r.k} className="rounded-lg border border-border bg-surface p-4">
+            <div className="font-mono text-[10px] tracking-[0.22em] text-subtle uppercase">{r.k}</div>
+            <div className="mt-1 font-display text-xl text-fg">{r.v}</div>
+            <p className="mt-1 text-sm text-muted">{r.d}</p>
+          </div>
+        ))}
+      </div>
+      <div className="grid gap-10 lg:grid-cols-2">
+        <div>
+          <h3 className="font-display text-2xl tracking-wide text-fg">Buy (add to elbow kit)</h3>
+          <ul className="mt-4 divide-y divide-border border border-border rounded-lg">
+            {SHOULDER_BUY.map((p) => (
+              <li key={p.item} className="flex gap-4 p-4">
+                <span className="font-mono text-sm text-accent">{p.qty}</span>
+                <span>
+                  <a href={p.href} className="text-fg underline-offset-4 hover:underline">
+                    {p.item}
+                  </a>
+                  <span className="mt-1 block text-sm text-muted">{p.why}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h3 className="font-display text-2xl tracking-wide text-fg">Print</h3>
+          <ul className="mt-4 divide-y divide-border border border-border rounded-lg">
+            {SHOULDER_PRINT.map((p) => (
+              <li key={p.file} className="flex flex-col gap-1 p-4 sm:flex-row sm:items-baseline sm:justify-between">
+                <a href={`/cad/shoulder/${p.file}`} download className="font-mono text-sm text-accent hover:underline">
+                  {p.file}
+                </a>
+                <span className="text-sm text-muted">{p.note}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </Section>
