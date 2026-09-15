@@ -31,12 +31,12 @@ const LAYERS = {
 } as const;
 
 const SOLO = [
-  { id: "print_fork_lateral", label: "Lateral plate", file: "/cad/elbow/print_fork_lateral.stl", color: 0xc8ccd4 },
-  { id: "print_fork_medial", label: "Medial plate", file: "/cad/elbow/print_fork_medial.stl", color: 0x6b7380 },
-  { id: "print_cuff_forearm", label: "Cuff", file: "/cad/elbow/print_cuff_forearm.stl", color: 0x7eb8c9 },
-  { id: "ref_sheave", label: "Sheave", file: "/cad/elbow/ref_sheave_DO_NOT_PRINT.stl", color: 0xc4a35a },
-  { id: "ref_608", label: "608-2RS", file: "/cad/elbow/ref_608_DO_NOT_PRINT.stl", color: 0xe07a3d },
-  { id: "ref_screw", label: "Shoulder screw", file: "/cad/elbow/ref_shoulder_screw_DO_NOT_PRINT.stl", color: 0x2a2c30 },
+  { id: "print_fork_lateral", label: "Lateral plate", file: "/cad/elbow/print_fork_lateral.stl", color: 0xf2f4f7 },
+  { id: "print_fork_medial", label: "Medial plate", file: "/cad/elbow/print_fork_medial.stl", color: 0x4b5568 },
+  { id: "print_cuff_forearm", label: "Cuff", file: "/cad/elbow/print_cuff_forearm.stl", color: 0x5ee0ff },
+  { id: "ref_sheave", label: "Sheave", file: "/cad/elbow/ref_sheave_DO_NOT_PRINT.stl", color: 0xffc93c },
+  { id: "ref_608", label: "608-2RS", file: "/cad/elbow/ref_608_DO_NOT_PRINT.stl", color: 0xff6a1a },
+  { id: "ref_screw", label: "Shoulder screw", file: "/cad/elbow/ref_shoulder_screw_DO_NOT_PRINT.stl", color: 0x111215 },
 ] as const;
 
 type View = "worn" | "brace" | (typeof SOLO)[number]["id"];

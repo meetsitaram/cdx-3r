@@ -71,7 +71,14 @@ def render_layers(names: list[str], out: Path, title: str):
         tris = read_stl(path)
         color = PALETTE[name]
         ax.add_collection3d(
-            Poly3DCollection(tris, facecolors=color, edgecolors="#1a1a1c", linewidths=0.08, shade=True)
+            Poly3DCollection(
+                tris,
+                facecolors=color,
+                edgecolors="#0a0a0c",
+                linewidths=0.2,
+                alpha=1.0,
+                shade=True,
+            )
         )
         chunks.append(tris.reshape(-1, 3))
         legend.append(Patch(facecolor=color, edgecolor="none", label=name.replace("_", " ")))

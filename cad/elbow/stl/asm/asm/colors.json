@@ -1,28 +1,28 @@
 {
   "palette": {
-    "cuff_upper": "#3d9aad",
-    "cuff_forearm": "#7eb8c9",
-    "lateral": "#c8ccd4",
-    "medial": "#6b7380",
-    "sheave": "#c4a35a",
-    "screw": "#2a2c30",
-    "nylock": "#c45c4a",
-    "bearing": "#e07a3d",
-    "anchor": "#5b8c7a",
-    "stop": "#e2c044",
-    "arm": "#c4b8a8"
+    "cuff_upper": "#12b5d4",
+    "cuff_forearm": "#5ee0ff",
+    "lateral": "#f2f4f7",
+    "medial": "#4b5568",
+    "sheave": "#ffc93c",
+    "screw": "#111215",
+    "nylock": "#ef4444",
+    "bearing": "#ff6a1a",
+    "anchor": "#22c55e",
+    "stop": "#facc15",
+    "arm": "#f3c6a5"
   },
   "layers": {
-    "arm": "#c4b8a8",
-    "cuff_upper": "#3d9aad",
-    "cuff_forearm": "#7eb8c9",
-    "lateral": "#c8ccd4",
-    "medial": "#6b7380",
-    "sheave": "#c4a35a",
-    "screw": "#2a2c30",
-    "nylock": "#c45c4a",
-    "bearing": "#e07a3d",
-    "anchor": "#5b8c7a",
-    "stop": "#e2c044"
+    "arm": "#f3c6a5",
+    "cuff_upper": "#12b5d4",
+    "cuff_forearm": "#5ee0ff",
+    "lateral": "#f2f4f7",
+    "medial": "#4b5568",
+    "sheave": "#ffc93c",
+    "screw": "#111215",
+    "nylock": "#ef4444",
+    "bearing": "#ff6a1a",
+    "anchor": "#22c55e",
+    "stop": "#facc15"
   }
 }

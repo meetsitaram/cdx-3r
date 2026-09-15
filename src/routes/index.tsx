@@ -311,7 +311,7 @@ function Cad() {
         a 3434T157 ball-bearing sheave later — do not reprint.
       </p>
       <img
-        src="/cad/elbow/preview/worn.png"
+        src="/cad/elbow/preview/worn.png?v=2"
         alt="Wearable elbow: ghost arm through cuffs, sheave outboard on the lateral plate"
         className="mb-4 w-full rounded-lg border border-border"
       />
