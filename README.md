@@ -26,6 +26,28 @@ Motors in the backpack. Bowden cables over the right shoulder. Three powered rev
 |---|---|
 | ![Winch module](public/gallery/winch.jpg) | ![Left hand on the red T-handle](public/gallery/estop.jpg) |
 
+## Motion
+
+Clips are muted, six seconds, H.264. Click play if they do not autoplay.
+
+**Worn carry** — two steps with the crate.
+
+<video src="https://github.com/meetsitaram/cdx-3r/raw/main/public/gallery/walk.mp4" controls muted loop playsinline width="100%"></video>
+
+[Play worn carry](https://github.com/meetsitaram/cdx-3r/raw/main/public/gallery/walk.mp4)
+
+**Elbow flexion** — first-person lift.
+
+<video src="https://github.com/meetsitaram/cdx-3r/raw/main/public/gallery/lift.mp4" controls muted loop playsinline width="100%"></video>
+
+[Play elbow flexion](https://github.com/meetsitaram/cdx-3r/raw/main/public/gallery/lift.mp4)
+
+**Bench winch** — spool, clutch, brake.
+
+<video src="https://github.com/meetsitaram/cdx-3r/raw/main/public/gallery/spool.mp4" controls muted loop playsinline width="100%"></video>
+
+[Play bench winch](https://github.com/meetsitaram/cdx-3r/raw/main/public/gallery/spool.mp4)
+
 ## Kinematics
 
 Not a 7-DOF industrial arm.

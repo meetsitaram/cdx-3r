@@ -299,14 +299,16 @@ function Motion() {
           <article key={clip.src} className="overflow-hidden rounded-lg border border-border bg-surface">
             <video
               className="aspect-video w-full bg-elevated object-cover"
-              src={clip.src}
               poster={clip.poster}
               autoPlay
               muted
               loop
               playsInline
               controls
-            />
+              preload="metadata"
+            >
+              <source src={clip.src} type="video/mp4" />
+            </video>
             <div className="p-4">
               <h3 className="font-display text-lg tracking-wide text-fg">{clip.title}</h3>
               <p className="mt-1 text-sm leading-relaxed text-muted">{clip.caption}</p>
