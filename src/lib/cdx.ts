@@ -148,9 +148,9 @@ export const SPONSOR_SPLIT = [
 
 export const CAD_STAGES = [
   { n: "01", name: "Elbow", status: "Done", blurb: "Hinge, McMaster sheave, printed forks and cuffs." },
-  { n: "02", name: "Shoulder", status: "Now", blurb: "Flexion (lateral) + abduction (posterior). Same cable rules." },
-  { n: "03", name: "Backpack", status: "Next", blurb: "Three winches, Hailong 48 V, ODrive S1." },
-  { n: "04", name: "Connect", status: "After", blurb: "Bowden runs, comb, system hard stops." },
+  { n: "02", name: "Shoulder", status: "Done", blurb: "Flexion (lateral) + abduction (posterior)." },
+  { n: "03", name: "Backpack", status: "Now", blurb: "3× D6374 + 10:1, Hailong 48 V, 3× ODrive S1." },
+  { n: "04", name: "Connect", status: "Next", blurb: "Bowden runs, comb, system hard stops." },
   { n: "05", name: "Armor", status: "Last", blurb: "Plates on the structure. Straps. Not costume first." },
 ] as const;
 
@@ -316,4 +316,85 @@ export const SHOULDER_SWATCHES = [
   { id: "cable_elbow", label: "Elbow pass-through", hex: "#38bdf8" },
   { id: "comb", label: "Comb", hex: "#14b8a6" },
   { id: "cuff", label: "Deltoid cuff", hex: "#5ee0ff" },
+] as const;
+
+export const PACK_PHYSICS = [
+  { k: "Drum r", v: "20 mm", d: "Printed, on the 14 mm planetary output" },
+  { k: "Elbow 5 kg", v: "9 N·m → 0.9 N·m", d: "After 10:1. D6374 is fine." },
+  { k: "Shoulder 5 kg", v: "17 N·m → 1.7 N·m", d: "Peak. Not 15 kg." },
+  { k: "Bus", v: "48 V · 3× S1", d: "Hailong 13 Ah. XT90." },
+] as const;
+
+export const PACK_BUY = [
+  {
+    qty: "3",
+    item: "ODrive S1",
+    why: "One axis each. 12–48 V, 40 A continuous with heat spreader.",
+    href: "https://shop.odriverobotics.com/products/odrive-s1",
+  },
+  {
+    qty: "3",
+    item: "ODrive D6374 150 kV",
+    why: "10 mm shaft, 8 mm rear for AMT212. 4 mm bullets included.",
+    href: "https://shop.odriverobotics.com/products/odrive-custom-motor-d6374-150kv",
+  },
+  {
+    qty: "3",
+    item: "PLE60 10:1 planetary",
+    why: "10 mm in, 14 mm out. Matches D6374. Drum bolts here.",
+    href: "https://www.omc-stepperonline.com/",
+  },
+  {
+    qty: "3",
+    item: "CUI AMT212 encoder",
+    why: "On the D6374 rear 8 mm. Talks to S1.",
+    href: "https://www.cuidevices.com/product/motion/rotary-encoders/incremental/modular/amt21-series",
+  },
+  {
+    qty: "1",
+    item: "Hailong 48 V 13 Ah",
+    why: "367×90×111 mm, ~4 kg, XT90. E-bike down-tube pack.",
+    href: "https://yosepower.com/products/48v-13ah-down-tube-hailong1-2-battery-lithium-ion-accu-e-bike-electric-bicycle-bottle-new-black-diy",
+  },
+  {
+    qty: "6",
+    item: "M5 barrel adjusters + Jagwire 5 mm ferrules",
+    why: "Bulkhead. Antagonist pair per axis.",
+    href: "https://www.jagwire.com/",
+  },
+  {
+    qty: "6",
+    item: "McMaster 6455K44 608-2RS",
+    why: "Drum support, same as the arm fairleads.",
+    href: "https://www.mcmaster.com/6455K44/",
+  },
+] as const;
+
+export const PACK_PRINT = [
+  { file: "print_frame.stl", note: "Pack shell. Straps bolt to the sides." },
+  { file: "print_sled.stl", note: "Hailong dovetail. Battery slides in." },
+  { file: "print_drum.stl", note: "Print three. 20 mm pitch radius." },
+  { file: "print_bulkhead.stl", note: "Six M5 barrels. Housing stops here." },
+] as const;
+
+export const PACK_PREVIEWS = [
+  { src: "/cad/backpack/preview/worn.png", title: "Worn — pack on the back" },
+  { src: "/cad/backpack/preview/assembly.png", title: "Pack only" },
+  { src: "/cad/backpack/preview/battery.png", title: "Buy — Hailong 48 V" },
+  { src: "/cad/backpack/preview/motor.png", title: "Buy — D6374" },
+  { src: "/cad/backpack/preview/gear.png", title: "Buy — 10:1 planetary" },
+  { src: "/cad/backpack/preview/s1.png", title: "Buy — ODrive S1" },
+  { src: "/cad/backpack/preview/drum.png", title: "Print — winch drum" },
+  { src: "/cad/backpack/preview/bulkhead.png", title: "Print — cable bulkhead" },
+] as const;
+
+export const PACK_SWATCHES = [
+  { id: "battery", label: "Hailong 48 V", hex: "#14532d" },
+  { id: "motor", label: "D6374 + gearbox", hex: "#111215" },
+  { id: "s1", label: "ODrive S1", hex: "#16a34a" },
+  { id: "xt90", label: "XT90", hex: "#f97316" },
+  { id: "bulkhead", label: "M5 barrels", hex: "#22c55e" },
+  { id: "cable_el", label: "Elbow pair", hex: "#38bdf8" },
+  { id: "cable_flex", label: "Flexion pair", hex: "#e879f9" },
+  { id: "cable_abd", label: "Abduction pair", hex: "#818cf8" },
 ] as const;

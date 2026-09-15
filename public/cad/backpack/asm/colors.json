@@ -1,0 +1,40 @@
+{
+  "palette": {
+    "torso": "#e7d3c0",
+    "frame": "#f2f4f7",
+    "sled": "#94a3b8",
+    "battery": "#14532d",
+    "motor": "#111215",
+    "gear": "#64748b",
+    "drum": "#ffc93c",
+    "bearing": "#ff6a1a",
+    "s1": "#16a34a",
+    "spreader": "#cbd5e1",
+    "xt90": "#f97316",
+    "bullet": "#eab308",
+    "bulkhead": "#22c55e",
+    "housing": "#1f2937",
+    "cable_el": "#38bdf8",
+    "cable_flex": "#e879f9",
+    "cable_abd": "#818cf8",
+    "strap": "#78716c",
+    "encoder": "#7c3aed"
+  },
+  "layers": {
+    "torso": "#e7d3c0",
+    "frame": "#f2f4f7",
+    "sled": "#94a3b8",
+    "battery": "#14532d",
+    "motor": "#111215",
+    "s1": "#16a34a",
+    "spreader": "#cbd5e1",
+    "xt90": "#f97316",
+    "bullet": "#eab308",
+    "bulkhead": "#22c55e",
+    "housing": "#1f2937",
+    "strap": "#78716c",
+    "cable_el": "#38bdf8",
+    "cable_flex": "#e879f9",
+    "cable_abd": "#818cf8"
+  }
+}

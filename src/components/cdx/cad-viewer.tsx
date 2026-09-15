@@ -64,6 +64,24 @@ const SHOULDER_COLORS: Record<string, string> = {
   stop: "#facc15",
 };
 
+const PACK_WORN = [
+  "torso",
+  "frame",
+  "sled",
+  "battery",
+  "motor",
+  "s1",
+  "spreader",
+  "xt90",
+  "bullet",
+  "bulkhead",
+  "housing",
+  "cable_el",
+  "cable_flex",
+  "cable_abd",
+  "strap",
+] as const;
+
 const KITS = {
   elbow: {
     prefix: "/cad/elbow",
@@ -93,6 +111,38 @@ const KITS = {
       { id: "ref_sheave_flex", label: "Flexion sheave", file: "/cad/shoulder/ref_sheave_flex_DO_NOT_PRINT.stl", color: 0xffc93c },
       { id: "ref_sheave_abd", label: "Abduction sheave", file: "/cad/shoulder/ref_sheave_abd_DO_NOT_PRINT.stl", color: 0xf97316 },
       { id: "print_cable_comb", label: "Comb", file: "/cad/shoulder/print_cable_comb.stl", color: 0x14b8a6 },
+    ],
+  },
+  backpack: {
+    prefix: "/cad/backpack",
+    worn: PACK_WORN,
+    brace: PACK_WORN.filter((n) => n !== "torso"),
+    fallback: "/cad/backpack/assembly_worn.stl",
+    swatches: {
+      torso: "#e7d3c0",
+      frame: "#f2f4f7",
+      sled: "#94a3b8",
+      battery: "#14532d",
+      motor: "#111215",
+      s1: "#16a34a",
+      spreader: "#cbd5e1",
+      xt90: "#f97316",
+      bullet: "#eab308",
+      bulkhead: "#22c55e",
+      housing: "#1f2937",
+      cable_el: "#38bdf8",
+      cable_flex: "#e879f9",
+      cable_abd: "#818cf8",
+      strap: "#78716c",
+    },
+    ghost: new Set(["torso"]),
+    solo: [
+      { id: "ref_battery", label: "Hailong", file: "/cad/backpack/ref_battery_DO_NOT_PRINT.stl", color: 0x14532d },
+      { id: "ref_motor", label: "D6374", file: "/cad/backpack/ref_motor_DO_NOT_PRINT.stl", color: 0x111215 },
+      { id: "ref_planetary", label: "10:1", file: "/cad/backpack/ref_planetary_DO_NOT_PRINT.stl", color: 0x64748b },
+      { id: "ref_s1", label: "ODrive S1", file: "/cad/backpack/ref_s1_DO_NOT_PRINT.stl", color: 0x16a34a },
+      { id: "print_drum", label: "Drum", file: "/cad/backpack/print_drum.stl", color: 0xffc93c },
+      { id: "print_bulkhead", label: "Bulkhead", file: "/cad/backpack/print_bulkhead.stl", color: 0x22c55e },
     ],
   },
 } as const;

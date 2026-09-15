@@ -6,7 +6,8 @@ Not a 7-axis arm. Three revolute joints, right side.
 |---|---|---|
 | 1 | **Elbow** — hinge, antagonist sheave, cuffs | `elbow/` |
 | 2 | **Shoulder** — flexion (lateral) + abduction (posterior) | `shoulder/` |
-| 3 | Backpack — 3 winches, Hailong 48 V sled, ODrive S1 | next |
+| 3 | **Backpack** — 3 winches, Hailong 48 V, ODrive S1 | `backpack/` |
+| 4 | Connect — Bowden runs, cable comb, hard stops as a system | next |
 | 4 | Connect — Bowden runs, cable comb, hard stops as a system | after pack |
 | 5 | Armor + straps — plates on the structure, not costume first | last |
 
