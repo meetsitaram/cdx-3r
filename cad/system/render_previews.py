@@ -1,0 +1,131 @@
+#!/usr/bin/env python3
+"""System stills: load path on the saddle, not the biceps."""
+from __future__ import annotations
+
+import json
+import struct
+from pathlib import Path
+
+import matplotlib
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import numpy as np
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+from matplotlib.patches import Patch
+
+STL = Path("/workspace/public/cad/system")
+ASM = STL / "asm"
+OUT = Path("/workspace/public/cad/system/preview")
+BG = "#121214"
+PALETTE = json.loads((ASM / "colors.json").read_text())["layers"]
+
+
+def read_stl(path: Path):
+    data = path.read_bytes()
+    n = struct.unpack_from("<I", data, 80)[0]
+    tris = np.empty((n, 3, 3), np.float32)
+    off = 84
+    for i in range(n):
+        chunk = struct.unpack_from("<12fH", data, off)
+        off += 50
+        tris[i] = np.array(chunk[3:12], np.float32).reshape(3, 3)
+    return tris
+
+
+def render_layers(names, out, title, elev=18, azim=40):
+    fig = plt.figure(figsize=(9.6, 6.4), dpi=120, facecolor=BG)
+    ax = fig.add_subplot(111, projection="3d")
+    chunks, legend = [], []
+    for name in names:
+        path = ASM / f"{name}.stl"
+        if not path.exists():
+            continue
+        tris = read_stl(path)
+        color = PALETTE.get(name, "#888")
+        ghost = name == "human"
+        ax.add_collection3d(
+            Poly3DCollection(
+                tris,
+                facecolors=color,
+                edgecolors="#0a0a0c",
+                linewidths=0.08,
+                alpha=0.28 if ghost else 1.0,
+                shade=True,
+            )
+        )
+        chunks.append(tris.reshape(-1, 3))
+        legend.append(Patch(facecolor=color, edgecolor="none", label=name.replace("_", " ")))
+    pts = np.vstack(chunks)
+    c = (pts.max(0) + pts.min(0)) / 2
+    r = (pts.max(0) - pts.min(0)).max() / 2 or 1
+    ax.set_xlim(c[0] - r, c[0] + r)
+    ax.set_ylim(c[1] - r, c[1] + r)
+    ax.set_zlim(c[2] - r, c[2] + r)
+    ax.view_init(elev=elev, azim=azim)
+    ax.set_axis_off()
+    ax.set_facecolor(BG)
+    ax.legend(handles=legend[:12], loc="upper left", fontsize=6, frameon=False, labelcolor="#e8e8e4")
+    fig.text(0.03, 0.04, title, color="#e8e8e4", fontsize=9, fontfamily="monospace")
+    fig.subplots_adjust(0, 0, 1, 1)
+    fig.savefig(out, facecolor=BG)
+    plt.close(fig)
+
+
+def render(path, color, out, title):
+    tris = read_stl(path)
+    fig = plt.figure(figsize=(9.6, 6.4), dpi=120, facecolor=BG)
+    ax = fig.add_subplot(111, projection="3d")
+    ax.add_collection3d(Poly3DCollection(tris, facecolors=color, edgecolors="#0a0a0c", linewidths=0.15, shade=True))
+    pts = tris.reshape(-1, 3)
+    c = (pts.max(0) + pts.min(0)) / 2
+    r = (pts.max(0) - pts.min(0)).max() / 2 or 1
+    ax.set_xlim(c[0] - r, c[0] + r)
+    ax.set_ylim(c[1] - r, c[1] + r)
+    ax.set_zlim(c[2] - r, c[2] + r)
+    ax.view_init(elev=18, azim=40)
+    ax.set_axis_off()
+    fig.text(0.03, 0.04, title, color="#e8e8e4", fontsize=9, fontfamily="monospace")
+    fig.subplots_adjust(0, 0, 1, 1)
+    fig.savefig(out, facecolor=BG)
+    plt.close(fig)
+
+
+def main():
+    OUT.mkdir(parents=True, exist_ok=True)
+    load = ["human", "saddle", "yoke", "beam", "belt", "park", "strap"]
+    worn = load + [
+        "pk_frame",
+        "pk_battery",
+        "pk_motor",
+        "pk_s1",
+        "pk_bulkhead",
+        "sh_sheave_flex",
+        "sh_sheave_abd",
+        "sh_cuff",
+        "el_cuff_upper",
+        "el_cuff_forearm",
+        "el_sheave",
+        "el_lateral",
+        "el_distal",
+    ]
+    print("load path")
+    render_layers(load, OUT / "loadpath.png", "LOAD PATH  ·  amber saddle + red park rest  ·  not the biceps")
+    print("worn")
+    render_layers(worn, OUT / "worn.png", "SYSTEM  ·  pack + shoulder 2R + elbow  ·  rest on the saddle")
+    print("parts")
+    jobs = [
+        ("saddle.png", "print_saddle.stl", "#f59e0b", "PRINT  SHOULDER SADDLE  ·  exo sits here"),
+        ("yoke.png", "print_yoke.stl", "#e2e8f0", "PRINT  YOKE  ·  pack to saddle"),
+        ("beam.png", "print_ua_beam.stl", "#94a3b8", "PRINT  UPPER-ARM BEAM  ·  lateral, not through flesh"),
+        ("belt.png", "print_hip_belt.stl", "#78716c", "PRINT  HIP BELT  ·  pack weight"),
+        ("park.png", "print_park_rest.stl", "#ef4444", "PRINT  PARK REST  ·  forearm sits here"),
+    ]
+    for name, src, color, title in jobs:
+        render(STL / src, color, OUT / name, title)
+        print(name)
+    print("wrote", OUT)
+
+
+if __name__ == "__main__":
+    main()

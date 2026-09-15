@@ -23,6 +23,10 @@ import {
   PACK_PREVIEWS,
   PACK_PRINT,
   PACK_SWATCHES,
+  SYSTEM_PHYSICS,
+  SYSTEM_PREVIEWS,
+  SYSTEM_PRINT,
+  SYSTEM_SWATCHES,
   GALLERY,
   MOTION,
   SPONSOR_SPLIT,
@@ -591,6 +595,73 @@ function Cad() {
             ))}
           </ul>
         </div>
+      </div>
+
+      <h3 className="mt-16 font-display text-2xl tracking-wide text-fg">04 — One system, rest on the saddle</h3>
+      <p className="mt-3 mb-8 max-w-2xl text-base leading-relaxed text-muted">
+        Elbow + shoulder + pack as one structure. The exo{" "}
+        <strong className="text-fg">sits on the amber saddle</strong> (trapezius /
+        acromion). A yoke takes that load into the pack and hip belt. The
+        red park rest holds the forearm in the rest pose. Cuffs couple torque.
+        They do not hang 8 kg on your biceps.
+      </p>
+      <img
+        src="/cad/system/preview/loadpath.png"
+        alt="Load path: amber shoulder saddle, yoke to pack, hip belt, red park rest under the forearm"
+        className="mb-4 w-full rounded-lg border border-border"
+      />
+      <img
+        src="/cad/system/preview/worn.png"
+        alt="Full CDX-3R system on a ghost wearer"
+        className="mb-4 w-full rounded-lg border border-border"
+      />
+      <details open className="mb-8 rounded-lg border border-border bg-surface p-4">
+        <summary className="cursor-pointer font-mono text-xs tracking-[0.18em] text-muted uppercase">
+          Orbit full system in 3D — drag to rotate
+        </summary>
+        <div className="mt-4">
+          <CadViewer kit="system" />
+        </div>
+      </details>
+      <ul className="mb-8 flex flex-wrap gap-x-4 gap-y-2">
+        {SYSTEM_SWATCHES.map((s) => (
+          <li key={s.id} className="flex items-center gap-2 font-mono text-[11px] tracking-[0.12em] text-muted uppercase">
+            <span className="h-3 w-3 rounded-sm border border-border" style={{ background: s.hex }} />
+            {s.label}
+          </li>
+        ))}
+      </ul>
+      <div className="mb-10 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {SYSTEM_PREVIEWS.filter((p) => !p.title.startsWith("Worn") && !p.title.startsWith("Load")).map((p) => (
+          <figure key={p.src} className="overflow-hidden rounded-lg border border-border bg-surface">
+            <img src={p.src} alt={p.title} className="aspect-[3/2] w-full object-cover" />
+            <figcaption className="px-3 py-2 font-mono text-[10px] tracking-[0.16em] text-subtle uppercase">
+              {p.title}
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+      <div className="mb-10 grid gap-3 lg:grid-cols-4">
+        {SYSTEM_PHYSICS.map((r) => (
+          <div key={r.k} className="rounded-lg border border-border bg-surface p-4">
+            <div className="font-mono text-[10px] tracking-[0.22em] text-subtle uppercase">{r.k}</div>
+            <div className="mt-1 font-display text-xl text-fg">{r.v}</div>
+            <p className="mt-1 text-sm text-muted">{r.d}</p>
+          </div>
+        ))}
+      </div>
+      <div>
+        <h3 className="font-display text-2xl tracking-wide text-fg">Print (load path)</h3>
+        <ul className="mt-4 divide-y divide-border border border-border rounded-lg">
+          {SYSTEM_PRINT.map((p) => (
+            <li key={p.file} className="flex flex-col gap-1 p-4 sm:flex-row sm:items-baseline sm:justify-between">
+              <a href={`/cad/system/${p.file}`} download className="font-mono text-sm text-accent hover:underline">
+                {p.file}
+              </a>
+              <span className="text-sm text-muted">{p.note}</span>
+            </li>
+          ))}
+        </ul>
       </div>
     </Section>
   );

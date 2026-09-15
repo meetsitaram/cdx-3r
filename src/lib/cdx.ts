@@ -149,8 +149,8 @@ export const SPONSOR_SPLIT = [
 export const CAD_STAGES = [
   { n: "01", name: "Elbow", status: "Done", blurb: "Hinge, McMaster sheave, printed forks and cuffs." },
   { n: "02", name: "Shoulder", status: "Done", blurb: "Flexion (lateral) + abduction (posterior)." },
-  { n: "03", name: "Backpack", status: "Now", blurb: "3× D6374 + 10:1, Hailong 48 V, 3× ODrive S1." },
-  { n: "04", name: "Connect", status: "Next", blurb: "Bowden runs, comb, system hard stops." },
+  { n: "03", name: "Backpack", status: "Done", blurb: "3× D6374 + 10:1, Hailong 48 V, 3× ODrive S1." },
+  { n: "04", name: "Connect", status: "Now", blurb: "One system. Saddle + hip belt take the weight, not the biceps." },
   { n: "05", name: "Armor", status: "Last", blurb: "Plates on the structure. Straps. Not costume first." },
 ] as const;
 
@@ -397,4 +397,37 @@ export const PACK_SWATCHES = [
   { id: "cable_el", label: "Elbow pair", hex: "#38bdf8" },
   { id: "cable_flex", label: "Flexion pair", hex: "#e879f9" },
   { id: "cable_abd", label: "Abduction pair", hex: "#818cf8" },
+] as const;
+
+export const SYSTEM_PHYSICS = [
+  { k: "Exo mass path", v: "Saddle + belt", d: "Not the cuffs. Not the biceps." },
+  { k: "Saddle", v: "Trapezius / acromion", d: "Amber pad. This is where it sits." },
+  { k: "Park rest", v: "Forearm shelf", d: "Red. Rest pose. Arm can leave the cuffs." },
+  { k: "UA beam", v: "Lateral tube", d: "GH to elbow. Outside the arm." },
+] as const;
+
+export const SYSTEM_PRINT = [
+  { file: "print_saddle.stl", note: "Shoulder saddle. Exo rests here." },
+  { file: "print_yoke.stl", note: "Pack to saddle. Load path." },
+  { file: "print_ua_beam.stl", note: "Lateral upper-arm beam. Not through flesh." },
+  { file: "print_hip_belt.stl", note: "Pack weight to the hips." },
+  { file: "print_park_rest.stl", note: "Forearm sits here in rest. Biceps idle." },
+] as const;
+
+export const SYSTEM_PREVIEWS = [
+  { src: "/cad/system/preview/worn.png", title: "Worn — full system" },
+  { src: "/cad/system/preview/loadpath.png", title: "Load path — saddle + park" },
+  { src: "/cad/system/preview/saddle.png", title: "Print — shoulder saddle" },
+  { src: "/cad/system/preview/yoke.png", title: "Print — pack yoke" },
+  { src: "/cad/system/preview/beam.png", title: "Print — UA beam" },
+  { src: "/cad/system/preview/belt.png", title: "Print — hip belt" },
+  { src: "/cad/system/preview/park.png", title: "Print — park rest" },
+] as const;
+
+export const SYSTEM_SWATCHES = [
+  { id: "saddle", label: "Shoulder saddle", hex: "#f59e0b" },
+  { id: "park", label: "Park rest", hex: "#ef4444" },
+  { id: "yoke", label: "Pack yoke", hex: "#e2e8f0" },
+  { id: "beam", label: "UA beam", hex: "#94a3b8" },
+  { id: "belt", label: "Hip belt", hex: "#78716c" },
 ] as const;
