@@ -256,7 +256,7 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
         for (const r of results) {
           if (r.status !== "fulfilled") continue;
           const { name, geo } = r.value;
-          addGeo(geo, hexToInt(spec.swatches[name] ?? "#8aa0a8"), {
+          addGeo(geo, hexToInt((spec.swatches as Record<string, string>)[name] ?? "#8aa0a8"), {
             metal: name.includes("sheave") || name === "screw",
             ghost: spec.ghost.has(name as never),
           });
