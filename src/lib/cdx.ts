@@ -63,22 +63,33 @@ export const GALLERY = [
 
 export const MOTION = [
   {
-    src: "/gallery/walk.mp4",
-    poster: "/gallery/hero.jpg",
-    title: "Worn carry",
-    caption: "Two steps with the crate. The 3R suit holds — it does not swing a 7-axis wrist.",
+    src: "/gallery/lift-3r.mp4",
+    poster: "/gallery/lift-3r.jpg",
+    title: "Coordinated 3R lift",
+    caption:
+      "Load path: hip → chest. Shoulder flexion first (upper arm rotates on the sheave), then elbow flexion (forearm closes on the pulley). Wrist plating does not move.",
+    featured: true,
+  },
+  {
+    src: "/gallery/shoulder-motion.mp4",
+    poster: "/gallery/shoulder.jpg",
+    title: "Shoulder flexion",
+    caption: "Dual sheaves. Cables only pull. The glenohumeral flexion plane raises the crate.",
+    featured: false,
+  },
+  {
+    src: "/gallery/elbow-motion.mp4",
+    poster: "/gallery/elbow.jpg",
+    title: "Elbow flexion",
+    caption: "Antagonist pair wraps the circular pulley. One side pays in, the other pays out.",
+    featured: false,
   },
   {
     src: "/gallery/lift.mp4",
     poster: "/gallery/first-person.jpg",
-    title: "Elbow flexion",
-    caption: "First-person: one revolute axis closing. Cables tighten, then hold.",
-  },
-  {
-    src: "/gallery/spool.mp4",
-    poster: "/gallery/winch.jpg",
-    title: "Bench winch",
-    caption: "The module sponsors should see spin: spool, clutch, brake, known load path.",
+    title: "Operator view",
+    caption: "Looking down the arm while the elbow pulley turns and the crate comes up.",
+    featured: false,
   },
 ] as const;
 

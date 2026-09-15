@@ -287,36 +287,54 @@ function Cables() {
 }
 
 function Motion() {
+  const featured = MOTION.find((c) => c.featured) ?? MOTION[0];
+  const rest = MOTION.filter((c) => c !== featured);
+
   return (
-    <Section id="motion" kicker="04 — Motion" title="Three revolute axes. That is the whole machine.">
+    <Section id="motion" kicker="04 — Motion" title="Watch the two lift joints, not a 7-axis wrist.">
       <p className="mb-8 max-w-2xl text-base leading-relaxed text-muted">
-        7R would be a robot arm: three shoulder, one elbow, three wrist. CDX-3R
-        only powers the lift. Wrist plating is passive so the hand can still
-        square on the crate.
+        CDX-3R only powers shoulder flexion and elbow flexion for this lift.
+        Abduction is the third axis (clear the hip). Wrist plating is dummy —
+        it does not articulate.
       </p>
+      <Clip clip={featured} className="mb-6" large />
       <div className="grid gap-6 lg:grid-cols-3">
-        {MOTION.map((clip) => (
-          <article key={clip.src} className="overflow-hidden rounded-lg border border-border bg-surface">
-            <video
-              className="aspect-video w-full bg-elevated object-cover"
-              poster={clip.poster}
-              autoPlay
-              muted
-              loop
-              playsInline
-              controls
-              preload="metadata"
-            >
-              <source src={clip.src} type="video/mp4" />
-            </video>
-            <div className="p-4">
-              <h3 className="font-display text-lg tracking-wide text-fg">{clip.title}</h3>
-              <p className="mt-1 text-sm leading-relaxed text-muted">{clip.caption}</p>
-            </div>
-          </article>
+        {rest.map((clip) => (
+          <Clip key={clip.src} clip={clip} />
         ))}
       </div>
     </Section>
+  );
+}
+
+function Clip({
+  clip,
+  className,
+  large,
+}: {
+  clip: (typeof MOTION)[number];
+  className?: string;
+  large?: boolean;
+}) {
+  return (
+    <article className={cn("overflow-hidden rounded-lg border border-border bg-surface", className)}>
+      <video
+        className={cn("w-full bg-elevated object-cover", large ? "aspect-video" : "aspect-video")}
+        poster={clip.poster}
+        autoPlay
+        muted
+        loop
+        playsInline
+        controls
+        preload="metadata"
+      >
+        <source src={clip.src} type="video/mp4" />
+      </video>
+      <div className="p-4">
+        <h3 className="font-display text-lg tracking-wide text-fg">{clip.title}</h3>
+        <p className="mt-1 text-sm leading-relaxed text-muted">{clip.caption}</p>
+      </div>
+    </article>
   );
 }
 

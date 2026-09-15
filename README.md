@@ -28,25 +28,31 @@ Motors in the backpack. Bowden cables over the right shoulder. Three powered rev
 
 ## Motion
 
-Clips are muted, six seconds, H.264. Click play if they do not autoplay.
+These clips show the **two lift joints** turning under load. Not a walk-around.
 
-**Worn carry** — two steps with the crate.
+**Coordinated 3R lift** — shoulder flexion, then elbow flexion. Crate from hip to chest. Wrist does not move.
 
-<video src="https://github.com/meetsitaram/cdx-3r/raw/main/public/gallery/walk.mp4" controls muted loop playsinline width="100%"></video>
+<video src="https://github.com/meetsitaram/cdx-3r/raw/main/public/gallery/lift-3r.mp4" controls muted loop playsinline width="100%"></video>
 
-[Play worn carry](https://github.com/meetsitaram/cdx-3r/raw/main/public/gallery/walk.mp4)
+[Play coordinated lift](https://github.com/meetsitaram/cdx-3r/raw/main/public/gallery/lift-3r.mp4)
 
-**Elbow flexion** — first-person lift.
+**Shoulder flexion** — dual sheaves rotate, cables only pull.
+
+<video src="https://github.com/meetsitaram/cdx-3r/raw/main/public/gallery/shoulder-motion.mp4" controls muted loop playsinline width="100%"></video>
+
+[Play shoulder](https://github.com/meetsitaram/cdx-3r/raw/main/public/gallery/shoulder-motion.mp4)
+
+**Elbow flexion** — antagonist pair wraps the pulley as the forearm closes.
+
+<video src="https://github.com/meetsitaram/cdx-3r/raw/main/public/gallery/elbow-motion.mp4" controls muted loop playsinline width="100%"></video>
+
+[Play elbow](https://github.com/meetsitaram/cdx-3r/raw/main/public/gallery/elbow-motion.mp4)
+
+**Operator view** — looking down the arm as the crate comes up.
 
 <video src="https://github.com/meetsitaram/cdx-3r/raw/main/public/gallery/lift.mp4" controls muted loop playsinline width="100%"></video>
 
-[Play elbow flexion](https://github.com/meetsitaram/cdx-3r/raw/main/public/gallery/lift.mp4)
-
-**Bench winch** — spool, clutch, brake.
-
-<video src="https://github.com/meetsitaram/cdx-3r/raw/main/public/gallery/spool.mp4" controls muted loop playsinline width="100%"></video>
-
-[Play bench winch](https://github.com/meetsitaram/cdx-3r/raw/main/public/gallery/spool.mp4)
+[Play operator view](https://github.com/meetsitaram/cdx-3r/raw/main/public/gallery/lift.mp4)
 
 ## Kinematics
 
