@@ -436,7 +436,7 @@ export const SYSTEM_SWATCHES = [
 ] as const;
 
 export const ARMOR_PRINT = [
-  { file: "print_fairing_deltoid.stl", note: "Football epaulette. Flexion sheave stays in the open sector." },
+  { file: "print_fairing_deltoid.stl", note: "Circular window panel. Dual 3434T121 sits in the hole." },
   { file: "print_fairing_ua.stl", note: "Floating bicep plate. Stops before the elbow sheave." },
   { file: "print_fairing_fa.stl", note: "Forearm dish. Starts 55 mm past the hinge." },
   { file: "print_fairing_scapula.stl", note: "Yoke dish over the scapula." },
@@ -445,7 +445,9 @@ export const ARMOR_PRINT = [
 ] as const;
 
 export const ARMOR_SWATCHES = [
-  { id: "deltoid", label: "Deltoid dome", hex: "#1c2024" },
+  { id: "deltoid", label: "Deltoid window", hex: "#1c2024" },
+  { id: "bezel", label: "Window lip", hex: "#8a9199" },
+  { id: "sheave", label: "Dual 3434T121", hex: "#c5cad3" },
   { id: "ua", label: "Bicep plate", hex: "#1f2328" },
   { id: "fa", label: "Forearm dish", hex: "#252a31" },
   { id: "scapula", label: "Yoke dish", hex: "#2a3038" },
@@ -460,12 +462,13 @@ export const ARMOR_BUY = [
 ] as const;
 
 export const ARMOR_PREVIEWS = [
-  { src: "/cad/armor/preview/worn.png", title: "Worn — shells on skeleton" },
-  { src: "/cad/armor/preview/ua.png", title: "Print — UA clamshell" },
-  { src: "/cad/armor/preview/fa.png", title: "Print — forearm" },
-  { src: "/cad/armor/preview/deltoid.png", title: "Print — deltoid cap" },
-  { src: "/cad/armor/preview/scapula.png", title: "Print — scapula lid" },
-  { src: "/cad/armor/preview/pack.png", title: "Print — pack tub" },
-  { src: "/cad/armor/preview/lid.png", title: "Print — pack lid" },
+  { src: "/cad/armor/preview/joint.png", title: "Joint — circular window, dual sheaves" },
+  { src: "/cad/armor/preview/worn.png", title: "Worn — plating on the skeleton" },
+  { src: "/cad/armor/preview/deltoid.png", title: "Print — deltoid window" },
+  { src: "/cad/armor/preview/ua.png", title: "Print — bicep plate" },
+  { src: "/cad/armor/preview/fa.png", title: "Print — forearm plate" },
+  { src: "/cad/armor/preview/scapula.png", title: "Print — yoke" },
+  { src: "/cad/armor/preview/pack.png", title: "Print — pack plate" },
+  { src: "/cad/armor/preview/lid.png", title: "Print — drum bezels" },
 ] as const;
 

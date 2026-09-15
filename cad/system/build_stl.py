@@ -59,6 +59,8 @@ PALETTE = {
     "ar_pack": "#16191d",
     "ar_lid": "#1a1e24",
     "ar_led": "#3b82f6",
+    "ar_bezel": "#8a9199",
+    "ar_sheave": "#c5cad3",
 }
 
 R_PACK = np.array([[0.0, 0.0, -1.0], [0.0, 1.0, 0.0], [1.0, 0.0, 0.0]])
@@ -232,12 +234,14 @@ def pack_layers():
 
 def armor_layers():
     led = place_elbow(ar.led_ua().add(ar.led_fa()))
-    led.add(ar.led_deltoid().rz(-90))
+    led.add(ar.led_deltoid())
     led.add(ar.pack_led().transformed(R_PACK, T_PACK))
     return [
         ("ar_ua", place_elbow(ar.fairing_ua()), PALETTE["ar_ua"]),
         ("ar_fa", place_elbow(ar.fairing_fa()), PALETTE["ar_fa"]),
-        ("ar_deltoid", ar.fairing_deltoid().rz(-90), PALETTE["ar_deltoid"]),
+        ("ar_deltoid", ar.fairing_deltoid(), PALETTE["ar_deltoid"]),
+        ("ar_bezel", ar.bezel_deltoid(), PALETTE["ar_bezel"]),
+        ("ar_sheave", ar.joint_sheaves(), PALETTE["ar_sheave"]),
         ("ar_scapula", ar.fairing_scapula(), PALETTE["ar_scapula"]),
         ("ar_pack", ar.pack_tub().transformed(R_PACK, T_PACK), PALETTE["ar_pack"]),
         ("ar_lid", ar.pack_lid().transformed(R_PACK, T_PACK), PALETTE["ar_lid"]),

@@ -18,7 +18,9 @@
     "ar_scapula": "#2a3038",
     "ar_pack": "#16191d",
     "ar_lid": "#1a1e24",
-    "ar_led": "#3b82f6"
+    "ar_led": "#3b82f6",
+    "ar_bezel": "#8a9199",
+    "ar_sheave": "#c5cad3"
   },
   "layers": {
     "human": "#f3c6a5",
@@ -80,6 +82,8 @@
     "ar_ua": "#1f2328",
     "ar_fa": "#252a31",
     "ar_deltoid": "#1c2024",
+    "ar_bezel": "#8a9199",
+    "ar_sheave": "#c5cad3",
     "ar_scapula": "#2a3038",
     "ar_pack": "#16191d",
     "ar_lid": "#1a1e24",

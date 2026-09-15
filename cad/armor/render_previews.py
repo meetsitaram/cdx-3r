@@ -94,16 +94,39 @@ def render(path, color, out, title):
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
-    worn = ["ghost_ua", "ghost_fa", "ghost_deltoid", "ghost_frame", "ua", "fa", "deltoid", "scapula", "pack", "lid", "led", "screw"]
+    worn = [
+        "ghost_ua",
+        "ghost_fa",
+        "ghost_deltoid",
+        "ghost_frame",
+        "ua",
+        "fa",
+        "deltoid",
+        "bezel",
+        "sheave",
+        "scapula",
+        "pack",
+        "lid",
+        "led",
+        "screw",
+    ]
     print("worn")
-    render_layers(worn, OUT / "worn.png", "ARMOR  ·  overlapping dishes  ·  sheaves stay open")
+    render_layers(worn, OUT / "worn.png", "ARMOR  ·  circular joint windows  ·  dual sheaves in the hole")
+    print("joint")
+    render_layers(
+        ["deltoid", "bezel", "sheave", "led"],
+        OUT / "joint.png",
+        "JOINT  ·  carbon window  ·  3434T121 dual stack",
+        elev=8,
+        azim=-70,
+    )
     jobs = [
         ("ua.png", "print_fairing_ua.stl", "#1f2328", "PRINT  BICEP PLATE  ·  stops before the elbow sheave"),
-        ("fa.png", "print_fairing_fa.stl", "#252a31", "PRINT  FOREARM DISH  ·  hinge stays open"),
-        ("deltoid.png", "print_fairing_deltoid.stl", "#1c2024", "PRINT  DELTOID DOME  ·  flexion sheave in the open sector"),
+        ("fa.png", "print_fairing_fa.stl", "#252a31", "PRINT  FOREARM PLATE  ·  hinge stays open"),
+        ("deltoid.png", "print_fairing_deltoid.stl", "#1c2024", "PRINT  DELTOID WINDOW  ·  circular cutout for the sheave"),
         ("scapula.png", "print_fairing_scapula.stl", "#2a3038", "PRINT  YOKE DISH"),
         ("pack.png", "print_fairing_pack_tub.stl", "#16191d", "PRINT  PACK PLATE  ·  3 drum windows"),
-        ("lid.png", "print_fairing_pack_lid.stl", "#1a1e24", "PRINT  DRUM BEZELS  ·  drums read through"),
+        ("lid.png", "print_fairing_pack_lid.stl", "#1a1e24", "PRINT  DRUM BEZELS"),
     ]
     for name, src, color, title in jobs:
         render(STL / src, color, OUT / name, title)

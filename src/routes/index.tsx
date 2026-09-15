@@ -646,11 +646,10 @@ function Cad() {
 
       <h3 className="mt-16 font-display text-2xl tracking-wide text-fg">05 — Sport dishes, joints in the open</h3>
       <p className="mt-3 mb-8 max-w-2xl text-base leading-relaxed text-muted">
-        Overlapping plates like hockey and football — not tubes. Deltoid is a
-        dome (epaulette). Bicep floats and <strong className="text-fg">stops before
-        the elbow sheave</strong>. Forearm dish starts 55 mm past the hinge.
-        Pack is a formed back plate with three drum windows. Gold pulleys,
-        608s, and winch drums stay visible on purpose.
+        Overlapping plates — not tubes. Deltoid is a <strong className="text-fg">circular
+        window</strong> around a dual 3434T121 stack. Bicep floats and stops
+        before the elbow sheave. Forearm starts 55 mm past the hinge. Pack is a
+        formed plate with three drum windows. Gold pulleys stay in the hole.
       </p>
       <img
         src="/cad/armor/preview/worn.png"

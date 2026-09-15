@@ -9,7 +9,9 @@
     "pack": "#16191d",
     "lid": "#1a1e24",
     "led": "#3b82f6",
-    "screw": "#c5cad3"
+    "bezel": "#8a9199",
+    "sheave": "#c5cad3",
+    "screw": "#111215"
   },
   "layers": {
     "ghost_ua": "#5ee0ff",
@@ -19,10 +21,12 @@
     "ua": "#1f2328",
     "fa": "#252a31",
     "deltoid": "#1c2024",
+    "bezel": "#8a9199",
+    "sheave": "#c5cad3",
     "scapula": "#2a3038",
     "pack": "#16191d",
     "lid": "#1a1e24",
     "led": "#3b82f6",
-    "screw": "#c5cad3"
+    "screw": "#111215"
   }
 }
