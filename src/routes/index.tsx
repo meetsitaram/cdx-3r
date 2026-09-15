@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import { SiteNav } from "@/components/cdx/nav";
+import { CadViewer } from "@/components/cdx/cad-viewer";
 import { Button } from "@/components/ui/button";
 import {
   BOM,
@@ -300,6 +301,7 @@ function Cad() {
         parts are the fixtures. The sheave, shaft, and tube are bought. 5 kg
         garage on Jagwire. 15 kg only after 1/8 in wire rope.
       </p>
+      <CadViewer />
       <ol className="mb-10 grid gap-3 sm:grid-cols-5">
         {CAD_STAGES.map((s) => (
           <li key={s.n} className="rounded-lg border border-border bg-surface p-4">
