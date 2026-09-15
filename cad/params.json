@@ -1,0 +1,62 @@
+{
+  "units": "mm",
+  "stage": "elbow",
+  "next": "shoulder",
+  "human": {
+    "note": "Adult male, right arm, parametric. Measure the wearer and edit.",
+    "upper_arm_len": 290,
+    "forearm_len": 260,
+    "hand_len": 90,
+    "elbow_width": 80,
+    "forearm_cuff_id": 95,
+    "upper_cuff_id": 105,
+    "padding": 8,
+    "elbow_rom_ext_deg": 0,
+    "elbow_rom_flex_deg": 135,
+    "work_flex_deg": 90
+  },
+  "physics": {
+    "g": 9.81,
+    "crate_kg_garage": 5,
+    "crate_kg_target": 15,
+    "lever_m": 0.35,
+    "sheave_pitch_mm": 76.2
+  },
+  "cots": {
+    "sheave": {
+      "mcmaster": "3434T121",
+      "url": "https://www.mcmaster.com/3434T121/",
+      "od": 88.9,
+      "pitch": 76.2,
+      "width": 17.46,
+      "bore": 19.05,
+      "rope_max": "5/16 in",
+      "wll_lb": 1550
+    },
+    "shaft": {
+      "mcmaster": "1346K17",
+      "url": "https://www.mcmaster.com/1346K17/",
+      "dia": 19.05,
+      "len": 100,
+      "note": "3/4 in precision shaft, cut to 100 mm"
+    },
+    "tube": {
+      "od": 25.0,
+      "id": 22.0,
+      "note": "25 mm OD carbon or 6061 tube, McMaster 89995K31 family"
+    },
+    "cable_garage": {
+      "name": "Jagwire 1.5 mm stainless + 5 mm brake housing",
+      "url": "https://www.jagwire.com/"
+    },
+    "cable_load": {
+      "name": "1/8 in 7x19 stainless wire rope",
+      "mcmaster": "3461T44"
+    },
+    "inserts": {
+      "m4": "McMaster 94180A351 heat-set M4",
+      "m3": "McMaster 94180A331 heat-set M3"
+    },
+    "bearings_optional": "Sheave 3434T121 already has a plain bearing. Do not add 608s unless you print the drum."
+  }
+}

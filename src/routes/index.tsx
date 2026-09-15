@@ -4,7 +4,12 @@ import { SiteNav } from "@/components/cdx/nav";
 import { Button } from "@/components/ui/button";
 import {
   BOM,
+  CAD_STAGES,
   COST_TIERS,
+  ELBOW_BUY,
+  ELBOW_HUMAN,
+  ELBOW_PHYSICS,
+  ELBOW_PRINT,
   GALLERY,
   MOTION,
   SPONSOR_SPLIT,
@@ -24,6 +29,7 @@ function Home() {
       <System />
       <Physics />
       <Cables />
+      <Cad />
       <Motion />
       <Safety />
       <Gallery />
@@ -286,12 +292,99 @@ function Cables() {
   );
 }
 
+function Cad() {
+  return (
+    <Section id="cad" kicker="04 — Build" title="Elbow first. Metal takes the load.">
+      <p className="mb-8 max-w-2xl text-base leading-relaxed text-muted">
+        Piece by piece. Elbow now, shoulder next, backpack after that. Printed
+        parts are the fixtures. The sheave, shaft, and tube are bought. 5 kg
+        garage on Jagwire. 15 kg only after 1/8 in wire rope.
+      </p>
+      <ol className="mb-10 grid gap-3 sm:grid-cols-5">
+        {CAD_STAGES.map((s) => (
+          <li key={s.n} className="rounded-lg border border-border bg-surface p-4">
+            <div className="font-mono text-[10px] tracking-[0.22em] text-subtle uppercase">
+              {s.n} · {s.status}
+            </div>
+            <div className="mt-1 font-display text-lg text-fg">{s.name}</div>
+            <p className="mt-1 text-sm text-muted">{s.blurb}</p>
+          </li>
+        ))}
+      </ol>
+
+      <h3 className="font-display text-2xl tracking-wide text-fg">Human arm</h3>
+      <p className="mt-2 mb-4 max-w-2xl text-sm text-muted">
+        Adult male defaults. Measure the wearer and edit <code className="text-accent">cad/params.json</code>.
+      </p>
+      <div className="mb-10 grid gap-3 sm:grid-cols-3">
+        {ELBOW_HUMAN.map((r) => (
+          <div key={r.k} className="rounded-lg border border-border bg-surface p-4">
+            <div className="font-mono text-[10px] tracking-[0.22em] text-subtle uppercase">{r.k}</div>
+            <div className="mt-1 font-display text-xl text-fg">{r.v}</div>
+            <p className="mt-1 text-sm text-muted">{r.d}</p>
+          </div>
+        ))}
+      </div>
+
+      <h3 className="font-display text-2xl tracking-wide text-fg">Physics at the elbow</h3>
+      <div className="mb-10 mt-4 grid gap-3 lg:grid-cols-3">
+        {ELBOW_PHYSICS.map((r) => (
+          <div key={r.k} className="rounded-lg border border-border bg-surface p-4">
+            <div className="font-mono text-[10px] tracking-[0.22em] text-subtle uppercase">{r.k}</div>
+            <div className="mt-1 font-display text-xl text-fg">{r.v}</div>
+            <p className="mt-1 text-sm text-muted">{r.d}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid gap-10 lg:grid-cols-2">
+        <div>
+          <h3 className="font-display text-2xl tracking-wide text-fg">Buy</h3>
+          <ul className="mt-4 divide-y divide-border border border-border rounded-lg">
+            {ELBOW_BUY.map((p) => (
+              <li key={p.item} className="flex gap-4 p-4">
+                <span className="font-mono text-sm text-accent">{p.qty}</span>
+                <span>
+                  <a href={p.href} className="text-fg underline-offset-4 hover:underline">
+                    {p.item}
+                  </a>
+                  <span className="mt-1 block text-sm text-muted">{p.why}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h3 className="font-display text-2xl tracking-wide text-fg">Print</h3>
+          <ul className="mt-4 divide-y divide-border border border-border rounded-lg">
+            {ELBOW_PRINT.map((p) => (
+              <li key={p.file} className="flex flex-col gap-1 p-4 sm:flex-row sm:items-baseline sm:justify-between">
+                <a href={`/cad/elbow/${p.file}`} download className="font-mono text-sm text-accent hover:underline">
+                  {p.file}
+                </a>
+                <span className="text-sm text-muted">{p.note}</span>
+              </li>
+            ))}
+          </ul>
+          <a
+            href="/cad/elbow/assembly_preview.stl"
+            download
+            className="mt-4 inline-block font-mono text-xs tracking-[0.18em] text-subtle uppercase hover:text-accent"
+          >
+            Preview assembly STL →
+          </a>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
 function Motion() {
   const featured = MOTION.find((c) => c.featured) ?? MOTION[0];
   const rest = MOTION.filter((c) => c !== featured);
 
   return (
-    <Section id="motion" kicker="04 — Motion" title="Watch the two lift joints, not a 7-axis wrist.">
+    <Section id="motion" kicker="05 — Motion" title="Watch the two lift joints, not a 7-axis wrist.">
       <p className="mb-8 max-w-2xl text-base leading-relaxed text-muted">
         CDX-3R only powers shoulder flexion and elbow flexion for this lift.
         Abduction is the third axis (clear the hip). Wrist plating is dummy —
@@ -340,7 +433,7 @@ function Clip({
 
 function Safety() {
   return (
-    <Section id="safety" kicker="05 — Safety" title="Power off must still let you move.">
+    <Section id="safety" kicker="06 — Safety" title="Power off must still let you move.">
       <div className="grid gap-6 lg:grid-cols-3">
         {[
           {
@@ -393,7 +486,7 @@ function Gallery() {
   const shot = open !== null ? GALLERY[open] : null;
 
   return (
-    <Section id="gallery" kicker="06 — Gallery" title="The machine, not the warehouse uniform.">
+    <Section id="gallery" kicker="07 — Gallery" title="The machine, not the warehouse uniform.">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {GALLERY.map((g, i) => (
           <button
@@ -451,7 +544,7 @@ function Cost() {
   const tier = COST_TIERS.find((t) => t.id === id) ?? COST_TIERS[1];
 
   return (
-    <Section id="cost" kicker="07 — Cost" title="Money is in machining, not the cables.">
+    <Section id="cost" kicker="08 — Cost" title="Money is in machining, not the cables.">
       <div className="flex flex-wrap gap-2">
         {COST_TIERS.map((t) => (
           <button
@@ -510,7 +603,7 @@ function Cost() {
 
 function Sponsor() {
   return (
-    <Section id="sponsor" kicker="08 — Raise" title="The prop gets the meeting. The bench gets the check.">
+    <Section id="sponsor" kicker="09 — Raise" title="The prop gets the meeting. The bench gets the check.">
       <p className="max-w-2xl text-base leading-relaxed text-muted">
         Sponsors fund a path, not a pretty still. Do not tell anyone it lifts
         30 kg if it does not. Pitch: this is the industrial-design target. Here

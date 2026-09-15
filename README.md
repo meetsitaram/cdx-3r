@@ -75,7 +75,16 @@ Open [http://localhost:8080](http://localhost:8080).
 npm run build
 ```
 
-## Layout
+## CAD
+
+Piece by piece. **Elbow is first.**
+
+- [cad/README.md](cad/README.md) — order of work
+- [cad/elbow/](cad/elbow/) — McMaster sheave, printable forks/cuffs, physics
+- STLs: `cad/elbow/stl/` (also on the site under Build)
+
+Do not print `ref_sheave_DO_NOT_PRINT.stl`. Buy [3434T121](https://www.mcmaster.com/3434T121/).
+
 
 | Path | What |
 |---|---|

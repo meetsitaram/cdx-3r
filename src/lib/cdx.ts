@@ -3,6 +3,7 @@ export const NAV = [
   { id: "physics", label: "Physics" },
   { id: "cables", label: "Cables" },
   { id: "motion", label: "Motion" },
+  { id: "cad", label: "Build" },
   { id: "safety", label: "Safety" },
   { id: "gallery", label: "Gallery" },
   { id: "cost", label: "Cost" },
@@ -143,4 +144,71 @@ export const SPONSOR_SPLIT = [
   { piece: "Exterior armor, pack, cables, LEDs", real: "Look-alike, high finish", why: "Photos and booth" },
   { piece: "One elbow or shoulder winch on a bench", real: "Real, instrumented", why: "Proves τ = T × r" },
   { piece: "Full 30 kg worn lift", real: "Not yet", why: "Injury risk and money sink" },
+] as const;
+
+export const CAD_STAGES = [
+  { n: "01", name: "Elbow", status: "Now", blurb: "Hinge, McMaster sheave, printed forks and cuffs." },
+  { n: "02", name: "Shoulder", status: "Next", blurb: "Flexion + abduction sheaves. Same cable rules." },
+  { n: "03", name: "Backpack", status: "After", blurb: "Three winches, Hailong 48 V, ODrive S1." },
+  { n: "04", name: "Connect", status: "After", blurb: "Bowden runs, comb, system hard stops." },
+  { n: "05", name: "Armor", status: "Last", blurb: "Plates on the structure. Straps. Not costume first." },
+] as const;
+
+export const ELBOW_HUMAN = [
+  { k: "Upper arm", v: "290 mm", d: "Shoulder axis to elbow axis" },
+  { k: "Forearm", v: "260 mm", d: "Elbow axis to wrist" },
+  { k: "Hand", v: "90 mm", d: "Adds to crate lever" },
+  { k: "Elbow width", v: "80 mm", d: "Epicondyle to epicondyle" },
+  { k: "Forearm cuff ID", v: "95 mm", d: "Skin + 8 mm foam" },
+  { k: "ROM", v: "0–135°", d: "Hard stop before anatomy" },
+] as const;
+
+export const ELBOW_PHYSICS = [
+  { k: "τ = T × r", v: "r = 38.1 mm", d: "3 in pitch, McMaster 3434T121" },
+  { k: "5 kg garage", v: "17 N·m → 450 N", d: "Jagwire 1.5 mm is in this band" },
+  { k: "15 kg target", v: "51 N·m → 1350 N", d: "1/8 in 7×19. Same printed forks." },
+] as const;
+
+export const ELBOW_BUY = [
+  {
+    qty: "1",
+    item: "McMaster 3434T121 sheave",
+    why: "Rated 1550 lb groove, 3/4 in bore",
+    href: "https://www.mcmaster.com/3434T121/",
+  },
+  {
+    qty: "1",
+    item: "3/4 in × 100 mm shaft",
+    why: "Elbow axis",
+    href: "https://www.mcmaster.com/1346K17/",
+  },
+  {
+    qty: "2",
+    item: "25 mm OD tube stubs",
+    why: "Upper arm + forearm spars",
+    href: "https://www.mcmaster.com/89995K31/",
+  },
+  {
+    qty: "1",
+    item: "Jagwire 1.5 mm + 5 mm housing",
+    why: "Garage flexor / extensor",
+    href: "https://www.jagwire.com/",
+  },
+  {
+    qty: "8",
+    item: "M4 heat-set inserts",
+    why: "Forks and hub",
+    href: "https://www.mcmaster.com/94180A351/",
+  },
+] as const;
+
+export const ELBOW_PRINT = [
+  { file: "print_fork_lateral.stl", note: "PETG, 5 walls, flat on bed" },
+  { file: "print_fork_medial.stl", note: "Mirror. Inserts from the outside" },
+  { file: "print_forearm_hub.stl", note: "PA12-CF if you have it" },
+  { file: "print_cuff_forearm.stl", note: "C-cuff, foam inside" },
+  { file: "print_cuff_upper.stl", note: "~80 mm proximal of the axis" },
+  { file: "print_bowden_anchor.stl", note: "Print two. 5 mm ferrule seat" },
+  { file: "print_hard_stop.stl", note: "Hits before your elbow does" },
+  { file: "print_drum.stl", note: "Only if the McMaster sheave is late. Not 15 kg" },
 ] as const;
