@@ -60,20 +60,22 @@ def render(path: Path, color: str, out: Path, title: str):
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     jobs = [
-        ("assembly.png", "assembly_preview.stl", "#8ab0ba", "ELBOW ASSEMBLY"),
-        ("fork.png", "print_fork_lateral.stl", "#7eb8c9", "PRINT  FORK"),
-        ("hub.png", "print_forearm_hub.stl", "#7eb8c9", "PRINT  FOREARM HUB"),
-        ("cuff.png", "print_cuff_forearm.stl", "#7eb8c9", "PRINT  FOREARM CUFF"),
+        ("worn.png", "assembly_worn.stl", "#8ab0ba", "WORN  ·  arm through cuffs, sheave outboard"),
+        ("assembly.png", "assembly_preview.stl", "#8ab0ba", "ELBOW  ·  no arm  ·  joint lateral"),
+        ("fork.png", "print_fork_lateral.stl", "#7eb8c9", "PRINT  LATERAL PLATE  ·  sheave mounts here"),
+        ("hub.png", "print_fork_medial.stl", "#7eb8c9", "PRINT  MEDIAL PLATE"),
+        ("cuff.png", "print_cuff_forearm.stl", "#7eb8c9", "PRINT  FOREARM CUFF  ·  arm goes through"),
         ("drum.png", "print_drum.stl", "#9aa3ad", "PRINT  DRUM  (not 15 kg)"),
-        ("sheave.png", "ref_sheave_DO_NOT_PRINT.stl", "#c4a35a", "BUY  3434T121 SHEAVE"),
+        ("sheave.png", "ref_sheave_DO_NOT_PRINT.stl", "#c4a35a", "BUY  3434T121  ·  lives outside the cuff"),
         ("anchor.png", "print_bowden_anchor.stl", "#7eb8c9", "PRINT  BOWDEN ANCHOR"),
         ("stop.png", "print_hard_stop.stl", "#7eb8c9", "PRINT  HARD STOP"),
+        ("arm.png", "ref_arm_ghost_DO_NOT_PRINT.stl", "#c4b8a8", "GHOST ARM  ·  do not print"),
     ]
     for name, src, color, title in jobs:
         print("render", name)
         render(STL / src, color, OUT / name, title)
     # contact sheet
-    fig, axes = plt.subplots(2, 4, figsize=(12.8, 6.4), dpi=110, facecolor=BG)
+    fig, axes = plt.subplots(2, 5, figsize=(16, 6.4), dpi=110, facecolor=BG)
     fig.subplots_adjust(0, 0, 1, 1, 0.01, 0.01)
     for ax, (name, _, _, title) in zip(axes.ravel(), jobs):
         ax.set_axis_off()

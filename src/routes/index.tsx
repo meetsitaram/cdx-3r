@@ -296,19 +296,20 @@ function Cables() {
 
 function Cad() {
   return (
-    <Section id="cad" kicker="04 — Build" title="Elbow first. Metal takes the load.">
+    <Section id="cad" kicker="04 — Build" title="Arm through the cuffs. Sheave outside.">
       <p className="mb-8 max-w-2xl text-base leading-relaxed text-muted">
-        Piece by piece. Elbow now, shoulder next, backpack after that. Printed
-        parts are the fixtures. The sheave, shaft, and tube are bought. 5 kg
-        garage on Jagwire. 15 kg only after 1/8 in wire rope.
+        The first CAD put the pulley in the elbow hole. That is not wearable.
+        This is a brace: C-cuffs around the arm, hinge axis through the
+        epicondyles, McMaster sheave on the <em>lateral</em> plate — outboard
+        of the cuff wall. Nothing is bolted through flesh.
       </p>
       <img
-        src="/cad/elbow/preview/assembly.png"
-        alt="Elbow assembly preview — forks, sheave, cuffs"
+        src="/cad/elbow/preview/worn.png"
+        alt="Wearable elbow: ghost arm through cuffs, sheave outboard on the lateral plate"
         className="mb-4 w-full rounded-lg border border-border"
       />
       <div className="mb-10 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        {ELBOW_PREVIEWS.filter((p) => p.title !== "Assembly").map((p) => (
+        {ELBOW_PREVIEWS.filter((p) => !p.title.startsWith("Worn")).map((p) => (
           <figure key={p.src} className="overflow-hidden rounded-lg border border-border bg-surface">
             <img src={p.src} alt={p.title} className="aspect-[3/2] w-full object-cover" />
             <figcaption className="px-3 py-2 font-mono text-[10px] tracking-[0.16em] text-subtle uppercase">

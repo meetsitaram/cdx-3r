@@ -83,7 +83,10 @@ Piece by piece. **Elbow is first.**
 - [cad/elbow/](cad/elbow/) — McMaster sheave, printable forks/cuffs, physics
 Open the site **Build** section for stills (and an optional 3D orbit). GitHub itself does not play STLs.
 
-![Elbow assembly](public/cad/elbow/preview/assembly.png)
+![Elbow worn — arm through cuffs, sheave outboard](public/cad/elbow/preview/worn.png)
+
+The sheave sits on the **lateral plate**, outside the cuff wall. The wearer occupies the rings. Two hinge stubs — nothing through the arm.
+
 
 | Sheave (buy) | Fork (print) | Cuff (print) |
 |---|---|---|

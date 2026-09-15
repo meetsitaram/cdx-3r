@@ -203,23 +203,22 @@ export const ELBOW_BUY = [
 ] as const;
 
 export const ELBOW_PRINT = [
-  { file: "print_fork_lateral.stl", note: "PETG, 5 walls, flat on bed" },
-  { file: "print_fork_medial.stl", note: "Mirror. Inserts from the outside" },
-  { file: "print_forearm_hub.stl", note: "PA12-CF if you have it" },
-  { file: "print_cuff_forearm.stl", note: "C-cuff, foam inside" },
-  { file: "print_cuff_upper.stl", note: "~80 mm proximal of the axis" },
-  { file: "print_bowden_anchor.stl", note: "Print two. 5 mm ferrule seat" },
-  { file: "print_hard_stop.stl", note: "Hits before your elbow does" },
-  { file: "print_drum.stl", note: "Only if the McMaster sheave is late. Not 15 kg" },
+  { file: "print_fork_lateral.stl", note: "Lateral plate. Sheave bolts here, outside the cuff." },
+  { file: "print_fork_medial.stl", note: "Medial hinge. No sheave. Completes the yoke." },
+  { file: "print_cuff_forearm.stl", note: "C-cuff. Arm goes through. Foam inside." },
+  { file: "print_cuff_upper.stl", note: "Same, ~95 mm proximal of the axis." },
+  { file: "print_bowden_anchor.stl", note: "Print two. On the lateral plate, not on the cuff ID." },
+  { file: "print_hard_stop.stl", note: "Hits before your elbow does." },
+  { file: "print_drum.stl", note: "Only if the McMaster sheave is late. Not 15 kg." },
 ] as const;
 
 export const ELBOW_PREVIEWS = [
-  { src: "/cad/elbow/preview/assembly.png", title: "Assembly" },
-  { src: "/cad/elbow/preview/sheave.png", title: "Buy — sheave" },
-  { src: "/cad/elbow/preview/fork.png", title: "Print — fork" },
-  { src: "/cad/elbow/preview/hub.png", title: "Print — hub" },
-  { src: "/cad/elbow/preview/cuff.png", title: "Print — cuff" },
-  { src: "/cad/elbow/preview/drum.png", title: "Print — drum" },
-  { src: "/cad/elbow/preview/anchor.png", title: "Print — anchor" },
-  { src: "/cad/elbow/preview/stop.png", title: "Print — stop" },
+  { src: "/cad/elbow/preview/worn.png", title: "Worn — arm through, sheave outboard" },
+  { src: "/cad/elbow/preview/assembly.png", title: "Brace only" },
+  { src: "/cad/elbow/preview/sheave.png", title: "Buy — sheave (lateral)" },
+  { src: "/cad/elbow/preview/fork.png", title: "Print — lateral plate" },
+  { src: "/cad/elbow/preview/hub.png", title: "Print — medial plate" },
+  { src: "/cad/elbow/preview/cuff.png", title: "Print — cuff (arm goes through)" },
+  { src: "/cad/elbow/preview/anchor.png", title: "Print — Bowden anchor" },
+  { src: "/cad/elbow/preview/stop.png", title: "Print — hard stop" },
 ] as const;

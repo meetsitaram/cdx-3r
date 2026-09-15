@@ -2,19 +2,19 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 const PARTS = [
-  { id: "assembly_preview", label: "Assembly", file: "/cad/elbow/assembly_preview.stl", color: 0x8aa0a8 },
-  { id: "print_fork_lateral", label: "Fork", file: "/cad/elbow/print_fork_lateral.stl", color: 0x7eb8c9 },
-  { id: "print_forearm_hub", label: "Hub", file: "/cad/elbow/print_forearm_hub.stl", color: 0x7eb8c9 },
+  { id: "worn", label: "Worn", file: "/cad/elbow/assembly_worn.stl", color: 0x8aa0a8 },
+  { id: "assembly_preview", label: "Brace", file: "/cad/elbow/assembly_preview.stl", color: 0x8aa0a8 },
+  { id: "print_fork_lateral", label: "Lateral plate", file: "/cad/elbow/print_fork_lateral.stl", color: 0x7eb8c9 },
+  { id: "print_fork_medial", label: "Medial plate", file: "/cad/elbow/print_fork_medial.stl", color: 0x7eb8c9 },
   { id: "print_cuff_forearm", label: "Cuff", file: "/cad/elbow/print_cuff_forearm.stl", color: 0x7eb8c9 },
-  { id: "print_drum", label: "Drum (print)", file: "/cad/elbow/print_drum.stl", color: 0x9aa3ad },
+  { id: "print_drum", label: "Drum", file: "/cad/elbow/print_drum.stl", color: 0x9aa3ad },
   { id: "print_bowden_anchor", label: "Anchor", file: "/cad/elbow/print_bowden_anchor.stl", color: 0x7eb8c9 },
-  { id: "print_hard_stop", label: "Stop", file: "/cad/elbow/print_hard_stop.stl", color: 0x7eb8c9 },
   { id: "ref_sheave", label: "Sheave (buy)", file: "/cad/elbow/ref_sheave_DO_NOT_PRINT.stl", color: 0xc4a35a },
 ] as const;
 
 export function CadViewer() {
   const host = useRef<HTMLDivElement>(null);
-  const [part, setPart] = useState<(typeof PARTS)[number]["id"]>("assembly_preview");
+  const [part, setPart] = useState<(typeof PARTS)[number]["id"]>("worn");
   const [status, setStatus] = useState("Loading STL…");
 
   useEffect(() => {
