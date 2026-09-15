@@ -81,10 +81,14 @@ Piece by piece. **Elbow is first.**
 
 - [cad/README.md](cad/README.md) — order of work
 - [cad/elbow/](cad/elbow/) — McMaster sheave, printable forks/cuffs, physics
-Open the site **Build** section — orbit the STLs in the browser. Or:
+Open the site **Build** section for stills (and an optional 3D orbit). GitHub itself does not play STLs.
 
-- STL → PrusaSlicer / Bambu / Blender
-- `.scad` → [OpenSCAD](https://openscad.org/)
+![Elbow assembly](public/cad/elbow/preview/assembly.png)
+
+| Sheave (buy) | Fork (print) | Cuff (print) |
+|---|---|---|
+| ![sheave](public/cad/elbow/preview/sheave.png) | ![fork](public/cad/elbow/preview/fork.png) | ![cuff](public/cad/elbow/preview/cuff.png) |
+
 
 
 Do not print `ref_sheave_DO_NOT_PRINT.stl`. Buy [3434T121](https://www.mcmaster.com/3434T121/).

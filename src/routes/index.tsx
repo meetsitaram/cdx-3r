@@ -10,6 +10,7 @@ import {
   ELBOW_BUY,
   ELBOW_HUMAN,
   ELBOW_PHYSICS,
+  ELBOW_PREVIEWS,
   ELBOW_PRINT,
   GALLERY,
   MOTION,
@@ -301,7 +302,29 @@ function Cad() {
         parts are the fixtures. The sheave, shaft, and tube are bought. 5 kg
         garage on Jagwire. 15 kg only after 1/8 in wire rope.
       </p>
-      <CadViewer />
+      <img
+        src="/cad/elbow/preview/assembly.png"
+        alt="Elbow assembly preview — forks, sheave, cuffs"
+        className="mb-4 w-full rounded-lg border border-border"
+      />
+      <div className="mb-10 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {ELBOW_PREVIEWS.filter((p) => p.title !== "Assembly").map((p) => (
+          <figure key={p.src} className="overflow-hidden rounded-lg border border-border bg-surface">
+            <img src={p.src} alt={p.title} className="aspect-[3/2] w-full object-cover" />
+            <figcaption className="px-3 py-2 font-mono text-[10px] tracking-[0.16em] text-subtle uppercase">
+              {p.title}
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+      <details className="mb-10 rounded-lg border border-border bg-surface p-4">
+        <summary className="cursor-pointer font-mono text-xs tracking-[0.18em] text-muted uppercase">
+          Orbit in 3D (WebGL)
+        </summary>
+        <div className="mt-4">
+          <CadViewer />
+        </div>
+      </details>
       <ol className="mb-10 grid gap-3 sm:grid-cols-5">
         {CAD_STAGES.map((s) => (
           <li key={s.n} className="rounded-lg border border-border bg-surface p-4">

@@ -212,3 +212,14 @@ export const ELBOW_PRINT = [
   { file: "print_hard_stop.stl", note: "Hits before your elbow does" },
   { file: "print_drum.stl", note: "Only if the McMaster sheave is late. Not 15 kg" },
 ] as const;
+
+export const ELBOW_PREVIEWS = [
+  { src: "/cad/elbow/preview/assembly.png", title: "Assembly" },
+  { src: "/cad/elbow/preview/sheave.png", title: "Buy — sheave" },
+  { src: "/cad/elbow/preview/fork.png", title: "Print — fork" },
+  { src: "/cad/elbow/preview/hub.png", title: "Print — hub" },
+  { src: "/cad/elbow/preview/cuff.png", title: "Print — cuff" },
+  { src: "/cad/elbow/preview/drum.png", title: "Print — drum" },
+  { src: "/cad/elbow/preview/anchor.png", title: "Print — anchor" },
+  { src: "/cad/elbow/preview/stop.png", title: "Print — stop" },
+] as const;

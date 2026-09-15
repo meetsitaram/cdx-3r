@@ -22,7 +22,7 @@ export function CadViewer() {
     if (!el) return;
     let dead = false;
     let renderer: import("three").WebGLRenderer | undefined;
-    let controls: import("three/addons/controls/OrbitControls.js").OrbitControls | undefined;
+    let controls: import("three/examples/jsm/controls/OrbitControls.js").OrbitControls | undefined;
     let frame = 0;
     let ro: ResizeObserver | undefined;
     let geoDispose: (() => void) | undefined;
@@ -30,8 +30,8 @@ export function CadViewer() {
 
     (async () => {
       const THREE = await import("three");
-      const { OrbitControls } = await import("three/addons/controls/OrbitControls.js");
-      const { STLLoader } = await import("three/addons/loaders/STLLoader.js");
+      const { OrbitControls } = await import("three/examples/jsm/controls/OrbitControls.js");
+      const { STLLoader } = await import("three/examples/jsm/loaders/STLLoader.js");
       if (dead || !el) return;
 
       const scene = new THREE.Scene();
