@@ -11,7 +11,14 @@
     "cable_el": "#38bdf8",
     "cable_flex": "#e879f9",
     "cable_abd": "#818cf8",
-    "ferrule": "#22c55e"
+    "ferrule": "#22c55e",
+    "ar_ua": "#1f2328",
+    "ar_fa": "#252a31",
+    "ar_deltoid": "#1c2024",
+    "ar_scapula": "#2a3038",
+    "ar_pack": "#16191d",
+    "ar_lid": "#1a1e24",
+    "ar_led": "#3b82f6"
   },
   "layers": {
     "human": "#f3c6a5",
@@ -69,6 +76,13 @@
     "el_cable_flex": "#e879f9",
     "el_cable_ext": "#818cf8",
     "el_clamp": "#fb7185",
-    "el_stop": "#facc15"
+    "el_stop": "#facc15",
+    "ar_ua": "#1f2328",
+    "ar_fa": "#252a31",
+    "ar_deltoid": "#1c2024",
+    "ar_scapula": "#2a3038",
+    "ar_pack": "#16191d",
+    "ar_lid": "#1a1e24",
+    "ar_led": "#3b82f6"
   }
 }

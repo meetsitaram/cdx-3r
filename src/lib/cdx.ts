@@ -150,8 +150,8 @@ export const CAD_STAGES = [
   { n: "01", name: "Elbow", status: "Done", blurb: "Hinge, McMaster sheave, printed forks and cuffs." },
   { n: "02", name: "Shoulder", status: "Done", blurb: "Flexion (lateral) + abduction (posterior)." },
   { n: "03", name: "Backpack", status: "Done", blurb: "3× D6374 + 10:1, Hailong 48 V, 3× ODrive S1." },
-  { n: "04", name: "Connect", status: "Now", blurb: "One system. Saddle + hip belt take the weight, not the biceps." },
-  { n: "05", name: "Armor", status: "Last", blurb: "Plates on the structure. Straps. Not costume first." },
+  { n: "04", name: "Connect", status: "Done", blurb: "One system. Saddle + hip belt take the weight, not the biceps." },
+  { n: "05", name: "Armor", status: "Now", blurb: "Carbon clamshells screw onto the cuffs, scapula, and pack. No load." },
 ] as const;
 
 export const ELBOW_HUMAN = [
@@ -433,5 +433,39 @@ export const SYSTEM_SWATCHES = [
   { id: "cable_el", label: "Elbow cables", hex: "#38bdf8" },
   { id: "cable_flex", label: "Flexion cables", hex: "#e879f9" },
   { id: "housing", label: "Bowden housing", hex: "#1f2937" },
+] as const;
+
+export const ARMOR_PRINT = [
+  { file: "print_fairing_ua.stl", note: "Upper-arm clamshell. 2 mm over the cuff. 4× M4." },
+  { file: "print_fairing_fa.stl", note: "Forearm clamshell. 4× M4." },
+  { file: "print_fairing_deltoid.stl", note: "Deltoid cap. Sheave stays visible. 3× M4." },
+  { file: "print_fairing_scapula.stl", note: "Lid over the scapula plate. 4× M4." },
+  { file: "print_fairing_pack_tub.stl", note: "Pack tub. Bolts to the printed frame." },
+  { file: "print_fairing_pack_lid.stl", note: "Pack lid. Three drum windows. Cable exit top-right." },
+] as const;
+
+export const ARMOR_SWATCHES = [
+  { id: "ua", label: "UA clamshell", hex: "#1f2328" },
+  { id: "fa", label: "Forearm clamshell", hex: "#252a31" },
+  { id: "deltoid", label: "Deltoid cap", hex: "#1c2024" },
+  { id: "scapula", label: "Scapula lid", hex: "#2a3038" },
+  { id: "pack", label: "Pack tub", hex: "#16191d" },
+  { id: "lid", label: "Pack lid", hex: "#1a1e24" },
+  { id: "led", label: "LED channel", hex: "#3b82f6" },
+] as const;
+
+export const ARMOR_BUY = [
+  { item: "M4 × 10 mm BHCS", sku: "91292A115", url: "https://www.mcmaster.com/91292A115/", note: "Fairing screws. 20×." },
+  { item: "M4 brass insert", sku: "94180A311", url: "https://www.mcmaster.com/94180A311/", note: "Heat-set into the cuffs." },
+] as const;
+
+export const ARMOR_PREVIEWS = [
+  { src: "/cad/armor/preview/worn.png", title: "Worn — shells on skeleton" },
+  { src: "/cad/armor/preview/ua.png", title: "Print — UA clamshell" },
+  { src: "/cad/armor/preview/fa.png", title: "Print — forearm" },
+  { src: "/cad/armor/preview/deltoid.png", title: "Print — deltoid cap" },
+  { src: "/cad/armor/preview/scapula.png", title: "Print — scapula lid" },
+  { src: "/cad/armor/preview/pack.png", title: "Print — pack tub" },
+  { src: "/cad/armor/preview/lid.png", title: "Print — pack lid" },
 ] as const;
 

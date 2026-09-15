@@ -26,6 +26,7 @@ def _load(name, path):
 
 sh = _load("shoulder_mod", CAD / "shoulder" / "build_stl.py")
 pk = _load("backpack_mod", CAD / "backpack" / "build_stl.py")
+ar = _load("armor_mod", CAD / "armor" / "build_stl.py")
 
 OUT = ROOT / "stl"
 PUB = Path("/workspace/public/cad/system")
@@ -51,6 +52,13 @@ PALETTE = {
     "cable_flex": "#e879f9",
     "cable_abd": "#818cf8",
     "ferrule": "#22c55e",
+    "ar_ua": "#1f2328",
+    "ar_fa": "#252a31",
+    "ar_deltoid": "#1c2024",
+    "ar_scapula": "#2a3038",
+    "ar_pack": "#16191d",
+    "ar_lid": "#1a1e24",
+    "ar_led": "#3b82f6",
 }
 
 R_PACK = np.array([[0.0, 0.0, -1.0], [0.0, 1.0, 0.0], [1.0, 0.0, 0.0]])
@@ -222,6 +230,21 @@ def pack_layers():
     return out
 
 
+def armor_layers():
+    led = place_elbow(ar.led_ua().add(ar.led_fa()))
+    led.add(ar.led_deltoid().rz(-90))
+    led.add(ar.pack_led().transformed(R_PACK, T_PACK))
+    return [
+        ("ar_ua", place_elbow(ar.fairing_ua()), PALETTE["ar_ua"]),
+        ("ar_fa", place_elbow(ar.fairing_fa()), PALETTE["ar_fa"]),
+        ("ar_deltoid", ar.fairing_deltoid().rz(-90), PALETTE["ar_deltoid"]),
+        ("ar_scapula", ar.fairing_scapula(), PALETTE["ar_scapula"]),
+        ("ar_pack", ar.pack_tub().transformed(R_PACK, T_PACK), PALETTE["ar_pack"]),
+        ("ar_lid", ar.pack_lid().transformed(R_PACK, T_PACK), PALETTE["ar_lid"]),
+        ("ar_led", led, PALETTE["ar_led"]),
+    ]
+
+
 def assembly_layers(with_human=True):
     layers = []
     if with_human:
@@ -241,6 +264,7 @@ def assembly_layers(with_human=True):
     layers += pack_layers()
     layers += shoulder_layers()
     layers += elbow_layers()
+    layers += armor_layers()
     return layers
 
 

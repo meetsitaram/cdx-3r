@@ -1,0 +1,29 @@
+{
+  "palette": {
+    "ghost_cuff": "#5ee0ff",
+    "ghost_frame": "#94a3b8",
+    "ua": "#1f2328",
+    "fa": "#252a31",
+    "deltoid": "#1c2024",
+    "scapula": "#2a3038",
+    "pack": "#16191d",
+    "lid": "#1a1e24",
+    "bezel": "#3a414c",
+    "led": "#3b82f6",
+    "screw": "#c5cad3"
+  },
+  "layers": {
+    "ghost_ua": "#5ee0ff",
+    "ghost_fa": "#5ee0ff",
+    "ghost_deltoid": "#5ee0ff",
+    "ghost_frame": "#94a3b8",
+    "ua": "#1f2328",
+    "fa": "#252a31",
+    "deltoid": "#1c2024",
+    "scapula": "#2a3038",
+    "pack": "#16191d",
+    "lid": "#1a1e24",
+    "led": "#3b82f6",
+    "screw": "#c5cad3"
+  }
+}

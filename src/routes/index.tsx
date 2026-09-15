@@ -27,6 +27,10 @@ import {
   SYSTEM_PREVIEWS,
   SYSTEM_PRINT,
   SYSTEM_SWATCHES,
+  ARMOR_BUY,
+  ARMOR_PREVIEWS,
+  ARMOR_PRINT,
+  ARMOR_SWATCHES,
   GALLERY,
   MOTION,
   SPONSOR_SPLIT,
@@ -638,6 +642,65 @@ function Cad() {
             </li>
           ))}
         </ul>
+      </div>
+
+      <h3 className="mt-16 font-display text-2xl tracking-wide text-fg">05 — Carbon shells, not a new skeleton</h3>
+      <p className="mt-3 mb-8 max-w-2xl text-base leading-relaxed text-muted">
+        Split fairings that <strong className="text-fg">screw onto the cuffs, scapula, and pack
+        frame</strong>. 2 mm slip. They take no torque. Sheaves stay exposed.
+        Pack lid has three drum windows. Print PETG-CF, or wrap sanded PETG.
+      </p>
+      <img
+        src="/cad/armor/preview/worn.png"
+        alt="Carbon fairings over the cyan skeleton cuffs and pack frame"
+        className="mb-4 w-full rounded-lg border border-border"
+      />
+      <LazyCadViewer kit="armor" label="Orbit armor shells in 3D — tap Load 3D" />
+      <ul className="mb-8 flex flex-wrap gap-x-4 gap-y-2">
+        {ARMOR_SWATCHES.map((s) => (
+          <li key={s.id} className="flex items-center gap-2 font-mono text-[11px] tracking-[0.12em] text-muted uppercase">
+            <span className="h-3 w-3 rounded-sm border border-border" style={{ background: s.hex }} />
+            {s.label}
+          </li>
+        ))}
+      </ul>
+      <div className="mb-10 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {ARMOR_PREVIEWS.filter((p) => !p.title.startsWith("Worn")).map((p) => (
+          <figure key={p.src} className="overflow-hidden rounded-lg border border-border bg-surface">
+            <img src={p.src} alt={p.title} className="aspect-[3/2] w-full object-cover" />
+            <figcaption className="px-3 py-2 font-mono text-[10px] tracking-[0.16em] text-subtle uppercase">
+              {p.title}
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+      <div className="grid gap-8 lg:grid-cols-2">
+        <div>
+          <h3 className="font-display text-2xl tracking-wide text-fg">Buy (M4)</h3>
+          <ul className="mt-4 divide-y divide-border border border-border rounded-lg">
+            {ARMOR_BUY.map((r) => (
+              <li key={r.sku} className="flex flex-col gap-1 p-4">
+                <a href={r.url} className="font-mono text-sm text-accent hover:underline" target="_blank" rel="noreferrer">
+                  {r.item} · {r.sku}
+                </a>
+                <span className="text-sm text-muted">{r.note}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h3 className="font-display text-2xl tracking-wide text-fg">Print (fairings)</h3>
+          <ul className="mt-4 divide-y divide-border border border-border rounded-lg">
+            {ARMOR_PRINT.map((p) => (
+              <li key={p.file} className="flex flex-col gap-1 p-4 sm:flex-row sm:items-baseline sm:justify-between">
+                <a href={`/cad/armor/${p.file}`} download className="font-mono text-sm text-accent hover:underline">
+                  {p.file}
+                </a>
+                <span className="text-sm text-muted">{p.note}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </Section>
   );
