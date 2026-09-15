@@ -143,32 +143,8 @@ const KITS = {
   },
   system: {
     prefix: "/cad/system",
-    worn: [
-      "human",
-      "saddle",
-      "yoke",
-      "beam",
-      "belt",
-      "park",
-      "strap",
-      "ferrule",
-      "housing",
-      "cable_el",
-      "cable_flex",
-      "cable_abd",
-      "pk_frame",
-      "pk_battery",
-      "pk_motor",
-      "pk_bulkhead",
-      "sh_sheave_flex",
-      "sh_sheave_abd",
-      "sh_cuff",
-      "el_cuff_upper",
-      "el_cuff_forearm",
-      "el_sheave",
-      "el_lateral",
-    ],
-    brace: ["saddle", "yoke", "beam", "belt", "park", "pk_frame", "pk_battery", "pk_motor", "sh_sheave_flex", "el_sheave"],
+    worn: ["human", "saddle", "yoke", "beam", "belt", "park"],
+    brace: ["saddle", "yoke", "beam", "belt", "park"],
     fallback: "/cad/system/assembly_worn.stl",
     swatches: {
       human: "#f3c6a5",
@@ -177,23 +153,6 @@ const KITS = {
       beam: "#94a3b8",
       belt: "#78716c",
       park: "#f97316",
-      strap: "#a8a29e",
-      ferrule: "#22c55e",
-      housing: "#1f2937",
-      cable_el: "#38bdf8",
-      cable_flex: "#e879f9",
-      cable_abd: "#818cf8",
-      pk_frame: "#f2f4f7",
-      pk_battery: "#14532d",
-      pk_motor: "#111215",
-      pk_bulkhead: "#22c55e",
-      sh_sheave_flex: "#ffc93c",
-      sh_sheave_abd: "#f97316",
-      sh_cuff: "#5ee0ff",
-      el_cuff_upper: "#12b5d4",
-      el_cuff_forearm: "#5ee0ff",
-      el_sheave: "#ffc93c",
-      el_lateral: "#f2f4f7",
     },
     ghost: new Set(["human"]),
     solo: [
@@ -207,10 +166,6 @@ const KITS = {
 } as const;
 
 type Kit = keyof typeof KITS;
-
-function hexToInt(hex: string) {
-  return parseInt(hex.replace("#", ""), 16);
-}
 
 async function loadThree() {
   const THREE = await import("three");
@@ -241,52 +196,60 @@ async function stlGeometry(THREE: typeof import("three"), url: string) {
   return geo;
 }
 
+const STILL: Record<Kit, string> = {
+  elbow: "/cad/elbow/preview/worn.png",
+  shoulder: "/cad/shoulder/preview/worn.png",
+  backpack: "/cad/backpack/preview/worn.png",
+  system: "/cad/system/preview/worn.png",
+};
+
 export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
   const spec = KITS[kit];
   const host = useRef<HTMLDivElement>(null);
   const [part, setPart] = useState("worn");
-  const [status, setStatus] = useState("Loading STL…");
+  const [status, setStatus] = useState("Still loaded. Tap Load 3D to orbit.");
+  const [live, setLive] = useState(false);
 
   useEffect(() => {
+    if (!live) return;
     const el = host.current;
     if (!el) return;
     let dead = false;
-    let started = false;
     let renderer: import("three").WebGLRenderer | undefined;
     let controls: InstanceType<typeof import("three/examples/jsm/controls/OrbitControls.js").OrbitControls> | undefined;
     let frame = 0;
     const disposers: Array<() => void> = [];
-    let tries = 0;
 
     const fail = (err: unknown) => {
       if (!dead) setStatus(err instanceof Error ? err.message : "Could not load STL");
     };
 
     const boot = async () => {
-      if (dead || started) return;
-      if (el.clientWidth < 16 || el.clientHeight < 16) {
-        if (tries++ < 40) window.setTimeout(() => void boot().catch(fail), 50);
+      if (dead) return;
+      if (el.clientWidth < 16) {
+        window.setTimeout(() => void boot().catch(fail), 80);
         return;
       }
-      started = true;
       setStatus("Loading STL…");
-
       const { THREE, OrbitControls } = await loadThree();
       if (dead) return;
 
       const scene = new THREE.Scene();
       scene.background = new THREE.Color(0x121214);
       const camera = new THREE.PerspectiveCamera(42, 1, 0.5, 8000);
-      try {
-        renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false, powerPreference: "low-power" });
-      } catch {
-        setStatus("WebGL failed on this device");
+      const canvas = document.createElement("canvas");
+      const gl =
+        canvas.getContext("webgl2", { alpha: false, antialias: false, powerPreference: "low-power" }) ||
+        canvas.getContext("webgl", { alpha: false, antialias: false, powerPreference: "low-power" });
+      if (!gl) {
+        setStatus("WebGL blocked here — use the still");
         return;
       }
+      renderer = new THREE.WebGLRenderer({ canvas, context: gl as WebGLRenderingContext, antialias: false });
       renderer.setPixelRatio(1);
       el.replaceChildren(renderer.domElement);
 
-      scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+      scene.add(new THREE.AmbientLight(0xffffff, 0.55));
       const key = new THREE.DirectionalLight(0xffffff, 1.05);
       key.position.set(160, 200, 120);
       scene.add(key);
@@ -304,49 +267,33 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
       };
       resize();
 
-      const group = new THREE.Group();
-      scene.add(group);
-
-      const addGeo = (geo: import("three").BufferGeometry, color: number, ghost = false) => {
-        const mat = new THREE.MeshStandardMaterial({
-          color,
-          metalness: 0.22,
-          roughness: 0.52,
-          transparent: ghost,
-          opacity: ghost ? 0.4 : 1,
-          depthWrite: !ghost,
-        });
-        group.add(new THREE.Mesh(geo, mat));
-        disposers.push(() => {
-          geo.dispose();
-          mat.dispose();
-        });
-      };
-
-      const frameCam = () => {
-        const box = new THREE.Box3().setFromObject(group);
-        const center = box.getCenter(new THREE.Vector3());
-        const size = box.getSize(new THREE.Vector3()).length() || 180;
-        group.position.set(0, 0, 0);
-        group.position.sub(center);
-        if (kit === "system") camera.position.set(size * 0.9, size * 0.2, size * 0.45);
-        else camera.position.set(size * 0.55, size * 0.4, size * 0.75);
-        controls?.target.set(0, 0, 0);
-        controls?.update();
-      };
-
       const layerNames = part === "worn" ? spec.worn : part === "brace" ? spec.brace : null;
       const url = layerNames ? spec.fallback : (spec.solo.find((p) => p.id === part) ?? spec.solo[0]).file;
-      const first = await stlGeometry(THREE, url);
+      const geo = await stlGeometry(THREE, url);
       if (dead) {
-        first.dispose();
+        geo.dispose();
         return;
       }
-      if (!layerNames) first.center();
+      geo.center();
       const solo = spec.solo.find((p) => p.id === part);
-      addGeo(first, solo && !layerNames ? solo.color : 0x9aa8ae);
-      frameCam();
-      setStatus("Drag to orbit · scroll to zoom");
+      const mat = new THREE.MeshStandardMaterial({
+        color: solo && !layerNames ? solo.color : 0x9aa8ae,
+        metalness: 0.22,
+        roughness: 0.52,
+      });
+      const mesh = new THREE.Mesh(geo, mat);
+      scene.add(mesh);
+      disposers.push(() => {
+        geo.dispose();
+        mat.dispose();
+      });
+
+      const box = new THREE.Box3().setFromObject(mesh);
+      const size = box.getSize(new THREE.Vector3()).length() || 180;
+      camera.position.set(size * 0.7, size * 0.28, size * 0.5);
+      controls.target.set(0, 0, 0);
+      controls.update();
+      setStatus("Drag to orbit · pinch to zoom");
 
       const tick = () => {
         if (dead) return;
@@ -355,45 +302,18 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
         frame = requestAnimationFrame(tick);
       };
       tick();
-
-      if (!layerNames) return;
-      let colored = 0;
-      for (const name of layerNames) {
-        if (dead) return;
-        try {
-          const geo = await stlGeometry(THREE, `${spec.prefix}/asm/${name}.stl`);
-          if (colored === 0) {
-            disposers.forEach((d) => d());
-            disposers.length = 0;
-            group.clear();
-          }
-          addGeo(geo, hexToInt((spec.swatches as Record<string, string>)[name] ?? "#8aa0a8"), spec.ghost.has(name as never));
-          colored += 1;
-        } catch {
-          /* skip */
-        }
-      }
-      if (colored > 0 && !dead) frameCam();
     };
 
-    const ro = new ResizeObserver(() => {
-      void boot().catch(fail);
-      if (!renderer || !el) return;
-      renderer.setSize(Math.max(el.clientWidth, 16), Math.max(el.clientHeight, 16), false);
-    });
-    ro.observe(el);
     void boot().catch(fail);
-
     return () => {
       dead = true;
       cancelAnimationFrame(frame);
-      ro.disconnect();
       disposers.forEach((d) => d());
       controls?.dispose();
       renderer?.dispose();
       renderer?.domElement.remove();
     };
-  }, [part, kit, spec]);
+  }, [live, part, kit, spec]);
 
   return (
     <div className="mb-4">
@@ -402,10 +322,7 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
           <button
             key={id}
             type="button"
-            onClick={() => {
-              setStatus("Loading STL…");
-              setPart(id);
-            }}
+            onClick={() => setPart(id)}
             className={cn(
               "rounded-full border px-3 py-1 font-mono text-[11px] tracking-[0.14em] uppercase",
               part === id ? "border-accent bg-accent/15 text-accent" : "border-border bg-surface text-muted hover:text-fg",
@@ -418,10 +335,7 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
           <button
             key={p.id}
             type="button"
-            onClick={() => {
-              setStatus("Loading STL…");
-              setPart(p.id);
-            }}
+            onClick={() => setPart(p.id)}
             className={cn(
               "rounded-full border px-3 py-1 font-mono text-[11px] tracking-[0.14em] uppercase",
               part === p.id ? "border-accent bg-accent/15 text-accent" : "border-border bg-surface text-muted hover:text-fg",
@@ -430,9 +344,25 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
             {p.label}
           </button>
         ))}
+        <button
+          type="button"
+          onClick={() => {
+            setLive(true);
+            setStatus("Loading STL…");
+          }}
+          className={cn(
+            "rounded-full border px-3 py-1 font-mono text-[11px] tracking-[0.14em] uppercase",
+            live ? "border-accent bg-accent/15 text-accent" : "border-border bg-surface text-muted hover:text-fg",
+          )}
+        >
+          Load 3D
+        </button>
       </div>
       <div className="overflow-hidden rounded-lg border border-border bg-elevated">
-        <div ref={host} className="w-full" style={{ height: 460, minHeight: 460 }} />
+        <div className="relative w-full" style={{ height: 460 }}>
+          <img src={STILL[kit]} alt="" className="absolute inset-0 h-full w-full object-contain" />
+          {live ? <div ref={host} className="absolute inset-0" /> : null}
+        </div>
         <div className="border-t border-border px-4 py-2 font-mono text-[11px] tracking-[0.14em] text-subtle uppercase">
           {status}
         </div>
@@ -450,15 +380,15 @@ export function LazyCadViewer({
   startOpen?: boolean;
   label: string;
 }) {
-  const [live, setLive] = useState(startOpen);
+  const [open, setOpen] = useState(startOpen);
   return (
     <details
       open={startOpen}
-      onToggle={(e) => setLive((e.currentTarget as HTMLDetailsElement).open)}
+      onToggle={(e) => setOpen((e.currentTarget as HTMLDetailsElement).open)}
       className="mb-8 rounded-lg border border-border bg-surface p-4"
     >
       <summary className="cursor-pointer font-mono text-xs tracking-[0.18em] text-muted uppercase">{label}</summary>
-      <div className="mt-4">{live ? <CadViewer kit={kit} /> : null}</div>
+      <div className="mt-4">{open ? <CadViewer kit={kit} /> : null}</div>
     </details>
   );
 }
