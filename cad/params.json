@@ -31,32 +31,48 @@
       "width": 17.46,
       "bore": 19.05,
       "rope_max": "5/16 in",
-      "wll_lb": 1550
+      "wll_lb": 1550,
+      "bearing": "sleeve, built in",
+      "price": 25.15,
+      "upgrade": "3434T157 sealed ball, same 3/4 in bore"
     },
-    "shaft": {
-      "mcmaster": "1346K17",
-      "url": "https://www.mcmaster.com/1346K17/",
-      "dia": 19.05,
-      "len": 100,
-      "note": "3/4 in precision shaft, cut to 100 mm"
+    "shoulder_screw": {
+      "mcmaster": "91273A274",
+      "url": "https://www.mcmaster.com/91273A274/",
+      "shoulder_dia": 19.05,
+      "shoulder_len": 38.1,
+      "thread": "3/4-10",
+      "head_dia": 25.4,
+      "note": "18-8 SS hex-drive. Traps the sheave against the lateral plate."
     },
-    "tube": {
-      "od": 25.0,
-      "id": 22.0,
-      "note": "25 mm OD carbon or 6061 tube, McMaster 89995K31 family"
+    "nylock": {
+      "mcmaster": "90640A125",
+      "url": "https://www.mcmaster.com/90640A125/",
+      "thread": "3/4-10"
     },
-    "cable_garage": {
-      "name": "Jagwire 1.5 mm stainless + 5 mm brake housing",
-      "url": "https://www.jagwire.com/"
+    "washer_34": {
+      "mcmaster": "91083A033",
+      "url": "https://www.mcmaster.com/91083A033/"
     },
-    "cable_load": {
-      "name": "1/8 in 7x19 stainless wire rope",
-      "mcmaster": "3461T44"
+    "idler_bearing": {
+      "mcmaster": "6455K44",
+      "url": "https://www.mcmaster.com/6455K44/",
+      "trade": "608-2RS",
+      "id": 8,
+      "od": 22,
+      "width": 7,
+      "dynamic_lb": 1600,
+      "qty": 2,
+      "note": "Cable fairleads on the lateral plate. Press into printed cups. M8 bolt through."
+    },
+    "idler_bolt": {
+      "mcmaster": "91290A194",
+      "url": "https://www.mcmaster.com/91290A194/",
+      "size": "M8 x 25 SHCS"
     },
     "inserts": {
-      "m4": "McMaster 94180A351 heat-set M4",
-      "m3": "McMaster 94180A331 heat-set M3"
-    },
-    "bearings_optional": "Sheave 3434T121 already has a plain bearing. Do not add 608s unless you print the drum."
+      "m4": "https://www.mcmaster.com/94180A351/",
+      "m8": "https://www.mcmaster.com/94180A411/"
+    }
   }
 }

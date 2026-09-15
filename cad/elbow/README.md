@@ -18,6 +18,21 @@ This is an orthopedic-brace layout, not a pulley stuffed inside the elbow.
 - Medial plate: light hinge only. No through-bolt through flesh.
 - 90° work pose in the assembly: upper arm −X, forearm +Y.
 
+## Attach the real hardware
+
+Stack, outboard → inboard:
+
+1. **91273A274** 3/4 in shoulder screw (head outboard)
+2. 3/4 in washer
+3. **3434T121** sheave (sleeve bearing already in it)
+4. Lateral plate (printed) — 19.2 mm hole
+5. 3/4 in washer
+6. **90640A125** nylock
+
+Cable fairleads: press **6455K44** (608-2RS) into the two printed cups on the plate. **M8×25** through the bore into an M8 heat-set.
+
+Same 3/4 in hole takes **3434T157** (sealed ball, ~$133) if you want to upgrade the sheave later. Do not reprint.
+
 ## Physics
 
 Pitch radius r = 38.1 mm (3434T121). Lever ≈ 0.35 m.
@@ -33,4 +48,4 @@ Pitch radius r = 38.1 mm (3434T121). Lever ≈ 0.35 m.
 
 ## Buy / print
 
-Same BOM. New prints: `print_fork_lateral.stl` (the plate the sheave bolts to), `print_fork_medial.stl` (yoke). Do not print `ref_arm_ghost` or `ref_sheave`.
+See the site **Build** list. Do not print `ref_*` files.

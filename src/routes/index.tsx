@@ -303,6 +303,12 @@ function Cad() {
         epicondyles, McMaster sheave on the <em>lateral</em> plate — outboard
         of the cuff wall. Nothing is bolted through flesh.
       </p>
+      <p className="mb-8 max-w-2xl text-base leading-relaxed text-muted">
+        Real hardware, one stack: 3434T121 sheave on a 91273A274 3/4 in
+        shoulder screw, nylock on the inside of the plate. Two 608-2RS
+        (6455K44) press into printed cups as cable fairleads. Same hole takes
+        a 3434T157 ball-bearing sheave later — do not reprint.
+      </p>
       <img
         src="/cad/elbow/preview/worn.png"
         alt="Wearable elbow: ghost arm through cuffs, sheave outboard on the lateral plate"

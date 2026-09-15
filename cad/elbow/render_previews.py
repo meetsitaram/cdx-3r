@@ -66,7 +66,9 @@ def main():
         ("hub.png", "print_fork_medial.stl", "#7eb8c9", "PRINT  MEDIAL PLATE"),
         ("cuff.png", "print_cuff_forearm.stl", "#7eb8c9", "PRINT  FOREARM CUFF  ·  arm goes through"),
         ("drum.png", "print_drum.stl", "#9aa3ad", "PRINT  DRUM  (not 15 kg)"),
-        ("sheave.png", "ref_sheave_DO_NOT_PRINT.stl", "#c4a35a", "BUY  3434T121  ·  lives outside the cuff"),
+        ("sheave.png", "ref_sheave_DO_NOT_PRINT.stl", "#c4a35a", "BUY  3434T121 SHEAVE  ·  3/4 in bore"),
+        ("bearing.png", "ref_608_DO_NOT_PRINT.stl", "#c4a35a", "BUY  6455K44  608-2RS"),
+        ("screw.png", "ref_shoulder_screw_DO_NOT_PRINT.stl", "#9aa3ad", "BUY  91273A274 SHOULDER SCREW"),
         ("anchor.png", "print_bowden_anchor.stl", "#7eb8c9", "PRINT  BOWDEN ANCHOR"),
         ("stop.png", "print_hard_stop.stl", "#7eb8c9", "PRINT  HARD STOP"),
         ("arm.png", "ref_arm_ghost_DO_NOT_PRINT.stl", "#c4b8a8", "GHOST ARM  ·  do not print"),
@@ -75,7 +77,7 @@ def main():
         print("render", name)
         render(STL / src, color, OUT / name, title)
     # contact sheet
-    fig, axes = plt.subplots(2, 5, figsize=(16, 6.4), dpi=110, facecolor=BG)
+    fig, axes = plt.subplots(3, 4, figsize=(16, 9.6), dpi=110, facecolor=BG)
     fig.subplots_adjust(0, 0, 1, 1, 0.01, 0.01)
     for ax, (name, _, _, title) in zip(axes.ravel(), jobs):
         ax.set_axis_off()

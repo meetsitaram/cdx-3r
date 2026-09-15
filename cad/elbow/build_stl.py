@@ -16,8 +16,9 @@ PARAMS = json.loads((ROOT.parent / "params.json").read_text())
 
 N = 56
 SHEAVE = PARAMS["cots"]["sheave"]
-SHAFT = PARAMS["cots"]["shaft"]["dia"]
-TUBE = PARAMS["cots"]["tube"]["od"]
+IDLER = PARAMS["cots"]["idler_bearing"]
+SCREW = PARAMS["cots"]["shoulder_screw"]
+SHAFT = SHEAVE["bore"]
 HUMAN = PARAMS["human"]
 
 # Anatomical: origin = elbow flexion axis, through the epicondyles.
@@ -226,7 +227,9 @@ def lateral_plate() -> Mesh:
     m.add(annulus(28, SHAFT / 2 + 0.2, 8).move(0, 0, Z_PLATE))
     # Cuff standoffs
     m.add(box(-110, -80, -12, 12, FA_OD - 2, t1))
-    m.add(box(-12, 12, 64, 96, FA_OD - 2, t1))
+    # 608 cups — cable fairleads, press-fit 22 mm bearings
+    m.add(idler_cup().move(-95, 32, Z_PLATE + 6))
+    m.add(idler_cup().move(18, 95, Z_PLATE + 6))
     return m
 
 
@@ -240,7 +243,32 @@ def medial_plate() -> Mesh:
     return m
 
 
-def sheave() -> Mesh:
+def idler_cup() -> Mesh:
+    """Printed 608 housing. 22.3 mm ID, 8.3 mm through."""
+    m = annulus(14.0, 11.15, IDLER["width"] + 0.4)
+    m.add(annulus(14.0, 4.15, 2.5).move(0, 0, -(IDLER["width"] + 0.4) / 2 - 1.2))
+    return m
+
+
+def idler_bearing() -> Mesh:
+    """COTS 608-2RS envelope. Do not print."""
+    return annulus(IDLER["od"] / 2, IDLER["id"] / 2, IDLER["width"])
+
+
+def shoulder_screw() -> Mesh:
+    """91273A274: 3/4 in shoulder × 1.5 in, hex head outboard."""
+    m = Mesh()
+    # shoulder through sheave + plate
+    m.add(cylinder(SCREW["shoulder_dia"] / 2, SCREW["shoulder_len"]))
+    # hex approximated as cylinder
+    m.add(cylinder(SCREW["head_dia"] / 2, 12.5, z0=SCREW["shoulder_len"] / 2))
+    # threaded stub
+    m.add(cylinder(9.4, 16, z0=-SCREW["shoulder_len"] / 2 - 16))
+    return m
+
+
+def nylock() -> Mesh:
+    return cylinder(14.5, 10)
     return annulus(SHEAVE["od"] / 2, SHEAVE["bore"] / 2, SHEAVE["width"]).move(0, 0, Z_SHEAVE)
 
 
@@ -280,6 +308,10 @@ def ghost_arm() -> Mesh:
     return m
 
 
+def sheave() -> Mesh:
+    return annulus(SHEAVE["od"] / 2, SHEAVE["bore"] / 2, SHEAVE["width"]).move(0, 0, Z_SHEAVE)
+
+
 def assembly(with_arm=False) -> Mesh:
     m = Mesh()
     m.add(cuff_upper())
@@ -287,7 +319,13 @@ def assembly(with_arm=False) -> Mesh:
     m.add(lateral_plate())
     m.add(medial_plate())
     m.add(sheave())
-    m.add(shaft())
+    # Shoulder screw: head outboard of sheave, nut inboard of plate
+    screw_z = Z_SHEAVE + SHEAVE["width"] / 2 - SCREW["shoulder_len"] / 2 + 2
+    m.add(shoulder_screw().move(0, 0, screw_z))
+    m.add(nylock().move(0, 0, Z_PLATE - 10))
+    # Real 608-2RS in the cups
+    m.add(idler_bearing().move(-95, 32, Z_PLATE + 6))
+    m.add(idler_bearing().move(18, 95, Z_PLATE + 6))
     m.add(bowden())
     m.add(hard_stop())
     if with_arm:
@@ -307,7 +345,10 @@ def main():
         "print_drum": drum().move(0, 0, -Z_SHEAVE),  # print at origin
         "print_bowden_anchor": bowden().move(70, -28, -(Z_PLATE + 12)),
         "print_hard_stop": hard_stop().move(0, 36, -Z_PLATE),
+        "print_idler_cup": idler_cup(),
         "ref_sheave_DO_NOT_PRINT": sheave().move(0, 0, -Z_SHEAVE),
+        "ref_608_DO_NOT_PRINT": idler_bearing(),
+        "ref_shoulder_screw_DO_NOT_PRINT": shoulder_screw(),
         "ref_arm_ghost_DO_NOT_PRINT": ghost_arm(),
         "assembly_preview": assembly(False),
         "assembly_worn": assembly(True),
