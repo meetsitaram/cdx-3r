@@ -216,30 +216,41 @@ def cuff_forearm() -> Mesh:
 
 
 def lateral_plate() -> Mesh:
-    """Sagittal plate on the LATERAL side. Arm never goes through this."""
+    """UPPER-ARM plate. Housing stops here. Does not cross the elbow."""
     t0, t1 = Z_PLATE - 4, Z_PLATE + 4
     m = Mesh()
-    # Upper-arm rail (along -X)
-    m.add(box(-130, 18, -16, 16, t0, t1))
-    # Forearm rail (along +Y, 90° pose)
-    m.add(box(-16, 16, -18, 120, t0, t1))
-    # Hinge boss
+    m.add(box(-130, 8, -16, 16, t0, t1))
     m.add(annulus(28, SHAFT / 2 + 0.2, 8).move(0, 0, Z_PLATE))
-    # Cuff standoffs
     m.add(box(-110, -80, -12, 12, FA_OD - 2, t1))
-    # 608 cups — cable fairleads, press-fit 22 mm bearings
     m.add(idler_cup().move(-95, 32, Z_PLATE + 6))
-    m.add(idler_cup().move(18, 95, Z_PLATE + 6))
+    m.add(idler_cup().move(-40, -36, Z_PLATE + 6))
+    return m
+
+
+def distal_plate() -> Mesh:
+    """FOREARM plate. Bolts to the sheave and rotates with it."""
+    t0, t1 = Z_PLATE - 4, Z_PLATE + 4
+    m = Mesh()
+    m.add(box(-16, 16, 12, 120, t0, t1))
+    m.add(annulus(32, SHAFT / 2 + 0.4, 6).move(0, 0, Z_PLATE))
+    m.add(box(-12, 12, 64, 96, FA_OD - 2, t1))
     return m
 
 
 def medial_plate() -> Mesh:
-    """Light medial hinge. No sheave. Completes the yoke; arm still passes between."""
+    """Upper-arm medial hinge only."""
     z = -Z_PLATE
     m = Mesh()
-    m.add(box(-110, 12, -12, 12, z - 3, z + 3))
-    m.add(box(-12, 12, -12, 100, z - 3, z + 3))
+    m.add(box(-110, 8, -12, 12, z - 3, z + 3))
     m.add(annulus(22, SHAFT / 2 + 0.2, 6).move(0, 0, z))
+    return m
+
+
+def medial_distal() -> Mesh:
+    z = -Z_PLATE
+    m = Mesh()
+    m.add(box(-12, 12, 12, 100, z - 3, z + 3))
+    m.add(annulus(20, SHAFT / 2 + 0.4, 5).move(0, 0, z))
     return m
 
 
@@ -269,7 +280,6 @@ def shoulder_screw() -> Mesh:
 
 def nylock() -> Mesh:
     return cylinder(14.5, 10)
-    return annulus(SHEAVE["od"] / 2, SHEAVE["bore"] / 2, SHEAVE["width"]).move(0, 0, Z_SHEAVE)
 
 
 def drum() -> Mesh:
@@ -290,10 +300,90 @@ def shaft() -> Mesh:
     return m
 
 
+def rod(p0, p1, r=1.5) -> Mesh:
+    p0 = np.asarray(p0, float)
+    p1 = np.asarray(p1, float)
+    v = p1 - p0
+    L = float(np.linalg.norm(v))
+    if L < 0.8:
+        return Mesh()
+    z = v / L
+    tmp = np.array([1.0, 0.0, 0.0]) if abs(z[0]) < 0.9 else np.array([0.0, 1.0, 0.0])
+    x = np.cross(tmp, z)
+    x /= np.linalg.norm(x)
+    y = np.cross(z, x)
+    return cylinder(r, L, n=12, z0=0).transformed(np.column_stack([x, y, z]), p0)
+
+
+def polyline(pts, r=1.5) -> Mesh:
+    m = Mesh()
+    for a, b in zip(pts[:-1], pts[1:]):
+        m.add(rod(a, b, r))
+    return m
+
+
+def arc_pts(radius, z, deg0, deg1, steps=14):
+    an = np.linspace(math.radians(deg0), math.radians(deg1), steps)
+    return [np.array([radius * math.cos(a), radius * math.sin(a), z]) for a in an]
+
+
+def cable_flexor() -> Mesh:
+    """Inner: ferrule on upper plate → 608 → wrap sheave → clamp on forearm sheave."""
+    z_g = Z_SHEAVE
+    r = SHEAVE["pitch"] / 2
+    pts = [
+        np.array([-160.0, 22.0, Z_PLATE + 10]),  # from backpack, still in housing
+        np.array([-78.0, 26.0, Z_PLATE + 10]),  # ferrule
+        np.array([-95.0, 32.0, Z_PLATE + 6]),  # 608
+        np.array([-r - 4, -8.0, z_g]),
+        *arc_pts(r, z_g, 185, 85),
+    ]
+    return polyline(pts, 1.6)
+
+
+def cable_extensor() -> Mesh:
+    z_g = Z_SHEAVE
+    r = SHEAVE["pitch"] / 2
+    pts = [
+        np.array([-160.0, -22.0, Z_PLATE + 10]),
+        np.array([-78.0, -26.0, Z_PLATE + 10]),
+        np.array([-40.0, -36.0, Z_PLATE + 6]),
+        np.array([-r - 2, 10.0, z_g]),
+        *arc_pts(r, z_g, 175, 260),
+    ]
+    return polyline(pts, 1.6)
+
+
+def cable_clamp() -> Mesh:
+    """Stop on the sheave — inner is pinched here, not on the cuff."""
+    r = SHEAVE["pitch"] / 2 + 4
+    z = Z_SHEAVE
+    m = box(-6, 6, -5, 5, -5, 5).move(0, r, z)
+    m.add(box(-6, 6, -5, 5, -5, 5).move(-r * 0.2, -r * 0.95, z))
+    return m
+
+
+def housing() -> Mesh:
+    """5 mm Bowden. Stops at the green anchors. Does not wrap the sheave."""
+    m = polyline(
+        [np.array([-200.0, 22.0, Z_PLATE + 10]), np.array([-78.0, 26.0, Z_PLATE + 10])],
+        r=2.6,
+    )
+    m.add(
+        polyline(
+            [np.array([-200.0, -22.0, Z_PLATE + 10]), np.array([-78.0, -26.0, Z_PLATE + 10])],
+            r=2.6,
+        )
+    )
+    return m
+
+
 def bowden() -> Mesh:
-    m = box(-16, 16, -10, 10, -8, 8)
-    m.add(cylinder(5.5, 14).ry(90).move(-8, 0, 0))
-    return m.move(-70, 28, Z_PLATE + 12)
+    a = box(-16, 16, -10, 10, -8, 8)
+    a.add(cylinder(5.5, 14).ry(90).move(-8, 0, 0))
+    m = a.move(-70, 28, Z_PLATE + 12)
+    m.add(a.move(-70, -28, Z_PLATE + 12))
+    return m
 
 
 def hard_stop() -> Mesh:
@@ -316,6 +406,7 @@ PALETTE = {
     "cuff_upper": "#12b5d4",
     "cuff_forearm": "#5ee0ff",
     "lateral": "#f2f4f7",
+    "distal": "#cbd5e1",
     "medial": "#4b5568",
     "sheave": "#ffc93c",
     "screw": "#111215",
@@ -324,6 +415,10 @@ PALETTE = {
     "anchor": "#22c55e",
     "stop": "#facc15",
     "arm": "#f3c6a5",
+    "housing": "#1f2937",
+    "cable_flex": "#e879f9",
+    "cable_ext": "#818cf8",
+    "clamp": "#fb7185",
 }
 
 
@@ -333,16 +428,21 @@ def assembly_layers(with_arm=False):
         ("cuff_upper", cuff_upper(), PALETTE["cuff_upper"]),
         ("cuff_forearm", cuff_forearm(), PALETTE["cuff_forearm"]),
         ("lateral", lateral_plate(), PALETTE["lateral"]),
+        ("distal", distal_plate(), PALETTE["distal"]),
         ("medial", medial_plate(), PALETTE["medial"]),
         ("sheave", sheave(), PALETTE["sheave"]),
         ("screw", shoulder_screw().move(0, 0, screw_z), PALETTE["screw"]),
         ("nylock", nylock().move(0, 0, Z_PLATE - 10), PALETTE["nylock"]),
         (
             "bearing",
-            idler_bearing().move(-95, 32, Z_PLATE + 6).add(idler_bearing().move(18, 95, Z_PLATE + 6)),
+            idler_bearing().move(-95, 32, Z_PLATE + 6).add(idler_bearing().move(-40, -36, Z_PLATE + 6)),
             PALETTE["bearing"],
         ),
         ("anchor", bowden(), PALETTE["anchor"]),
+        ("housing", housing(), PALETTE["housing"]),
+        ("cable_flex", cable_flexor(), PALETTE["cable_flex"]),
+        ("cable_ext", cable_extensor(), PALETTE["cable_ext"]),
+        ("clamp", cable_clamp(), PALETTE["clamp"]),
         ("stop", hard_stop(), PALETTE["stop"]),
     ]
     if with_arm:
@@ -364,6 +464,7 @@ def main():
         "print_cuff_upper": cuff_upper(),
         "print_cuff_forearm": cuff_forearm(),
         "print_fork_lateral": lateral_plate(),
+        "print_fork_distal": distal_plate(),
         "print_fork_medial": medial_plate(),
         "print_forearm_hub": annulus(28, SHAFT / 2 + 0.2, 12),
         "print_drum": drum().move(0, 0, -Z_SHEAVE),  # print at origin

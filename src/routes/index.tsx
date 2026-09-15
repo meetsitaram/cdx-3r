@@ -310,8 +310,17 @@ function Cad() {
         (6455K44) press into printed cups as cable fairleads. Same hole takes
         a 3434T157 ball-bearing sheave later — do not reprint.
       </p>
+      <p className="mb-8 max-w-2xl text-base leading-relaxed text-muted">
+        Cable path: dark Bowden from the backpack{" "}
+        <strong className="text-fg">stops in the green ferrules</strong> on the
+        upper-arm plate. Pink / violet inners exit, turn on the orange 608s,
+        wrap the gold sheave, and{" "}
+        <strong className="text-fg">pinch in the pink clamps on the sheave</strong>
+        — which is bolted to the forearm plate. The cuff is not a cable
+        attachment. Housing never wraps the joint.
+      </p>
       <img
-        src="/cad/elbow/preview/worn.png?v=2"
+        src="/cad/elbow/preview/worn.png?v=3"
         alt="Wearable elbow: ghost arm through cuffs, sheave outboard on the lateral plate"
         className="mb-4 w-full rounded-lg border border-border"
       />

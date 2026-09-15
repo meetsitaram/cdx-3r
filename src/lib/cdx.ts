@@ -221,7 +221,8 @@ export const ELBOW_BUY = [
 ] as const;
 
 export const ELBOW_PRINT = [
-  { file: "print_fork_lateral.stl", note: "Lateral plate. Sheave bolts here, outside the cuff." },
+  { file: "print_fork_lateral.stl", note: "Upper-arm plate. Bowden housing stops here." },
+  { file: "print_fork_distal.stl", note: "Forearm plate. Bolts to the sheave. Rotates." },
   { file: "print_fork_medial.stl", note: "Medial hinge. No sheave. Completes the yoke." },
   { file: "print_cuff_forearm.stl", note: "C-cuff. Arm goes through. Foam inside." },
   { file: "print_cuff_upper.stl", note: "Same, ~95 mm proximal of the axis." },
@@ -232,8 +233,8 @@ export const ELBOW_PRINT = [
 ] as const;
 
 export const ELBOW_PREVIEWS = [
-  { src: "/cad/elbow/preview/worn.png?v=2", title: "Worn — arm through, sheave outboard" },
-  { src: "/cad/elbow/preview/assembly.png?v=2", title: "Brace only" },
+  { src: "/cad/elbow/preview/worn.png?v=3", title: "Worn — cables on the sheave" },
+  { src: "/cad/elbow/preview/assembly.png?v=3", title: "Brace only" },
   { src: "/cad/elbow/preview/sheave.png?v=2", title: "Buy — 3434T121 sheave" },
   { src: "/cad/elbow/preview/bearing.png?v=2", title: "Buy — 608-2RS" },
   { src: "/cad/elbow/preview/screw.png?v=2", title: "Buy — 3/4 in shoulder screw" },
@@ -248,12 +249,14 @@ export const ELBOW_SWATCHES = [
   { id: "arm", label: "Ghost arm", hex: "#f3c6a5" },
   { id: "cuff_upper", label: "Upper cuff", hex: "#12b5d4" },
   { id: "cuff_forearm", label: "Forearm cuff", hex: "#5ee0ff" },
-  { id: "lateral", label: "Lateral plate", hex: "#f2f4f7" },
+  { id: "lateral", label: "Upper-arm plate", hex: "#f2f4f7" },
+  { id: "distal", label: "Forearm plate", hex: "#cbd5e1" },
   { id: "medial", label: "Medial plate", hex: "#4b5568" },
   { id: "sheave", label: "3434T121 sheave", hex: "#ffc93c" },
-  { id: "screw", label: "Shoulder screw", hex: "#111215" },
-  { id: "bearing", label: "608-2RS", hex: "#ff6a1a" },
-  { id: "nylock", label: "Nylock", hex: "#ef4444" },
-  { id: "anchor", label: "Bowden anchor", hex: "#22c55e" },
-  { id: "stop", label: "Hard stop", hex: "#facc15" },
+  { id: "housing", label: "Bowden housing", hex: "#1f2937" },
+  { id: "cable_flex", label: "Flexor inner", hex: "#e879f9" },
+  { id: "cable_ext", label: "Extensor inner", hex: "#818cf8" },
+  { id: "clamp", label: "Cable clamp on sheave", hex: "#fb7185" },
+  { id: "anchor", label: "Housing ferrule (stops here)", hex: "#22c55e" },
+  { id: "bearing", label: "608 fairlead", hex: "#ff6a1a" },
 ] as const;

@@ -100,7 +100,24 @@ def render_layers(names: list[str], out: Path, title: str):
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
-    worn = ["arm", "cuff_upper", "cuff_forearm", "lateral", "medial", "sheave", "screw", "nylock", "bearing", "anchor", "stop"]
+    worn = [
+        "arm",
+        "cuff_upper",
+        "cuff_forearm",
+        "lateral",
+        "distal",
+        "medial",
+        "sheave",
+        "screw",
+        "nylock",
+        "bearing",
+        "anchor",
+        "housing",
+        "cable_flex",
+        "cable_ext",
+        "clamp",
+        "stop",
+    ]
     brace = [n for n in worn if n != "arm"]
     print("render worn (colored)")
     render_layers(worn, OUT / "worn.png", "WORN  ·  color by part")

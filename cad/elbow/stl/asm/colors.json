@@ -3,6 +3,7 @@
     "cuff_upper": "#12b5d4",
     "cuff_forearm": "#5ee0ff",
     "lateral": "#f2f4f7",
+    "distal": "#cbd5e1",
     "medial": "#4b5568",
     "sheave": "#ffc93c",
     "screw": "#111215",
@@ -10,19 +11,28 @@
     "bearing": "#ff6a1a",
     "anchor": "#22c55e",
     "stop": "#facc15",
-    "arm": "#f3c6a5"
+    "arm": "#f3c6a5",
+    "housing": "#1f2937",
+    "cable_flex": "#e879f9",
+    "cable_ext": "#818cf8",
+    "clamp": "#fb7185"
   },
   "layers": {
     "arm": "#f3c6a5",
     "cuff_upper": "#12b5d4",
     "cuff_forearm": "#5ee0ff",
     "lateral": "#f2f4f7",
+    "distal": "#cbd5e1",
     "medial": "#4b5568",
     "sheave": "#ffc93c",
     "screw": "#111215",
     "nylock": "#ef4444",
     "bearing": "#ff6a1a",
     "anchor": "#22c55e",
+    "housing": "#1f2937",
+    "cable_flex": "#e879f9",
+    "cable_ext": "#818cf8",
+    "clamp": "#fb7185",
     "stop": "#facc15"
   }
 }
