@@ -143,8 +143,32 @@ const KITS = {
   },
   system: {
     prefix: "/cad/system",
-    worn: ["human", "saddle", "yoke", "beam", "belt", "park"],
-    brace: ["saddle", "yoke", "beam", "belt", "park"],
+    worn: [
+      "human",
+      "saddle",
+      "yoke",
+      "beam",
+      "belt",
+      "park",
+      "strap",
+      "ferrule",
+      "housing",
+      "cable_el",
+      "cable_flex",
+      "cable_abd",
+      "pk_frame",
+      "pk_battery",
+      "pk_motor",
+      "pk_bulkhead",
+      "sh_sheave_flex",
+      "sh_sheave_abd",
+      "sh_cuff",
+      "el_cuff_upper",
+      "el_cuff_forearm",
+      "el_sheave",
+      "el_lateral",
+    ],
+    brace: ["saddle", "yoke", "beam", "belt", "park", "pk_frame", "pk_battery", "pk_motor", "sh_sheave_flex", "el_sheave"],
     fallback: "/cad/system/assembly_worn.stl",
     swatches: {
       human: "#f3c6a5",
@@ -153,6 +177,23 @@ const KITS = {
       beam: "#94a3b8",
       belt: "#78716c",
       park: "#f97316",
+      strap: "#a8a29e",
+      ferrule: "#22c55e",
+      housing: "#1f2937",
+      cable_el: "#38bdf8",
+      cable_flex: "#e879f9",
+      cable_abd: "#818cf8",
+      pk_frame: "#f2f4f7",
+      pk_battery: "#14532d",
+      pk_motor: "#111215",
+      pk_bulkhead: "#22c55e",
+      sh_sheave_flex: "#ffc93c",
+      sh_sheave_abd: "#f97316",
+      sh_cuff: "#5ee0ff",
+      el_cuff_upper: "#12b5d4",
+      el_cuff_forearm: "#5ee0ff",
+      el_sheave: "#ffc93c",
+      el_lateral: "#f2f4f7",
     },
     ghost: new Set(["human"]),
     solo: [
@@ -166,6 +207,10 @@ const KITS = {
 } as const;
 
 type Kit = keyof typeof KITS;
+
+function hexToInt(hex: string) {
+  return parseInt(hex.replace("#", ""), 16);
+}
 
 async function loadThree() {
   const THREE = await import("three");
@@ -267,6 +312,36 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
       };
       resize();
 
+      const group = new THREE.Group();
+      scene.add(group);
+
+      const addMesh = (g: import("three").BufferGeometry, color: number, ghost = false, metal = false) => {
+        const m = new THREE.MeshStandardMaterial({
+          color,
+          metalness: metal ? 0.65 : 0.2,
+          roughness: metal ? 0.35 : 0.52,
+          transparent: ghost,
+          opacity: ghost ? 0.4 : 1,
+          depthWrite: !ghost,
+        });
+        group.add(new THREE.Mesh(g, m));
+        disposers.push(() => {
+          g.dispose();
+          m.dispose();
+        });
+      };
+
+      const frameCam = () => {
+        const box = new THREE.Box3().setFromObject(group);
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3()).length() || 180;
+        group.position.set(0, 0, 0);
+        group.position.sub(center);
+        camera.position.set(size * 0.7, size * 0.28, size * 0.5);
+        controls?.target.set(0, 0, 0);
+        controls?.update();
+      };
+
       const layerNames = part === "worn" ? spec.worn : part === "brace" ? spec.brace : null;
       const url = layerNames ? spec.fallback : (spec.solo.find((p) => p.id === part) ?? spec.solo[0]).file;
       const geo = await stlGeometry(THREE, url);
@@ -274,26 +349,11 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
         geo.dispose();
         return;
       }
-      geo.center();
+      if (!layerNames) geo.center();
       const solo = spec.solo.find((p) => p.id === part);
-      const mat = new THREE.MeshStandardMaterial({
-        color: solo && !layerNames ? solo.color : 0x9aa8ae,
-        metalness: 0.22,
-        roughness: 0.52,
-      });
-      const mesh = new THREE.Mesh(geo, mat);
-      scene.add(mesh);
-      disposers.push(() => {
-        geo.dispose();
-        mat.dispose();
-      });
-
-      const box = new THREE.Box3().setFromObject(mesh);
-      const size = box.getSize(new THREE.Vector3()).length() || 180;
-      camera.position.set(size * 0.7, size * 0.28, size * 0.5);
-      controls.target.set(0, 0, 0);
-      controls.update();
-      setStatus("Drag to orbit · pinch to zoom");
+      addMesh(geo, solo && !layerNames ? solo.color : 0x9aa8ae);
+      frameCam();
+      setStatus("Drag to orbit · colors loading…");
 
       const tick = () => {
         if (dead) return;
@@ -302,7 +362,32 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
         frame = requestAnimationFrame(tick);
       };
       tick();
-    };
+
+      if (!layerNames) {
+        setStatus("Drag to orbit · pinch to zoom");
+        return;
+      }
+
+      let colored = 0;
+      const grey = group.children[0];
+      for (const name of layerNames) {
+        if (dead) return;
+        try {
+          const g = await stlGeometry(THREE, `${spec.prefix}/asm/${name}.stl`);
+          addMesh(
+            g,
+            hexToInt((spec.swatches as Record<string, string>)[name] ?? "#8aa0a8"),
+            spec.ghost.has(name as never),
+            name.includes("sheave"),
+          );
+          colored += 1;
+          if (colored === 1 && grey) group.remove(grey);
+        } catch {
+          /* keep going */
+        }
+      }
+      if (colored > 0) frameCam();
+      setStatus("Drag to orbit · pinch to zoom");
 
     void boot().catch(fail);
     return () => {
