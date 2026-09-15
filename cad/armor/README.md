@@ -1,16 +1,14 @@
-# Armor — bolt-on carbon shells
+# Armor — overlapping sport dishes
 
-Stage 5. These take **no load**. They screw onto the cuffs, scapula plate, and pack frame you already have.
+Stage 5. **Joints stay open.** These are hockey/football plates, not tubes.
 
-| Print | Goes on | Fasteners |
+| Print | Sport analog | Leaves visible |
 |---|---|---|
-| `print_fairing_ua.stl` | Upper-arm cuff | 4× M4 BHCS 91292A115 |
-| `print_fairing_fa.stl` | Forearm cuff | 4× M4 |
-| `print_fairing_deltoid.stl` | Deltoid cuff | 3× M4. Sheave stays exposed. |
-| `print_fairing_scapula.stl` | Scapula plate | 4× M4 |
-| `print_fairing_pack_tub.stl` | Pack frame | 4× M4 into the printed frame |
-| `print_fairing_pack_lid.stl` | Tub | 4× M4. Three drum windows. |
+| `print_fairing_deltoid.stl` | Football epaulette (dome) | Flexion sheave |
+| `print_fairing_ua.stl` | Floating Bauer bicep | Elbow sheave + 608s |
+| `print_fairing_fa.stl` | Forearm dish, starts 55 mm past the hinge | Elbow sheave |
+| `print_fairing_scapula.stl` | Yoke dish | Pack straps |
+| `print_fairing_pack_tub.stl` | Formed back plate, 3 drum windows | Winch drums |
+| `print_fairing_pack_lid.stl` | Window bezels + cable trunk | Drums |
 
-2 mm slip over the cuff OD. PETG-CF or sanded PETG + 2×2 carbon vinyl.
-
-Do not print the skeleton again. Snap these on, then wrap.
+No load in the carbon. M4 into the cuffs. PETG-CF or wrap.

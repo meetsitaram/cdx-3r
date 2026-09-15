@@ -96,14 +96,14 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     worn = ["ghost_ua", "ghost_fa", "ghost_deltoid", "ghost_frame", "ua", "fa", "deltoid", "scapula", "pack", "lid", "led", "screw"]
     print("worn")
-    render_layers(worn, OUT / "worn.png", "ARMOR  ·  carbon shells on the skeleton  ·  M4 bosses")
+    render_layers(worn, OUT / "worn.png", "ARMOR  ·  overlapping dishes  ·  sheaves stay open")
     jobs = [
-        ("ua.png", "print_fairing_ua.stl", "#1f2328", "PRINT  UA CLAMSHELL  ·  slips over upper cuff"),
-        ("fa.png", "print_fairing_fa.stl", "#252a31", "PRINT  FOREARM CLAMSHELL"),
-        ("deltoid.png", "print_fairing_deltoid.stl", "#1c2024", "PRINT  DELTOID CAP  ·  sheave stays visible"),
-        ("scapula.png", "print_fairing_scapula.stl", "#2a3038", "PRINT  SCAPULA LID"),
-        ("pack.png", "print_fairing_pack_tub.stl", "#16191d", "PRINT  PACK TUB"),
-        ("lid.png", "print_fairing_pack_lid.stl", "#1a1e24", "PRINT  PACK LID  ·  3 drum windows"),
+        ("ua.png", "print_fairing_ua.stl", "#1f2328", "PRINT  BICEP PLATE  ·  stops before the elbow sheave"),
+        ("fa.png", "print_fairing_fa.stl", "#252a31", "PRINT  FOREARM DISH  ·  hinge stays open"),
+        ("deltoid.png", "print_fairing_deltoid.stl", "#1c2024", "PRINT  DELTOID DOME  ·  flexion sheave in the open sector"),
+        ("scapula.png", "print_fairing_scapula.stl", "#2a3038", "PRINT  YOKE DISH"),
+        ("pack.png", "print_fairing_pack_tub.stl", "#16191d", "PRINT  PACK PLATE  ·  3 drum windows"),
+        ("lid.png", "print_fairing_pack_lid.stl", "#1a1e24", "PRINT  DRUM BEZELS  ·  drums read through"),
     ]
     for name, src, color, title in jobs:
         render(STL / src, color, OUT / name, title)

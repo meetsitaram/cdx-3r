@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""CDX-3R modular carbon fairings. Screw onto the existing skeleton. Take no load."""
+"""CDX-3R sport dishes. Overlapping plates. Joints stay open."""
 from __future__ import annotations
 
 import json
@@ -12,24 +12,10 @@ import numpy as np
 ROOT = Path(__file__).resolve().parent
 CAD = ROOT.parent
 sys.path.insert(0, str(CAD / "elbow"))
-from build_stl import (  # noqa: E402
-    Mesh,
-    annulus,
-    box,
-    cuff_c,
-    cylinder,
-    write_stl,
-)
+from build_stl import Mesh, annulus, box, cuff_c, cylinder, write_stl  # noqa: E402
 
 OUT = ROOT / "stl"
 PUB = Path("/workspace/public/cad/armor")
-
-UA_OD = 105.0 / 2 + 8.0  # 60.5
-FA_OD = 95.0 / 2 + 8.0  # 55.5
-DEL_OD = 120.0 / 2 + 8.0  # 68
-CLEAR = 2.0
-WALL = 4.5
-M4 = 2.1
 
 PALETTE = {
     "ghost_cuff": "#5ee0ff",
@@ -40,125 +26,212 @@ PALETTE = {
     "scapula": "#2a3038",
     "pack": "#16191d",
     "lid": "#1a1e24",
-    "bezel": "#3a414c",
     "led": "#3b82f6",
     "screw": "#c5cad3",
 }
 
 
-def bosses_on_ring(r, h, n=4) -> Mesh:
+def _pt(r, lat, lon):
+    c, s = math.cos(lat), math.sin(lat)
+    return np.array([r * c * math.cos(lon), r * s, r * c * math.sin(lon)])
+
+
+def sphere_shell(r_out, r_in, lat0, lat1, lon0, lon1, nlat=14, nlon=22) -> Mesh:
+    """Open spherical dish. Joints live in the missing sector."""
     m = Mesh()
-    for i in range(n):
-        a = math.radians(-40 + i * (280 / max(n - 1, 1)))
-        x, y = r * math.cos(a), r * math.sin(a)
-        m.add(cylinder(5.6, 6).move(x, y, h * 0.28))
-        m.add(cylinder(5.6, 6).move(x, y, -h * 0.28))
+    lats = np.linspace(math.radians(lat0), math.radians(lat1), nlat)
+    lons = np.linspace(math.radians(lon0), math.radians(lon1), nlon)
+
+    def ring(r, i, j):
+        return (
+            _pt(r, lats[i], lons[j]),
+            _pt(r, lats[i], lons[j + 1]),
+            _pt(r, lats[i + 1], lons[j + 1]),
+            _pt(r, lats[i + 1], lons[j]),
+        )
+
+    for i in range(nlat - 1):
+        for j in range(nlon - 1):
+            a, b, c, d = ring(r_out, i, j)
+            m.add_tri(a, b, c)
+            m.add_tri(a, c, d)
+            a, b, c, d = ring(r_in, i, j)
+            m.add_tri(a, d, c)
+            m.add_tri(a, c, b)
+    for i in range(nlat - 1):
+        for lon in (lons[0], lons[-1]):
+            o0 = _pt(r_out, lats[i], lon)
+            o1 = _pt(r_out, lats[i + 1], lon)
+            i0 = _pt(r_in, lats[i], lon)
+            i1 = _pt(r_in, lats[i + 1], lon)
+            if lon == lons[0]:
+                m.add_tri(o0, i0, i1)
+                m.add_tri(o0, i1, o1)
+            else:
+                m.add_tri(o0, o1, i1)
+                m.add_tri(o0, i1, i0)
+    for j in range(nlon - 1):
+        for lat in (lats[0], lats[-1]):
+            o0 = _pt(r_out, lat, lons[j])
+            o1 = _pt(r_out, lat, lons[j + 1])
+            i0 = _pt(r_in, lat, lons[j])
+            i1 = _pt(r_in, lat, lons[j + 1])
+            if lat == lats[0]:
+                m.add_tri(o0, o1, i1)
+                m.add_tri(o0, i1, i0)
+            else:
+                m.add_tri(o0, i0, i1)
+                m.add_tri(o0, i1, o1)
     return m
 
 
-def led_strip(r, h) -> Mesh:
-    return box(r - 0.4, r + 1.8, -3.2, 3.2, -h * 0.38, h * 0.38)
+def loft_dish(r0, r1, wall, z0, z1, a0_deg, a1_deg, n=22, ns=10) -> Mesh:
+    """Tapered sector. Not a ring — hockey/football plate."""
+    m = Mesh()
+    zs = np.linspace(z0, z1, ns)
+    an = np.linspace(math.radians(a0_deg), math.radians(a1_deg), n)
+    rs = np.linspace(r0, r1, ns)
+
+    def p(si, ai, r):
+        a = an[ai]
+        z = zs[si]
+        return np.array([r * math.cos(a), r * math.sin(a), z])
+
+    for s in range(ns - 1):
+        ro0, ro1 = rs[s] + wall, rs[s + 1] + wall
+        ri0, ri1 = rs[s], rs[s + 1]
+        for i in range(n - 1):
+            m.add_tri(p(s, i, ro0), p(s, i + 1, ro0), p(s + 1, i + 1, ro1))
+            m.add_tri(p(s, i, ro0), p(s + 1, i + 1, ro1), p(s + 1, i, ro1))
+            m.add_tri(p(s, i, ri0), p(s + 1, i, ri1), p(s + 1, i + 1, ri1))
+            m.add_tri(p(s, i, ri0), p(s + 1, i + 1, ri1), p(s, i + 1, ri0))
+        for r_a, r_b, flip in ((rs[s], rs[s] + wall, False), (rs[s + 1], rs[s + 1] + wall, True)):
+            pass
+        for ai in (0, n - 1):
+            a0, b0 = p(s, ai, ri0), p(s, ai, ro0)
+            a1, b1 = p(s + 1, ai, ri1), p(s + 1, ai, ro1)
+            if ai == 0:
+                m.add_tri(a0, a1, b1)
+                m.add_tri(a0, b1, b0)
+            else:
+                m.add_tri(a0, b0, b1)
+                m.add_tri(a0, b1, a1)
+    for s, r, z in ((0, rs[0], zs[0]), (ns - 1, rs[-1], zs[-1])):
+        for i in range(n - 1):
+            a = p(s, i, r)
+            b = p(s, i + 1, r)
+            c = p(s, i + 1, r + wall)
+            d = p(s, i, r + wall)
+            if s == 0:
+                m.add_tri(a, d, c)
+                m.add_tri(a, c, b)
+            else:
+                m.add_tri(a, b, c)
+                m.add_tri(a, c, d)
+    return m
 
 
-def fairing_ua() -> Mesh:
-    """Clamshell over the upper-arm cuff. Same C-opening, taller, 2 mm slip fit."""
-    body = cuff_c(UA_OD + CLEAR, WALL, 92, open_deg=70)
-    body.add(bosses_on_ring(UA_OD + CLEAR + WALL, 92, 4))
-    return body.rx(-90).move(0, 100, 0)
+def heightmap_plate(ax, ay, z0, bulge, t, nx=16, ny=18, holes=()) -> Mesh:
+    """Formed dish (football back plate). holes = (x, y, r)."""
+    m = Mesh()
+    xs = np.linspace(-ax, ax, nx)
+    ys = np.linspace(-ay, ay, ny)
 
+    def zh(x, y):
+        u, v = x / ax, y / ay
+        return z0 + bulge * max(0.0, 1.0 - u * u - v * v)
 
-def led_ua() -> Mesh:
-    return led_strip(UA_OD + CLEAR + WALL, 92).rx(-90).move(0, 100, 0)
+    def inside_hole(x, y):
+        for hx, hy, hr in holes:
+            if (x - hx) ** 2 + (y - hy) ** 2 < hr * hr:
+                return True
+        return False
 
+    def in_plate(x, y):
+        return (x / ax) ** 2 + (y / ay) ** 2 <= 1.02 and not inside_hole(x, y)
 
-def fairing_fa() -> Mesh:
-    body = cuff_c(FA_OD + CLEAR, WALL, 82, open_deg=70)
-    body.add(bosses_on_ring(FA_OD + CLEAR + WALL, 82, 4))
-    return body.ry(90).move(-90, 0, 0)
-
-
-def led_fa() -> Mesh:
-    return led_strip(FA_OD + CLEAR + WALL, 82).ry(90).move(-90, 0, 0)
+    for i in range(nx - 1):
+        for j in range(ny - 1):
+            quad = [(xs[i], ys[j]), (xs[i + 1], ys[j]), (xs[i + 1], ys[j + 1]), (xs[i], ys[j + 1])]
+            if not all(in_plate(x, y) for x, y in quad):
+                continue
+            o = [np.array([x, y, zh(x, y)]) for x, y in quad]
+            inn = [np.array([x, y, zh(x, y) - t]) for x, y in quad]
+            m.add_tri(o[0], o[1], o[2])
+            m.add_tri(o[0], o[2], o[3])
+            m.add_tri(inn[0], inn[2], inn[1])
+            m.add_tri(inn[0], inn[3], inn[2])
+    return m
 
 
 def fairing_deltoid() -> Mesh:
-    """Over the deltoid cuff. Opening toward the flexion sheave so the gold pulley stays visible."""
-    body = cuff_c(DEL_OD + CLEAR, 5.0, 78, open_deg=95)
-    body.add(bosses_on_ring(DEL_OD + CLEAR + 5.0, 78, 3))
-    # lateral cap, does not swallow the sheave
-    body.add(box(DEL_OD + 2, DEL_OD + 14, -22, 22, -18, 28))
-    return body.ry(90).move(70, 0, 0)
+    """Football epaulette. Dome. Flexion sheave stays in the open sector."""
+    # Open toward +Z (sheave at z=72). Pole slightly up/lateral.
+    cap = sphere_shell(88, 81, 8, 78, -125, 45, nlat=12, nlon=20)
+    return cap.move(48, 12, 8)
 
 
 def led_deltoid() -> Mesh:
-    return led_strip(DEL_OD + CLEAR + 5.0, 70).ry(90).move(70, 0, 0)
+    return cylinder(2.2, 50).ry(90).move(70, 40, 18)
+
+
+def fairing_ua() -> Mesh:
+    """Floating bicep plate. Stops before the elbow sheave."""
+    # Around Z, then rx-90 so it runs up the upper arm. Bottom of dish at y≈70, elbow at y=0.
+    dish = loft_dish(66, 60, 5.0, -30, 78, 40, 195, n=20, ns=9)
+    return dish.rx(-90).move(0, 108, 8)
+
+
+def led_ua() -> Mesh:
+    return box(68, 71, -3, 3, -20, 50).rx(-90).move(0, 108, 8)
+
+
+def fairing_fa() -> Mesh:
+    """Forearm dish. Starts 55 mm past the elbow axis — sheave stays clear."""
+    dish = loft_dish(58, 50, 5.0, -36, 70, 50, 200, n=20, ns=9)
+    return dish.ry(90).move(-118, 0, 6)
+
+
+def led_fa() -> Mesh:
+    return box(60, 63, -3, 3, -24, 40).ry(90).move(-118, 0, 6)
 
 
 def fairing_scapula() -> Mesh:
-    """Lid over the scapula plate. 3 mm wall. Strap slots stay open."""
-    m = Mesh()
-    m.add(box(-74, 24, 92, 96, -54, 44))  # top
-    m.add(box(-74, -70, 38, 92, -54, 44))  # left
-    m.add(box(20, 24, 38, 92, -54, 44))  # right
-    m.add(box(-74, 24, 38, 42, -54, 44))  # bottom
-    m.add(box(-74, 24, 38, 96, 40, 44))  # back
-    m.add(box(-74, 24, 38, 96, -54, -50))  # front
-    for x, z in ((-60, -30), (-60, 30), (10, -30), (10, 30)):
-        m.add(cylinder(5.6, 6).rx(90).move(x, 94, z))
-    return m
+    """Yoke dish over the scapula. Not a box lid."""
+    plate = heightmap_plate(58, 52, 70, 22, 4.5, nx=14, ny=14)
+    return plate.rx(-20).move(-24, 62, -6)
 
 
 def pack_tub() -> Mesh:
-    """5-sided tub around the 220×280×80 frame. Wearer side open."""
-    m = Mesh()
-    m.add(box(-122, 122, -154, 154, -6, -1))  # back against wearer? pack z=0 is against wearer
-    # Actually pack z=0 is the back panel against the wearer. Shell wraps z=-4 (toward wearer, 4mm pad) to z=94 (out).
-    m.add(box(-122, -117, -154, 154, -4, 94))
-    m.add(box(117, 122, -154, 154, -4, 94))
-    m.add(box(-122, 122, 149, 154, -4, 94))
-    m.add(box(-122, 122, -154, -149, -4, 94))
-    # wearer-side lip
-    m.add(box(-122, 122, -154, 154, -6, -2))
-    for x, y in ((-108, -136), (108, -136), (-108, 136), (108, 136)):
-        m.add(cylinder(5.6, 8).move(x, y, 4))
+    """Formed back plate (football kidney / moto roost). Wearer side open."""
+    holes = ((0.0, -70.0, 30.0), (0.0, 0.0, 30.0), (0.0, 70.0, 30.0))
+    m = heightmap_plate(118, 148, 18, 78, 6.0, nx=18, ny=22, holes=holes)
+    for y in (-70.0, 0.0, 70.0):
+        m.add(annulus(34, 26, 8).move(0, y, 88))
     return m
 
 
 def pack_lid() -> Mesh:
-    """Outer lid with three drum windows. Bolts to the tub."""
+    """Window bezels + cable trunk. Joints (drums) read through the holes."""
     m = Mesh()
-    # frame around windows
-    m.add(box(-122, 122, -154, 154, 90, 96))
-    for y in (-72.0, 0.0, 72.0):
-        m.add(annulus(38, 27, 8).move(0, y, 93))
-    # cable exit, top-right
-    m.add(box(70, 110, 130, 152, 88, 100))
-    for x, y in ((-100, -140), (100, -140), (-100, 140), (100, 140)):
-        m.add(cylinder(5.6, 6).move(x, y, 93))
+    for y in (-70.0, 0.0, 70.0):
+        m.add(annulus(36, 27, 6).move(0, y, 92))
+    m.add(cylinder(16, 28).ry(90).move(70, 128, 70))
     return m
 
 
 def pack_led() -> Mesh:
     m = Mesh()
-    m.add(box(-90, 90, 146, 151, 70, 88))
-    for y in (-72.0, 0.0, 72.0):
-        m.add(cylinder(3.0, 4).move(40, y, 96))
+    m.add(box(-80, 80, 138, 144, 55, 78))
+    for y in (-70.0, 0.0, 70.0):
+        m.add(cylinder(2.6, 4).move(32, y, 96))
     return m
 
 
 def screws() -> Mesh:
     m = Mesh()
-    for x, y, z in (
-        (0, 70, 66),
-        (0, 130, 66),
-        (-90, 0, 60),
-        (-90, 0, -60),
-        (70, 0, 80),
-        (70, 0, -80),
-        (-60, 94, -30),
-        (10, 94, 30),
-    ):
-        m.add(cylinder(3.5, 4).move(x, y, z))
+    for p in ((48, 40, 40), (48, -10, 40), (0, 140, 55), (0, 80, 55), (-90, 8, 40), (-150, 8, 40)):
+        m.add(cylinder(3.4, 5).move(*p))
     return m
 
 
@@ -180,7 +253,6 @@ T_PACK = np.array([-145.0, -80.0, -200.0])
 
 
 def assembly_layers(with_ghost=True):
-    """Fairings in the worn system frame so the orbit matches the arm."""
     layers = []
     if with_ghost:
         layers.append(("ghost_ua", place_elbow(cuff_c(105 / 2, 8, 52).rx(-90).move(0, 100, 0)), PALETTE["ghost_cuff"]))
@@ -219,9 +291,9 @@ def main():
     PUB.mkdir(parents=True, exist_ok=True)
     parts = print_parts()
     worn, preview = Mesh(), Mesh()
-    for name, mesh, _ in assembly_layers(True):
+    for _, mesh, _ in assembly_layers(True):
         worn.add(mesh)
-    for name, mesh, _ in assembly_layers(False):
+    for _, mesh, _ in assembly_layers(False):
         preview.add(mesh)
     parts["assembly_worn"] = worn
     parts["assembly_preview"] = preview
@@ -229,7 +301,6 @@ def main():
         write_stl(OUT / f"{name}.stl", mesh, name)
         write_stl(PUB / f"{name}.stl", mesh, name)
         print(f"  {name:32s} {len(mesh.tris):5d}")
-
     asm_pub, asm_out = PUB / "asm", OUT / "asm"
     asm_pub.mkdir(parents=True, exist_ok=True)
     asm_out.mkdir(parents=True, exist_ok=True)

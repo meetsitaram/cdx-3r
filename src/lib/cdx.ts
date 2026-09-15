@@ -151,7 +151,7 @@ export const CAD_STAGES = [
   { n: "02", name: "Shoulder", status: "Done", blurb: "Flexion (lateral) + abduction (posterior)." },
   { n: "03", name: "Backpack", status: "Done", blurb: "3× D6374 + 10:1, Hailong 48 V, 3× ODrive S1." },
   { n: "04", name: "Connect", status: "Done", blurb: "One system. Saddle + hip belt take the weight, not the biceps." },
-  { n: "05", name: "Armor", status: "Now", blurb: "Carbon clamshells screw onto the cuffs, scapula, and pack. No load." },
+  { n: "05", name: "Armor", status: "Now", blurb: "Overlapping sport dishes. Sheaves and drums stay in the open." },
 ] as const;
 
 export const ELBOW_HUMAN = [
@@ -436,21 +436,21 @@ export const SYSTEM_SWATCHES = [
 ] as const;
 
 export const ARMOR_PRINT = [
-  { file: "print_fairing_ua.stl", note: "Upper-arm clamshell. 2 mm over the cuff. 4× M4." },
-  { file: "print_fairing_fa.stl", note: "Forearm clamshell. 4× M4." },
-  { file: "print_fairing_deltoid.stl", note: "Deltoid cap. Sheave stays visible. 3× M4." },
-  { file: "print_fairing_scapula.stl", note: "Lid over the scapula plate. 4× M4." },
-  { file: "print_fairing_pack_tub.stl", note: "Pack tub. Bolts to the printed frame." },
-  { file: "print_fairing_pack_lid.stl", note: "Pack lid. Three drum windows. Cable exit top-right." },
+  { file: "print_fairing_deltoid.stl", note: "Football epaulette. Flexion sheave stays in the open sector." },
+  { file: "print_fairing_ua.stl", note: "Floating bicep plate. Stops before the elbow sheave." },
+  { file: "print_fairing_fa.stl", note: "Forearm dish. Starts 55 mm past the hinge." },
+  { file: "print_fairing_scapula.stl", note: "Yoke dish over the scapula." },
+  { file: "print_fairing_pack_tub.stl", note: "Formed back plate. Three drum windows." },
+  { file: "print_fairing_pack_lid.stl", note: "Window bezels + cable trunk. Drums read through." },
 ] as const;
 
 export const ARMOR_SWATCHES = [
-  { id: "ua", label: "UA clamshell", hex: "#1f2328" },
-  { id: "fa", label: "Forearm clamshell", hex: "#252a31" },
-  { id: "deltoid", label: "Deltoid cap", hex: "#1c2024" },
-  { id: "scapula", label: "Scapula lid", hex: "#2a3038" },
-  { id: "pack", label: "Pack tub", hex: "#16191d" },
-  { id: "lid", label: "Pack lid", hex: "#1a1e24" },
+  { id: "deltoid", label: "Deltoid dome", hex: "#1c2024" },
+  { id: "ua", label: "Bicep plate", hex: "#1f2328" },
+  { id: "fa", label: "Forearm dish", hex: "#252a31" },
+  { id: "scapula", label: "Yoke dish", hex: "#2a3038" },
+  { id: "pack", label: "Pack plate", hex: "#16191d" },
+  { id: "lid", label: "Drum bezels", hex: "#1a1e24" },
   { id: "led", label: "LED channel", hex: "#3b82f6" },
 ] as const;
 

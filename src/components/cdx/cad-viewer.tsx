@@ -239,12 +239,12 @@ const KITS = {
     },
     ghost: new Set(["ghost_ua", "ghost_fa", "ghost_deltoid", "ghost_frame"]),
     solo: [
-      { id: "print_fairing_ua", label: "UA shell", file: "/cad/armor/print_fairing_ua.stl", color: 0x1f2328 },
-      { id: "print_fairing_fa", label: "Forearm", file: "/cad/armor/print_fairing_fa.stl", color: 0x252a31 },
-      { id: "print_fairing_deltoid", label: "Deltoid", file: "/cad/armor/print_fairing_deltoid.stl", color: 0x1c2024 },
-      { id: "print_fairing_scapula", label: "Scapula", file: "/cad/armor/print_fairing_scapula.stl", color: 0x2a3038 },
-      { id: "print_fairing_pack_tub", label: "Pack tub", file: "/cad/armor/print_fairing_pack_tub.stl", color: 0x16191d },
-      { id: "print_fairing_pack_lid", label: "Pack lid", file: "/cad/armor/print_fairing_pack_lid.stl", color: 0x1a1e24 },
+      { id: "print_fairing_ua", label: "Bicep plate", file: "/cad/armor/print_fairing_ua.stl", color: 0x1f2328 },
+      { id: "print_fairing_fa", label: "Forearm dish", file: "/cad/armor/print_fairing_fa.stl", color: 0x252a31 },
+      { id: "print_fairing_deltoid", label: "Deltoid dome", file: "/cad/armor/print_fairing_deltoid.stl", color: 0x1c2024 },
+      { id: "print_fairing_scapula", label: "Yoke dish", file: "/cad/armor/print_fairing_scapula.stl", color: 0x2a3038 },
+      { id: "print_fairing_pack_tub", label: "Pack plate", file: "/cad/armor/print_fairing_pack_tub.stl", color: 0x16191d },
+      { id: "print_fairing_pack_lid", label: "Drum bezels", file: "/cad/armor/print_fairing_pack_lid.stl", color: 0x1a1e24 },
     ],
   },
 } as const;
