@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CDX-3R — cable-driven right arm</title>
+    <meta name="theme-color" content="#09090b" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Oswald:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #09090b;
+        --fg: #e8e8e4;
+        --muted: #9a9a94;
+        --line: #2a2a2e;
+        --accent: #5ee0ff;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; background: var(--bg); color: var(--fg); font-family: "IBM Plex Sans", system-ui, sans-serif; }
+      header { padding: 28px 20px 8px; max-width: 920px; margin: 0 auto; }
+      h1 { font-family: Oswald, sans-serif; letter-spacing: 0.18em; font-size: 28px; margin: 0; }
+      p { color: var(--muted); line-height: 1.55; max-width: 640px; }
+      .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0; }
+      button {
+        font-family: inherit; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+        border: 1px solid var(--line); background: #121214; color: var(--muted);
+        border-radius: 999px; padding: 8px 14px; cursor: pointer;
+      }
+      button.on { border-color: var(--accent); color: var(--accent); background: #102228; }
+      #view { width: min(920px, calc(100% - 32px)); height: 520px; margin: 0 auto; display: block; border: 1px solid var(--line); border-radius: 12px; background: #121214; }
+      #status { text-align: center; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); padding: 12px; }
+      .shots { max-width: 920px; margin: 24px auto; padding: 0 16px 48px; display: grid; gap: 12px; }
+      .shots img { width: 100%; border-radius: 12px; border: 1px solid var(--line); }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <h1>CDX-3R</h1>
+      <p>
+        3-DoF cable-driven right arm. Drag to orbit. One STL at a time — system first, then elbow,
+        shoulder, pack.
+      </p>
+      <div class="tabs" id="tabs"></div>
+    </header>
+    <canvas id="view"></canvas>
+    <div id="status">Loading…</div>
+    <div class="shots">
+      <img
+        alt="System rest pose"
+        src="https://cdn.jsdelivr.net/gh/meetsitaram/cdx-3r@main/public/cad/system/preview/worn.png"
+      />
+      <img
+        alt="Elbow"
+        src="https://cdn.jsdelivr.net/gh/meetsitaram/cdx-3r@main/public/cad/elbow/preview/worn.png"
+      />
+    </div>
+    <script type="module">
+      import * as THREE from "three";
+      import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+      const CDN = "https://cdn.jsdelivr.net/gh/meetsitaram/cdx-3r@main/public";
+      const KITS = [
+        { id: "system", label: "Full system", file: "/cad/system/assembly_worn.stl" },
+        { id: "elbow", label: "Elbow", file: "/cad/elbow/assembly_worn.stl" },
+        { id: "shoulder", label: "Shoulder", file: "/cad/shoulder/assembly_worn.stl" },
+        { id: "pack", label: "Backpack", file: "/cad/backpack/assembly_worn.stl" },
+      ];
+
+      async function loadStl(url) {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("STL " + res.status);
+        const buf = await res.arrayBuffer();
+        const view = new DataView(buf);
+        const n = view.getUint32(80, true);
+        const pos = new Float32Array(n * 9);
+        let o = 84;
+        for (let i = 0; i < n; i++) {
+          o += 12;
+          for (let k = 0; k < 9; k++, o += 4) pos[i * 9 + k] = view.getFloat32(o, true);
+          o += 2;
+        }
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+        geo.computeVertexNormals();
+        return geo;
+      }
+
+      const canvas = document.getElementById("view");
+      const status = document.getElementById("status");
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: "low-power" });
+      renderer.setPixelRatio(1);
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x121214);
+      const camera = new THREE.PerspectiveCamera(42, 1, 0.5, 8000);
+      const controls = new OrbitControls(camera, canvas);
+      controls.enableDamping = true;
+      scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+      const key = new THREE.DirectionalLight(0xffffff, 1.05);
+      key.position.set(160, 200, 120);
+      scene.add(key);
+      let mesh;
+
+      function resize() {
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight;
+        renderer.setSize(w, h, false);
+        camera.aspect = w / Math.max(h, 1);
+        camera.updateProjectionMatrix();
+      }
+      window.addEventListener("resize", resize);
+      resize();
+
+      async function show(kit) {
+        status.textContent = "Loading " + kit.label + "…";
+        const geo = await loadStl(CDN + kit.file);
+        if (mesh) {
+          scene.remove(mesh);
+          mesh.geometry.dispose();
+          mesh.material.dispose();
+        }
+        mesh = new THREE.Mesh(
+          geo,
+          new THREE.MeshStandardMaterial({ color: 0x9aa8ae, metalness: 0.22, roughness: 0.5 }),
+        );
+        scene.add(mesh);
+        const box = new THREE.Box3().setFromObject(mesh);
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3()).length() || 180;
+        mesh.position.sub(center);
+        camera.position.set(size * 0.7, size * 0.25, size * 0.55);
+        controls.target.set(0, 0, 0);
+        status.textContent = "Drag to orbit · pinch to zoom";
+      }
+
+      const tabs = document.getElementById("tabs");
+      for (const kit of KITS) {
+        const b = document.createElement("button");
+        b.textContent = kit.label;
+        b.onclick = () => {
+          for (const x of tabs.children) x.classList.remove("on");
+          b.classList.add("on");
+          show(kit).catch((e) => (status.textContent = e.message));
+        };
+        tabs.appendChild(b);
+      }
+      tabs.firstChild.classList.add("on");
+      show(KITS[0]).catch((e) => (status.textContent = e.message));
+
+      (function tick() {
+        controls.update();
+        renderer.render(scene, camera);
+        requestAnimationFrame(tick);
+      })();
+    </script>
+  </body>
+</html>
