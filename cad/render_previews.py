@@ -37,10 +37,10 @@ def main(kits=('armor','system','backpack','shoulder','elbow')):
             save('armor',[f'print_fairing_{part}'],file+'.png',size=(700,600))
     if 'system' in kits:
         save('system',system_names(),'worn.png',view=(-.62,.24,1),size=(1500,1400))
-        save('system',[n for n in system_names() if n!='human'],'worn_gear.png',view=(-.62,.24,1),size=(1500,1400))
+        save('system',[n for n in system_names() if n!='human' and not n.startswith('ghost_')],'worn_gear.png',view=(-.62,.24,1),size=(1500,1400))
         save('system',arm_names(),'arm.png',view=(.55,.38,1),size=(1400,1300))
         render('system',arm_names(),CAD/'system/preview/arm-clay.png',view=(.55,.38,1),size=(1400,1300),clay=True)
-        save('system',['human','saddle','yoke','beam','belt','park','pk_frame'],'loadpath.png',view=(-.62,.24,1))
+        save('system',['human','ghost_upper','ghost_forearm','saddle','yoke','beam','belt','park','pk_frame'],'loadpath.png',view=(-.62,.24,1))
     if 'backpack' in kits:
         names=list(json.loads((PUBLIC/'backpack/asm/colors.json').read_text())['layers'])
         save('backpack',[n for n in names if n not in ['torso','strap']],'assembly.png',view=(.55,.25,1))

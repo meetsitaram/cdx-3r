@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import type { Pose, MotionManifest } from "@/lib/cad-motion";
 import { cn } from "@/lib/utils";
 import { ELBOW_SWATCHES, SHOULDER_SWATCHES } from "@/lib/cdx";
 
@@ -171,7 +172,7 @@ async function loadThree() {
 }
 
 async function stlGeometry(THREE: typeof import("three"), url: string) {
-  const res = await fetch(url.includes("?") ? url : `${url}?v=shells-b`);
+  const res = await fetch(url.includes("?") ? url : `${url}?v=motion-c`);
   if (!res.ok) throw new Error(`STL ${res.status}`);
   const buf = await res.arrayBuffer();
   if (buf.byteLength < 84) throw new Error("STL too small");
@@ -193,11 +194,11 @@ async function stlGeometry(THREE: typeof import("three"), url: string) {
 }
 
 const STILL: Record<Kit, string> = {
-  elbow: "/cad/elbow/preview/worn.png?v=shells-b",
-  shoulder: "/cad/shoulder/preview/worn.png?v=shells-b",
-  backpack: "/cad/backpack/preview/worn.png?v=shells-b",
-  system: "/cad/system/preview/worn.png?v=shells-b",
-  armor: "/cad/armor/preview/worn.png?v=shells-b",
+  elbow: "/cad/elbow/preview/worn.png?v=motion-c",
+  shoulder: "/cad/shoulder/preview/worn.png?v=motion-c",
+  backpack: "/cad/backpack/preview/worn.png?v=motion-c",
+  system: "/cad/system/preview/worn.png?v=motion-c",
+  armor: "/cad/armor/preview/worn.png?v=motion-c",
 };
 
 export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
@@ -206,8 +207,50 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
   const [part, setPart] = useState("worn");
   const [status, setStatus] = useState("Still loaded. Tap Load 3D to orbit.");
   const [live, setLive] = useState(false);
+  const [pose, setPose] = useState<Pose>({ shoulderAbduction: 0, shoulderFlexion: 0, elbowFlexion: 90 });
+  const [motion, setMotion] = useState<MotionManifest | null>(null);
+  const [presets, setPresets] = useState<{ label: string; pose: Pose }[]>([]);
+  const [shells, setShells] = useState(true);
+  const [axes, setAxes] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const poseRef = useRef(pose);
+  const displayRef = useRef({ shells, axes });
+  const rigRef = useRef<ReturnType<typeof import("@/lib/cad-motion").createMotionRig> | null>(null);
+  const fitRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
+    poseRef.current = pose; displayRef.current = { shells, axes };
+    rigRef.current?.update(pose, shells, axes);
+  }, [pose, shells, axes]);
+
+  useEffect(() => {
+    if (!playing || !motion || !presets.length) return;
+    let frame = 0; let start: number | null = null; let last = 0;
+    const initial = { ...poseRef.current };
+    const targets = [presets[1].pose, presets[2].pose, presets[3].pose, motion.rest];
+    const tick = (now: number) => {
+      start ??= now;
+      const elapsed = (now - start) / 1000;
+      const segment = Math.floor(elapsed / 3);
+      if (segment >= targets.length) { setPose({ ...motion.rest }); setPlaying(false); return; }
+      if (now - last >= 33) {
+        last = now;
+        const from = segment === 0 ? initial : targets[segment - 1];
+        const to = targets[segment]; const t = (elapsed % 3) / 3;
+        const smooth = t * t * (3 - 2 * t);
+        const next = { ...from };
+        for (const j of motion.joints) next[j.key] = from[j.key] + (to[j.key] - from[j.key]) * smooth;
+        setPose(next);
+      }
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [playing, motion, presets]);
+
+
+  useEffect(() => {
+    setMotion(null); setPlaying(false);
     if (!live) return;
     const el = host.current;
     if (!el) return;
@@ -284,11 +327,13 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
           opacity: ghost ? 0.4 : 1,
           depthWrite: !ghost,
         });
-        group.add(new THREE.Mesh(g, m));
+        const mesh = new THREE.Mesh(g, m);
+        group.add(mesh);
         disposers.push(() => {
           g.dispose();
           m.dispose();
         });
+        return mesh;
       };
 
       const frameCam = () => {
@@ -303,23 +348,27 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
         controls?.update();
       };
 
+      fitRef.current = frameCam;
+      let motionData: unknown = null;
       let layerNames: readonly string[] | null = part === "worn" || part === "brace" ? [] : null;
       let layerColors: Record<string, string> = spec.swatches;
       let ghostNames: ReadonlySet<string> = spec.ghost;
       let manifestWarning = false;
       if (layerNames) {
         try {
-          const response = await fetch(`${spec.prefix}/asm/colors.json?v=shells-b`);
+          const response = await fetch(`${spec.prefix}/asm/colors.json?v=motion-c`);
           if (!response.ok) throw new Error("Manifest unavailable");
           const manifest = await response.json() as {
             layers: Record<string, string>;
             views?: Record<string, string[]>;
             ghosts?: string[];
+            motion?: unknown;
           };
           const names = manifest.views?.[part] ?? Object.keys(manifest.layers);
           if (!names.length || names.some((name) => !/^[a-z0-9_]+$/.test(name) || !manifest.layers[name])) {
             throw new Error("Invalid assembly manifest");
           }
+          motionData = manifest.motion;
           layerNames = names;
           layerColors = manifest.layers;
           ghostNames = new Set(manifest.ghosts ?? [...spec.ghost]);
@@ -369,20 +418,44 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
       }
       // Swap only when every requested layer is ready; partial downloads must
       // never silently remove parts from the assembly.
+      let rig: ReturnType<typeof import("@/lib/cad-motion").createMotionRig> | null = null;
+      let parsedMotion: MotionManifest | null = null;
+      let rigModule: typeof import("@/lib/cad-motion") | null = null;
+      if (kit === "system") {
+        try {
+          rigModule = await import("@/lib/cad-motion");
+          parsedMotion = rigModule.readMotion(motionData, [...layerNames]);
+        } catch { parsedMotion = null; }
+      }
+      if (dead) {
+        for (const result of loaded) if (result.status === "fulfilled") result.value.geometry.dispose();
+        return;
+      }
       group.clear();
+      if (parsedMotion && rigModule) {
+        rig = rigModule.createMotionRig(group, parsedMotion);
+        rigRef.current = rig;
+        disposers.push(() => rig?.dispose());
+      }
       for (const result of loaded) {
         if (result.status !== "fulfilled") continue;
         const { name, geometry } = result.value;
-        addMesh(geometry, hexToInt(layerColors[name] ?? "#8aa0a8"), ghostNames.has(name),
+        const mesh = addMesh(geometry, hexToInt(layerColors[name] ?? "#8aa0a8"), ghostNames.has(name),
           /sheave|trim|bezel|fastener|screw|motor|ferrule/.test(name), name.includes("led"));
+        rig?.add(name, mesh);
+      }
+      if (rig && parsedMotion && rigModule) {
+        rig.update(poseRef.current, displayRef.current.shells, displayRef.current.axes);
+        setMotion(parsedMotion); setPresets(rigModule.POSES);
       }
       frameCam();
-      setStatus(`Drag to orbit · ${layerNames.length} layers loaded`);
+      setStatus(`Drag to orbit · ${layerNames.length} layers loaded${rig ? " · joint controls ready" : kit === "system" ? " · joint rig unavailable" : ""}`);
     };
 
     void boot().catch(fail);
     return () => {
       dead = true;
+      rigRef.current = null; fitRef.current = null;
       cancelAnimationFrame(frame);
       disposers.forEach((d) => d());
       controls?.dispose();
@@ -422,6 +495,7 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
         ))}
         <button
           type="button"
+          disabled={live}
           onClick={() => {
             setLive(true);
             setStatus("Loading STL…");
@@ -431,9 +505,34 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
             live ? "border-accent bg-accent/15 text-accent" : "border-border bg-surface text-muted hover:text-fg",
           )}
         >
-          Load 3D
+          {live ? "3D loaded" : "Load 3D"}
         </button>
       </div>
+      {kit === "system" && (part === "worn" || part === "brace") && (
+        <div className="mb-3 rounded-lg border border-border bg-surface p-4">
+          <p className="mb-3 text-sm text-muted">Articulated CAD · shoulder abduction, shoulder flexion, and elbow flexion. {motion ? "Drag a slider or play the motion sequence." : "Load 3D to enable joint controls."}</p>
+          {motion && <>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {motion.joints.map((j) => (
+                <label key={j.id} className="text-sm text-fg">
+                  <span className="flex justify-between gap-2">{j.label}<output>{Math.round(pose[j.key])}°</output></span>
+                  <input className="mt-2 w-full accent-cyan-400" aria-label={j.label} type="range" min={j.min} max={j.max} step={1} value={pose[j.key]}
+                    onChange={(e) => { setPlaying(false); setPose((p) => ({ ...p, [j.key]: Number(e.target.value) })); }} />
+                </label>
+              ))}
+            </div>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              {presets.map((preset) => <button key={preset.label} type="button" className="rounded border border-border px-3 py-1 text-xs text-fg hover:border-accent"
+                onClick={() => { setPlaying(false); setPose({ ...preset.pose }); }}>{preset.label}</button>)}
+              <button type="button" className="rounded border border-accent px-3 py-1 text-xs text-accent" onClick={() => setPlaying((p) => !p)}>{playing ? "Stop motion" : "Play motion"}</button>
+              <button type="button" className="rounded border border-border px-3 py-1 text-xs text-fg" onClick={() => fitRef.current?.()}>Fit view</button>
+              <label className="ml-2 flex items-center gap-2 text-xs text-muted"><input type="checkbox" checked={shells} onChange={(e) => setShells(e.target.checked)} />Shells</label>
+              <label className="flex items-center gap-2 text-xs text-muted"><input type="checkbox" checked={axes} onChange={(e) => setAxes(e.target.checked)} />Joint axes</label>
+            </div>
+          </>}
+          <p className="mt-3 text-xs text-subtle">Inspection motion: ranges are provisional. Cable bending is approximate; collisions and mounting strength are not validated.</p>
+        </div>
+      )}
       <div className="overflow-hidden rounded-lg border border-border bg-elevated">
         <div className="relative w-full" style={{ height: 460 }}>
           <img src={STILL[kit]} alt="" className="absolute inset-0 h-full w-full object-contain" />

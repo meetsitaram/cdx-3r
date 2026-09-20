@@ -40,9 +40,9 @@ PARAMS = json.loads((ROOT.parent / "params.json").read_text())
 # +Y up (head). +X anterior (upper arm at 90° flexion). +Z lateral (right).
 PITCH = SHEAVE["pitch"] / 2
 W = SHEAVE["width"]
-from design import SHOULDER_Z
+from design import SHOULDER_Z, SHOULDER_ABD_X
 Z_FLEX = SHOULDER_Z  # shared shoulder flexion datum
-X_ABD = -78.0  # abduction sheave, behind the shoulder toward the pack
+X_ABD = SHOULDER_ABD_X  # abduction sheave, behind the shoulder toward the pack
 CUFF_T = 8.0
 DELTOID_ID = 120.0
 

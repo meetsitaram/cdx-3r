@@ -6,7 +6,7 @@ Not a 7-axis arm. Three revolute joints, right side.
 |---|---|---|
 | 1 | **Elbow** — hinge, antagonist sheave, cuffs | `elbow/` |
 | 2 | **Shoulder** — flexion (lateral) + abduction (posterior) | `shoulder/` |
-| 3 | **Backpack** — 3 winches, Hailong 48 V, ODrive S1 | `backpack/` |
+| 3 | **Backpack** — 3 winches, battery envelope, ODrive S1 | `backpack/` |
 | 4 | **Connect** — one system, saddle + hip belt take the weight | `system/` |
 | 4 | Connect — Bowden runs, cable comb, hard stops as a system | after pack |
 | 5 | **Armor** — circular window around the sheave | `armor/` |
@@ -16,6 +16,10 @@ Not a 7-axis arm. Three revolute joints, right side.
 Open `elbow/` first. Do not print the whole suit.
 
 ## Current revision
+
+[Revision C — articulated assembly](system/README.md#revision-c--articulated-inspection-model)
+adds three joint controls, moving shells and hardware, and approximate flexible
+cable routing to the system viewer.
 
 [Revision B — rebuilt shells](armor/README.md) adds segmented shoulder armor,
 tapered arm panels and a passive wrist collar, with a synchronized full assembly.

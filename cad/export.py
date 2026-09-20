@@ -19,7 +19,7 @@ def write_mesh(path,mesh):
     path.write_bytes(data)
 
 
-def export_kit(kit,layers_fn,parts,palette):
+def export_kit(kit,layers_fn,parts,palette,motion=None):
     layers=[(name,normalize(mesh),color) for name,mesh,color in layers_fn(True)]
     body={'human','torso','arm'}|{n for n,_,_ in layers if n.startswith('ghost_')}
     full,brace=Mesh(),Mesh()
@@ -28,9 +28,10 @@ def export_kit(kit,layers_fn,parts,palette):
         if name not in body:brace.add(mesh)
     parts={name:normalize(mesh) for name,mesh in parts.items() if not name.startswith('assembly_')}
     parts.update(assembly_worn=full,assembly_preview=brace)
-    manifest={'revision':'shells-b','palette':palette,'layers':{n:c for n,_,c in layers},
+    manifest={'revision':'motion-c','palette':palette,'layers':{n:c for n,_,c in layers},
               'views':{'worn':[n for n,_,_ in layers], 'brace':[n for n,_,_ in layers if n not in body]},
               'ghosts':sorted(body & {n for n,_,_ in layers})}
+    if motion is not None:manifest['motion']=motion
     local=CAD/kit/'stl';served=public_dir(kit)
     for dest in [local,served]:
         asm=dest/'asm';asm.mkdir(parents=True,exist_ok=True)

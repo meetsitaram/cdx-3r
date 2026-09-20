@@ -29,10 +29,17 @@ python -B cad/render_previews.py
 
 Install the packages in `cad/requirements.txt` if needed. The outputs in `cad/*/stl` and `public/cad/*` are generated together, with matching manifests. The web viewer uses these manifests and retains a complete combined assembly if any colored layer fails to load.
 
-The five CAD checks cover export synchronization and completeness, closed single-solid shell topology, pack envelope separation, joint/window alignment, and sleeve coverage/cuff clearance. They do not establish collision clearance through the full motion range or structural load capacity.
+The original five geometry checks cover export synchronization and completeness, closed single-solid shell topology, pack envelope separation, joint/window alignment, and sleeve coverage/cuff clearance. They do not establish collision clearance through the full motion range or structural load capacity.
 
 ## Layout changes supporting the shells
 
 Both flexion axes are parallel to world Z; the elbow is directly below the shoulder. The previous whole-elbow 45° yaw is removed. The abduction sheave and its mounting ring now use world X as their rotation axis.
 
 The pack has three transverse winch bays at 90 mm spacing, controllers behind the motors, and a separate lower battery compartment. The existing compact battery envelope has been rotated to 220 × 76 × 52 mm. A specific battery part remains to be selected; the old Hailong purchase reference did not match that envelope.
+
+## Articulated integration
+
+[Revision C](../system/README.md#revision-c--articulated-inspection-model) assigns each
+panel and its trim, lighting and fasteners to the appropriate joint. The shell
+contours and printable parts are unchanged; grouping layers are now split by
+rigid attachment. Use the system viewer to inspect movement with the mechanisms.

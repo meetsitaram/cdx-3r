@@ -711,12 +711,14 @@ function Motion() {
   const rest = MOTION.filter((c) => c !== featured);
 
   return (
-    <Section id="motion" kicker="05 — Motion" title="Watch the two lift joints, not a 7-axis wrist.">
+    <Section id="motion" kicker="05 — Motion" title="Move the integrated arm.">
       <p className="mb-8 max-w-2xl text-base leading-relaxed text-muted">
-        CDX-3R only powers shoulder flexion and elbow flexion for this lift.
-        Abduction is the third axis (clear the hip). Wrist plating is dummy —
-        it does not articulate.
+        Explore all three joints with the actual CAD shells and mechanics.
+        Load 3D, adjust the joint angles, or play the motion sequence. The wrist
+        collar follows the forearm; it has no separate powered axis.
       </p>
+      <LazyCadViewer kit="system" startOpen label="Articulated assembly — load 3D to move" />
+      <p className="mb-4 text-sm text-muted">Concept motion clips</p>
       <Clip clip={featured} className="mb-6" large />
       <div className="grid gap-6 lg:grid-cols-3">
         {rest.map((clip) => (

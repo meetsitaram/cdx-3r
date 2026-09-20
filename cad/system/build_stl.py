@@ -32,8 +32,7 @@ def human():
     m=ellipsoid([96,178,155],[-15,-110,MID_Z+20],3)
     m.add(ellipsoid([43,38,44],[-5,80,MID_Z+10]))
     m.add(ellipsoid([68,84,70],[-5,164,MID_Z+10],3))
-    m.add(ellipsoid([36,UA/2-8,36],[0,-UA/2,0],3))
-    m.add(ellipsoid([FA/2-5,31,32],[FA/2,-UA,0],3))
+
     return m
 
 
@@ -123,9 +122,25 @@ def shoulder_layers():
     layers=[]
     for name,mesh,color in sh.assembly_layers(False):
         # Onward cable routes are replaced by the continuous system harness.
-        if name in {'arm','torso','housing','cable_elbow'}:continue
+        if name in {'arm','torso','housing','cable_elbow','screw','bearing','cups','anchor','clamp'}:continue
         if name in {'cuff','flex_yoke'}:mesh=mesh.rz(-90)
         layers.append((f'sh_{name}',mesh,color))
+    # These legacy layers contained both shoulder joints. Export each rigid
+    # body separately so one transform can never move the other joint's parts.
+    hardware = {
+        'screw_flex': sh.screw_flex(), 'screw_abd': sh.screw_abd(),
+        'bearing_flex': sh.idler_bearing().move(28,38,sh.Z_FLEX-4).add(sh.idler_bearing().move(-22,38,sh.Z_FLEX-4)),
+        'bearing_abd': sh.idler_bearing().ry(90).move(sh.X_ABD+6,36,28).add(sh.idler_bearing().ry(90).move(sh.X_ABD+6,-36,28)),
+        'cups_flex': sh.idler_cup().move(28,38,sh.Z_FLEX-4).add(sh.idler_cup().move(-22,38,sh.Z_FLEX-4)),
+        'cups_abd': sh.idler_cup().ry(90).move(sh.X_ABD+6,36,28).add(sh.idler_cup().ry(90).move(sh.X_ABD+6,-36,28)),
+        'clamp_flex': box(-6,6,-6,6,-6,6).move(sh.PITCH,0,sh.Z_FLEX),
+        'clamp_abd': box(-6,6,-6,6,-6,6).move(sh.X_ABD,0,sh.PITCH),
+    }
+    a=box(-10,10,-14,14,-8,8).add(cylinder(5.5,14).rx(-90).move(0,8,0))
+    hardware['anchor_flex']=a.move(20,55,sh.Z_FLEX-8).add(a.move(-20,55,sh.Z_FLEX-8))
+    hardware['anchor_abd']=a.ry(90).move(sh.X_ABD+10,50,20).add(a.ry(90).move(sh.X_ABD+10,-50,20))
+    for name,mesh in hardware.items():
+        layers.append(('sh_'+name,mesh,sh.PALETTE.get(name.split('_')[0],'#7b8e9d')))
     return layers
 
 
@@ -139,11 +154,20 @@ def armor_layers():
 
 
 def assembly_layers(with_human=True):
-    layers=[('human',human(),PALETTE['human'])] if with_human else []
+    layers=[('human',human(),PALETTE['human']),
+            ('ghost_upper',ellipsoid([36,UA/2-8,36],[0,-UA/2,0],3),PALETTE['human']),
+            ('ghost_forearm',ellipsoid([FA/2-5,31,32],[FA/2,-UA,0],3),PALETTE['human'])] if with_human else []
     for name,fn in [('saddle',saddle),('yoke',yoke),('beam',ua_beam),('belt',hip_belt),('park',park_rest),
-                    ('strap',straps),('ferrule',ferrules),('housing',housing)]:
+                    ('strap',straps)]:
         layers.append((name,fn(),PALETTE[name]))
-    layers.append(('cable_collars',cable_collars(),'#536471'))
+    for i,path in enumerate(housing_paths()):
+        layers.append((f'housing_{i}',tube(path,3.3,10),PALETTE['housing']))
+        collars=Mesh()
+        for index in range(3,len(path)-3,5):collars.add(tube(path[index:index+2],3.9,10))
+        layers.append((f'collars_{i}',collars,'#536471'))
+        for label,endpoint,neighbor in [('base',path[0],path[1]),('end',path[-1],path[-2])]:
+            tangent=neighbor-endpoint;tangent/=np.linalg.norm(tangent)
+            layers.append((f'ferrule_{i}_{label}',tube([endpoint,endpoint+tangent*9],4.8,12),PALETTE['ferrule']))
     return layers+pack_layers()+shoulder_layers()+elbow_layers()+armor_layers()
 
 
@@ -151,7 +175,8 @@ def main():
     from export import export_kit
     parts={'print_saddle':saddle(),'print_yoke':yoke(),'print_ua_beam':ua_beam(),
            'print_hip_belt':hip_belt(),'print_park_rest':park_rest()}
-    export_kit('system',assembly_layers,parts,PALETTE)
+    from motion import motion_manifest
+    export_kit('system',assembly_layers,parts,PALETTE, motion_manifest(assembly_layers(),housing_paths()))
 
 
 if __name__=='__main__':main()

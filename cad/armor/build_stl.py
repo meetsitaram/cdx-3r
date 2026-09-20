@@ -146,12 +146,15 @@ def shell_layers():
     """All armor in the shared work pose; no duplicate cosmetic mechanisms."""
     items=[];trim=Mesh();screws=Mesh();led=Mesh()
     for axis,start,end in [('ua',68*UA/290,246*UA/290),('fa',51*FA/260,252*FA/260)]:
+        trim=Mesh();screws=Mesh();led=Mesh()
         for name,a,b,color in [('',-39,39,'carbon'),('_front',43,118,'carbon_side'),('_rear',-118,-43,'carbon_side')]:
             items.append((axis+name,panel(axis,start,end,a,b),color))
             trim.add(panel_border(axis,start,end,a,b));screws.add(limb_bolts(axis,start,end,a,b))
         for angle in [-31,31]:
             v0=(angle-1+39)/78;v1=(angle+1+39)/78
             led.add(patch(lambda u,v,inner:panel_point(axis,start,end,-39,39,.17+.67*u,v0+(v1-v0)*v,3.4 if inner else 4.4),24,3))
+        items += [(axis+'_trim',trim,'metal'),(axis+'_fasteners',screws,'fastener'),(axis+'_led',led,'led')]
+    screws=Mesh();led=Mesh()
     for i,(a,b) in enumerate([(4,118),(122,238),(242,356)]):
         items.append((['deltoid','deltoid_front','deltoid_rear'][i],cap_patch(a,b),'carbon'))
         led.add(ring_arc(58,100,a+5,b-5,r=1.1))
@@ -164,6 +167,8 @@ def shell_layers():
             screws.add(bolt_at(np.array([r*np.cos(angle),r*np.sin(angle),z])+normal*1.3,normal))
     items += [('shoulder_trim',cap_trim(),'metal'),('bezel',ring(56,46.5,6,99),'metal'),
               ('scapula',fairing_scapula(),'carbon_side')]
+    items += [('shoulder_fasteners',screws,'fastener'),('shoulder_led',led,'led')]
+    led=Mesh();trim=Mesh()
     # Elbow bezel is coaxial with the real elbow sheave. The inner edge clears
     # its 44.45 mm OD radius; there is no second decorative sheave.
     from build_stl import Z_SHEAVE
@@ -175,7 +180,7 @@ def shell_layers():
     for t in [FA-3,FA+10]:trim.add(limb_patch('fa',t,t+3,-112,112,5.3,1.5,False,3,36))
     for t in np.linspace(FA-62,FA-37,4):
         items.append((f'vent_{round(t)}',limb_patch('fa',t,t+3,52,105,4,2,False,2,12),'dark_metal'))
-    items += [('trim',trim,'metal'),('fasteners',screws,'fastener'),('led',led,'led')]
+    items += [('wrist_trim',trim,'metal'),('elbow_led',led,'led')]
     for name,mesh,color in pack_layers_local():
         items.append((name,mesh.transformed(R_PACK,T_PACK),color))
     return [(name,mesh,PALETTE[color]) for name,mesh,color in items]

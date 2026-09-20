@@ -17,19 +17,23 @@ ROOT=Path(__file__).resolve().parent
 PUBLIC=ROOT.parent/'public/cad'
 
 
-def render(kit,names,destination,view=(.65,.32,1.),size=(1300,1200),clay=False):
+def render(kit,names,destination,view=(.65,.32,1.),size=(1300,1200),clay=False,pose=None,frame_vertices=None):
     manifest=json.loads((PUBLIC/kit/'asm/colors.json').read_text())
     meshes=[]
     for name in names:
         mesh_path=PUBLIC/kit/f'{name}.stl' if name.startswith(('print_','ref_')) else PUBLIC/kit/f'asm/{name}.stl'
         mesh=trimesh.load_mesh(mesh_path,process=True)
+        if pose is not None:
+            from motion import pose_vertices
+            mesh.vertices=pose_vertices(name,mesh.vertices,manifest['motion'],pose)
         meshes.append((name,mesh,manifest['layers'].get(name,'#344653')))
     vertices=np.vstack([m.vertices for _,m,_ in meshes])
-    center=(vertices.min(0)+vertices.max(0))/2
+    framing=np.asarray(frame_vertices) if frame_vertices is not None else vertices
+    center=(framing.min(0)+framing.max(0))/2
     eye=np.array(view,float);eye/=np.linalg.norm(eye)
     right=np.cross([0,1,0],eye);right/=np.linalg.norm(right);up=np.cross(eye,right)
     basis=np.column_stack([right,up,eye])
-    projected=(vertices-center)@basis
+    projected=(framing-center)@basis
     low,high=projected.min(0),projected.max(0)
     width,height=size;scale=min((width-100)/(high[0]-low[0]),(height-100)/(high[1]-low[1]))
     mid=(low+high)/2

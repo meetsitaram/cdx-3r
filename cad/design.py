@@ -12,6 +12,7 @@ FA = float(HUMAN['forearm_len'])
 # World: X forward, Y up, Z outboard. Both flexion axes are parallel to Z.
 ELBOW = np.array([0., -UA, 0.])
 SHOULDER_Z = 72.
+SHOULDER_ABD_X = -78.
 MID_Z = -200.
 R_PACK = np.array([[0., 0., -1.], [0., 1., 0.], [1., 0., 0.]])
 T_PACK = np.array([-145., -65., MID_Z])
