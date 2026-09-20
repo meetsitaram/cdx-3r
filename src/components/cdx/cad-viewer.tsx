@@ -2,62 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { ELBOW_SWATCHES, SHOULDER_SWATCHES } from "@/lib/cdx";
 
-const ELBOW_WORN = [
-  "arm",
-  "cuff_upper",
-  "cuff_forearm",
-  "lateral",
-  "distal",
-  "medial",
-  "sheave",
-  "screw",
-  "nylock",
-  "bearing",
-  "anchor",
-  "housing",
-  "cable_flex",
-  "cable_ext",
-  "clamp",
-  "stop",
-] as const;
-
-const SHOULDER_WORN = [
-  "torso",
-  "arm",
-  "cuff",
-  "scapula",
-  "abd_yoke",
-  "flex_yoke",
-  "sheave_flex",
-  "sheave_abd",
-  "screw",
-  "bearing",
-  "anchor",
-  "comb",
-  "housing",
-  "cable_flex",
-  "cable_abd",
-  "cable_elbow",
-  "clamp",
-  "stop",
-] as const;
-
-const PACK_WORN = [
-  "torso",
-  "frame",
-  "sled",
-  "battery",
-  "motor",
-  "s1",
-  "spreader",
-  "xt90",
-  "bulkhead",
-  "cable_el",
-  "cable_flex",
-  "cable_abd",
-  "strap",
-] as const;
-
 const SHOULDER_COLORS: Record<string, string> = {
   torso: "#e7d3c0",
   arm: "#f3c6a5",
@@ -83,8 +27,6 @@ const SHOULDER_COLORS: Record<string, string> = {
 const KITS = {
   elbow: {
     prefix: "/cad/elbow",
-    worn: ELBOW_WORN,
-    brace: ELBOW_WORN.filter((n) => n !== "arm"),
     fallback: "/cad/elbow/assembly_worn.stl",
     swatches: Object.fromEntries(ELBOW_SWATCHES.map((s) => [s.id, s.hex])),
     ghost: new Set(["arm"]),
@@ -97,8 +39,6 @@ const KITS = {
   },
   shoulder: {
     prefix: "/cad/shoulder",
-    worn: SHOULDER_WORN,
-    brace: SHOULDER_WORN.filter((n) => n !== "arm" && n !== "torso"),
     fallback: "/cad/shoulder/assembly_worn.stl",
     swatches: { ...SHOULDER_COLORS, ...Object.fromEntries(SHOULDER_SWATCHES.map((s) => [s.id, s.hex])) },
     ghost: new Set(["arm", "torso"]),
@@ -113,8 +53,6 @@ const KITS = {
   },
   backpack: {
     prefix: "/cad/backpack",
-    worn: PACK_WORN,
-    brace: PACK_WORN.filter((n) => n !== "torso"),
     fallback: "/cad/backpack/assembly_worn.stl",
     swatches: {
       torso: "#e7d3c0",
@@ -133,7 +71,7 @@ const KITS = {
     },
     ghost: new Set(["torso"]),
     solo: [
-      { id: "ref_battery", label: "Hailong", file: "/cad/backpack/ref_battery_DO_NOT_PRINT.stl", color: 0x14532d },
+      { id: "ref_battery", label: "Battery envelope", file: "/cad/backpack/ref_battery_DO_NOT_PRINT.stl", color: 0x14532d },
       { id: "ref_motor", label: "D6374", file: "/cad/backpack/ref_motor_DO_NOT_PRINT.stl", color: 0x111215 },
       { id: "ref_planetary", label: "10:1", file: "/cad/backpack/ref_planetary_DO_NOT_PRINT.stl", color: 0x64748b },
       { id: "ref_s1", label: "ODrive S1", file: "/cad/backpack/ref_s1_DO_NOT_PRINT.stl", color: 0x16a34a },
@@ -143,41 +81,6 @@ const KITS = {
   },
   system: {
     prefix: "/cad/system",
-    worn: [
-      "human",
-      "saddle",
-      "yoke",
-      "beam",
-      "belt",
-      "park",
-      "strap",
-      "ferrule",
-      "housing",
-      "cable_el",
-      "cable_flex",
-      "cable_abd",
-      "pk_frame",
-      "pk_battery",
-      "pk_motor",
-      "pk_bulkhead",
-      "sh_sheave_flex",
-      "sh_sheave_abd",
-      "sh_cuff",
-      "el_cuff_upper",
-      "el_cuff_forearm",
-      "el_sheave",
-      "el_lateral",
-      "ar_ua",
-      "ar_fa",
-      "ar_deltoid",
-      "ar_bezel",
-      "ar_sheave",
-      "ar_scapula",
-      "ar_pack",
-      "ar_lid",
-      "ar_led",
-    ],
-    brace: ["saddle", "yoke", "beam", "belt", "park", "pk_frame", "pk_battery", "pk_motor", "sh_sheave_flex", "el_sheave"],
     fallback: "/cad/system/assembly_worn.stl",
     swatches: {
       human: "#f3c6a5",
@@ -224,8 +127,6 @@ const KITS = {
   },
   armor: {
     prefix: "/cad/armor",
-    worn: ["ghost_ua", "ghost_fa", "ghost_deltoid", "ghost_frame", "ua", "fa", "deltoid", "bezel", "sheave", "scapula", "pack", "lid", "led", "screw"],
-    brace: ["ua", "fa", "deltoid", "bezel", "sheave", "scapula", "pack", "lid", "led"],
     fallback: "/cad/armor/assembly_worn.stl",
     swatches: {
       ghost_ua: "#5ee0ff",
@@ -246,11 +147,11 @@ const KITS = {
     ghost: new Set(["ghost_ua", "ghost_fa", "ghost_deltoid", "ghost_frame"]),
     solo: [
       { id: "print_fairing_ua", label: "Bicep plate", file: "/cad/armor/print_fairing_ua.stl", color: 0x1f2328 },
-      { id: "print_fairing_fa", label: "Forearm dish", file: "/cad/armor/print_fairing_fa.stl", color: 0x252a31 },
-      { id: "print_fairing_deltoid", label: "Deltoid window", file: "/cad/armor/print_fairing_deltoid.stl", color: 0x1c2024 },
+      { id: "print_fairing_fa", label: "Forearm panel", file: "/cad/armor/print_fairing_fa.stl", color: 0x252a31 },
+      { id: "print_fairing_deltoid", label: "Shoulder crown", file: "/cad/armor/print_fairing_deltoid.stl", color: 0x1c2024 },
       { id: "print_fairing_scapula", label: "Yoke dish", file: "/cad/armor/print_fairing_scapula.stl", color: 0x2a3038 },
       { id: "print_fairing_pack_tub", label: "Pack plate", file: "/cad/armor/print_fairing_pack_tub.stl", color: 0x16191d },
-      { id: "print_fairing_pack_lid", label: "Drum bezels", file: "/cad/armor/print_fairing_pack_lid.stl", color: 0x1a1e24 },
+      { id: "print_fairing_pack_lid", label: "Battery cover", file: "/cad/armor/print_fairing_pack_lid.stl", color: 0x1a1e24 },
     ],
   },
 } as const;
@@ -270,13 +171,13 @@ async function loadThree() {
 }
 
 async function stlGeometry(THREE: typeof import("three"), url: string) {
-  const res = await fetch(url.includes("?") ? url : `${url}?v=3`);
+  const res = await fetch(url.includes("?") ? url : `${url}?v=shells-b`);
   if (!res.ok) throw new Error(`STL ${res.status}`);
   const buf = await res.arrayBuffer();
   if (buf.byteLength < 84) throw new Error("STL too small");
   const view = new DataView(buf);
   const n = view.getUint32(80, true);
-  if (n <= 0 || n > 5_000_000) throw new Error("Bad STL");
+  if (n <= 0 || n > 5_000_000 || buf.byteLength !== 84 + n * 50) throw new Error("Bad STL");
   const pos = new Float32Array(n * 9);
   let o = 84;
   for (let i = 0; i < n; i++) {
@@ -286,16 +187,17 @@ async function stlGeometry(THREE: typeof import("three"), url: string) {
   }
   const geo = new THREE.BufferGeometry();
   geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-  geo.computeVertexNormals();
-  return geo;
+  // Smooth the curved shells while retaining sharp panel and machined edges.
+  const { toCreasedNormals } = await import("three/examples/jsm/utils/BufferGeometryUtils.js");
+  return toCreasedNormals(geo, Math.PI * 35 / 180);
 }
 
 const STILL: Record<Kit, string> = {
-  elbow: "/cad/elbow/preview/worn.png",
-  shoulder: "/cad/shoulder/preview/worn.png",
-  backpack: "/cad/backpack/preview/worn.png",
-  system: "/cad/system/preview/worn.png",
-  armor: "/cad/armor/preview/joint.png?v=3",
+  elbow: "/cad/elbow/preview/worn.png?v=shells-b",
+  shoulder: "/cad/shoulder/preview/worn.png?v=shells-b",
+  backpack: "/cad/backpack/preview/worn.png?v=shells-b",
+  system: "/cad/system/preview/worn.png?v=shells-b",
+  armor: "/cad/armor/preview/worn.png?v=shells-b",
 };
 
 export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
@@ -341,13 +243,16 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
         return;
       }
       renderer = new THREE.WebGLRenderer({ canvas, context: gl as WebGLRenderingContext, antialias: false });
-      renderer.setPixelRatio(1);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       el.replaceChildren(renderer.domElement);
 
-      scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+      scene.add(new THREE.HemisphereLight(0xddefff, 0x526170, 1.6));
       const key = new THREE.DirectionalLight(0xffffff, 1.05);
-      key.position.set(160, 200, 120);
+      key.position.set(160, 260, 240);
       scene.add(key);
+      const rim = new THREE.DirectionalLight(0xc4ddff, 1.4);
+      rim.position.set(-240, 150, -100);
+      scene.add(rim);
 
       controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
@@ -361,14 +266,19 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
         renderer.setSize(w, h, false);
       };
       resize();
+      const observer = new ResizeObserver(resize);
+      observer.observe(el);
+      disposers.push(() => observer.disconnect());
 
       const group = new THREE.Group();
       scene.add(group);
 
-      const addMesh = (g: import("three").BufferGeometry, color: number, ghost = false, metal = false) => {
+      const addMesh = (g: import("three").BufferGeometry, color: number, ghost = false, metal = false, led = false) => {
         const m = new THREE.MeshStandardMaterial({
           color,
-          metalness: metal ? 0.65 : 0.2,
+          metalness: metal ? 0.72 : 0.15,
+          emissive: led ? color : 0x000000,
+          emissiveIntensity: led ? 0.45 : 0,
           roughness: metal ? 0.35 : 0.52,
           transparent: ghost,
           opacity: ghost ? 0.4 : 1,
@@ -382,6 +292,7 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
       };
 
       const frameCam = () => {
+        group.position.set(0, 0, 0);
         const box = new THREE.Box3().setFromObject(group);
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3()).length() || 180;
@@ -392,8 +303,34 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
         controls?.update();
       };
 
-      const layerNames = part === "worn" ? spec.worn : part === "brace" ? spec.brace : null;
-      const url = layerNames ? spec.fallback : (spec.solo.find((p) => p.id === part) ?? spec.solo[0]).file;
+      let layerNames: readonly string[] | null = part === "worn" || part === "brace" ? [] : null;
+      let layerColors: Record<string, string> = spec.swatches;
+      let ghostNames: ReadonlySet<string> = spec.ghost;
+      let manifestWarning = false;
+      if (layerNames) {
+        try {
+          const response = await fetch(`${spec.prefix}/asm/colors.json?v=shells-b`);
+          if (!response.ok) throw new Error("Manifest unavailable");
+          const manifest = await response.json() as {
+            layers: Record<string, string>;
+            views?: Record<string, string[]>;
+            ghosts?: string[];
+          };
+          const names = manifest.views?.[part] ?? Object.keys(manifest.layers);
+          if (!names.length || names.some((name) => !/^[a-z0-9_]+$/.test(name) || !manifest.layers[name])) {
+            throw new Error("Invalid assembly manifest");
+          }
+          layerNames = names;
+          layerColors = manifest.layers;
+          ghostNames = new Set(manifest.ghosts ?? [...spec.ghost]);
+        } catch {
+          // Preserve the complete combined STL when a manifest is unavailable.
+          manifestWarning = true;
+        }
+      }
+      const url = layerNames
+        ? part === "brace" ? spec.fallback.replace("assembly_worn.stl", "assembly_preview.stl") : spec.fallback
+        : (spec.solo.find((p) => p.id === part) ?? spec.solo[0]).file;
       const geo = await stlGeometry(THREE, url);
       if (dead) {
         geo.dispose();
@@ -418,26 +355,29 @@ export function CadViewer({ kit = "elbow" }: { kit?: Kit }) {
         return;
       }
 
-      let colored = 0;
-      const grey = group.children[0];
-      for (const name of layerNames) {
-        if (dead) return;
-        try {
-          const g = await stlGeometry(THREE, `${spec.prefix}/asm/${name}.stl`);
-          addMesh(
-            g,
-            hexToInt((spec.swatches as Record<string, string>)[name] ?? "#8aa0a8"),
-            spec.ghost.has(name as never),
-            name.includes("sheave"),
-          );
-          colored += 1;
-          if (colored === 1 && grey) group.remove(grey);
-        } catch {
-          /* keep going */
-        }
+      if (manifestWarning) {
+        setStatus("Complete assembly shown · layer colors unavailable");
+        return;
       }
-      if (colored > 0) frameCam();
-      setStatus("Drag to orbit · pinch to zoom");
+      const loaded = await Promise.allSettled(
+        layerNames.map(async (name) => ({ name, geometry: await stlGeometry(THREE, `${spec.prefix}/asm/${name}.stl`) })),
+      );
+      if (dead || loaded.some((result) => result.status === "rejected")) {
+        for (const result of loaded) if (result.status === "fulfilled") result.value.geometry.dispose();
+        if (!dead) setStatus("Complete assembly shown · some layer files could not load");
+        return;
+      }
+      // Swap only when every requested layer is ready; partial downloads must
+      // never silently remove parts from the assembly.
+      group.clear();
+      for (const result of loaded) {
+        if (result.status !== "fulfilled") continue;
+        const { name, geometry } = result.value;
+        addMesh(geometry, hexToInt(layerColors[name] ?? "#8aa0a8"), ghostNames.has(name),
+          /sheave|trim|bezel|fastener|screw|motor|ferrule/.test(name), name.includes("led"));
+      }
+      frameCam();
+      setStatus(`Drag to orbit · ${layerNames.length} layers loaded`);
     };
 
     void boot().catch(fail);

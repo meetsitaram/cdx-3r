@@ -1,78 +1,42 @@
 #!/usr/bin/env python3
-"""CDX-3R backpack: 3 winches, Hailong 48 V, ODrive S1, Bowden bulkhead."""
+"""Three transverse winches in separated bays above a compact battery envelope."""
 from __future__ import annotations
-
-import json
 import sys
 from pathlib import Path
-
 import numpy as np
-
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "elbow"))
-from build_stl import (  # noqa: E402
-    Mesh,
-    annulus,
-    box,
-    cylinder,
-    idler_bearing,
-    polyline,
-    write_stl,
-)
-
-ROOT = Path(__file__).resolve().parent
-OUT = ROOT / "stl"
-PUB = Path("/workspace/public/cad/backpack")
-
-# Origin: pack center on the back. +Y up, +X right, +Z out (away from the wearer).
-# Hailong 48V 13Ah: 367 x 90 x 111 mm
-# D6374: ~75 OD x 74 L, 10 mm shaft
-# PLE60 10:1: 60 mm square, ~72 L, 14 mm out
-# ODrive S1 + spreader: 105 x 75 x 22
-
-PALETTE = {
-    "torso": "#e7d3c0",
-    "frame": "#f2f4f7",
-    "sled": "#94a3b8",
-    "battery": "#14532d",
-    "motor": "#111215",
-    "gear": "#64748b",
-    "drum": "#ffc93c",
-    "bearing": "#ff6a1a",
-    "s1": "#16a34a",
-    "spreader": "#cbd5e1",
-    "xt90": "#f97316",
-    "bullet": "#eab308",
-    "bulkhead": "#22c55e",
-    "housing": "#1f2937",
-    "cable_el": "#38bdf8",
-    "cable_flex": "#e879f9",
-    "cable_abd": "#818cf8",
-    "strap": "#78716c",
-    "encoder": "#7c3aed",
-}
+ROOT=Path(__file__).resolve().parent
+sys.path.insert(0,str(ROOT.parent))
+from design import PACK, WINCH_ROWS, WINCH_X, WINCH_Z, BATTERY_SIZE, BATTERY_CENTER, public_dir
+from surfaces import Mesh, plate, ring, curve, tube, ellipsoid, cylinder, annulus
+from build_stl import box, idler_bearing
+OUT=ROOT/'stl';PUB=public_dir('backpack')
+PALETTE={'torso':'#b2a79a','frame':'#697987','sled':'#536572','battery':'#283c43',
+'motor':'#8f9eaa','s1':'#2d5a57','spreader':'#687b88','xt90':'#c4803c','bullet':'#bda071',
+'bulkhead':'#8496a5','housing':'#15212a','cable_el':'#465968','cable_flex':'#465968',
+'cable_abd':'#465968','strap':'#303b42'}
 
 
-def frame() -> Mesh:
-    """20 L shell. 220 W × 280 H × 80 D — a pack, not a wardrobe."""
-    m = box(-110, 110, -140, 140, 0, 5)
-    m.add(box(-110, 110, -140, 140, 75, 80))
-    m.add(box(-110, -105, -140, 140, 0, 80))
-    m.add(box(105, 110, -140, 140, 0, 80))
-    m.add(box(-110, 110, 135, 140, 0, 80))
-    m.add(box(-110, 110, -140, -135, 0, 80))
+def frame():
+    # Open ladder chassis: no front wall hiding the motors or crossing the
+    # armor windows. Backplane and rails meet without overlapping volumes.
+    m=plate([[-120,-240],[120,-240],[125,-218],[125,132],[106,152],[-106,152],[-125,132],[-125,-218]],0,6,1)
+    for x in [-122,122]:
+        m.add(box(x-3,x+3,-220,126,6,113))
+    for y in [-132,-35,55,145]:
+        m.add(box(-119,119,y-3,y+3,6,21))
     return m
 
 
-def sled() -> Mesh:
-    m = box(-42, 42, -120, 40, 8, 18)
-    m.add(box(-42, -34, -120, 40, 8, 72))
-    m.add(box(34, 42, -120, 40, 8, 72))
+def sled():
+    x,y,z=BATTERY_CENTER;w,h,d=BATTERY_SIZE
+    m=box(-w/2-3,w/2+3,y-h/2-5,y+h/2+5,z-d/2-5,z-d/2-2)
+    for sign in [-1,1]:m.add(box(sign*(w/2+3)-2,sign*(w/2+3)+2,y-h/2-5,y+h/2+5,z-d/2-2,z+d/2))
     return m
 
 
-def battery() -> Mesh:
-    """48 V brick that actually fits a pack. Hailong downtube is 367 mm — too tall to wear."""
-    return box(-38, 38, -125, 95, 18, 70)
+def battery():
+    x,y,z=BATTERY_CENTER;w,h,d=BATTERY_SIZE
+    return box(x-w/2,x+w/2,y-h/2,y+h/2,z-d/2,z+d/2)
 
 
 def motor() -> Mesh:
@@ -107,145 +71,88 @@ def winch() -> Mesh:
     return m
 
 
-def winch_at(x: float) -> Mesh:
-    return winch().rx(-90).move(x, 55, 42)
+def winch_at(y):
+    return winch().ry(90).move(WINCH_X,y,WINCH_Z)
 
 
-def s1() -> Mesh:
-    m = box(-40, 40, -28, 28, 0, 8)
-    m.add(box(-36, 36, -24, 24, 8, 16))
+def s1():
+    # Existing board envelope; positioned in the shallow backplane layer.
+    return box(-40,40,-28,28,0,16)
+
+
+def drives():
+    m=Mesh()
+    for y in WINCH_ROWS:m.add(s1().move(0,y,10))
     return m
 
 
-def drives() -> Mesh:
-    m = Mesh()
-    for x in (-65.0, 0.0, 65.0):
-        m.add(s1().move(x, 105, 10))
+def spreader():
+    m=Mesh()
+    for y in WINCH_ROWS:m.add(box(-43,43,y-30,y+30,6,9))
     return m
 
 
-def spreader() -> Mesh:
-    return box(-100, 100, 80, 125, 6, 12)
+def xt90():
+    return box(-10,10,-8,8,0,18)
 
 
-def xt90() -> Mesh:
-    m = box(-10, 10, -8, 8, 0, 18)
-    m.add(cylinder(3.5, 10).move(-5, 0, 18))
-    m.add(cylinder(3.5, 10).move(5, 0, 18))
+def bullets():
+    m=Mesh()
+    for y in WINCH_ROWS:
+        for dy in [-5,5]:m.add(cylinder(2.2,10).ry(90).move(-110,y+dy,69))
     return m
 
 
-def bullets() -> Mesh:
-    m = Mesh()
-    for x in (-65.0, 0.0, 65.0):
-        for dy in (-6.0, 6.0):
-            m.add(cylinder(2.2, 12).ry(90).move(x + 28, 55 + dy, 42))
+def bulkhead():
+    m=box(-65,65,139,148,30,48)
+    for x in [-50,-30,-10,10,30,50]:m.add(annulus(5,2.8,10).rx(90).move(x,153,39))
     return m
 
 
-def bulkhead() -> Mesh:
-    m = box(-95, 95, 118, 132, 48, 58)
-    for x in (-65.0, -50.0, -8.0, 8.0, 50.0, 65.0):
-        m.add(cylinder(5.5, 16).move(x, 125, 64))
-        m.add(cylinder(2.8, 8).move(x, 125, 74))
+def housing():
+    m=Mesh()
+    for index,y in enumerate(WINCH_ROWS):
+        for side in [-1,1]:
+            x=-50+index*40+(side+1)*10
+            pts=[[104,y+side*18,88],[112,y+side*22,92],[112,132,92],[x,148,39],[x,160,39]]
+            m.add(tube(curve(pts,32),2.7,8))
     return m
 
 
-def housing() -> Mesh:
-    m = Mesh()
-    for x in (-65.0, -50.0, -8.0, 8.0, 50.0, 65.0):
-        m.add(polyline([np.array([x, 125.0, 74]), np.array([x * 0.3, 200.0, 30]), np.array([18.0, 250.0, 8])], 2.6))
+def cables():
+    # Cable cores within the continuous housings; the system owns the onward
+    # runs over the shoulder so a second floating harness is not assembled.
+    return {}
+
+
+def straps():
+    m=Mesh()
+    for x in [-82,82]:m.add(box(x-10,x+10,-200,120,-8,-2))
     return m
 
 
-def cables() -> dict[str, Mesh]:
-    def pair(a, b):
-        m = polyline(
-            [np.array([a, 70.0, 55]), np.array([a, 125.0, 64]), np.array([a * 0.3, 200.0, 30]), np.array([18.0, 250.0, 8])],
-            1.4,
-        )
-        m.add(
-            polyline(
-                [np.array([b, 70.0, 55]), np.array([b, 125.0, 64]), np.array([b * 0.3, 200.0, 30]), np.array([22.0, 250.0, 8])],
-                1.4,
-            )
-        )
-        return m
-
-    return {"cable_el": pair(-65, -50), "cable_flex": pair(-8, 8), "cable_abd": pair(50, 65)}
-
-
-def straps() -> Mesh:
-    m = box(-100, -78, -30, 110, -6, 6)
-    m.add(box(78, 100, -30, 110, -6, 6))
-    return m
-
-
-def ghost_torso() -> Mesh:
-    m = cylinder(140, 400).move(0, 0, -90)
-    m.add(cylinder(70, 90).move(0, 220, -90))
-    return m
+def ghost_torso():
+    return ellipsoid([150,205,87],[0,-25,-92])
 
 
 def assembly_layers(with_body=True):
-    layers = []
-    if with_body:
-        layers.append(("torso", ghost_torso(), PALETTE["torso"]))
-    layers += [
-        ("frame", frame(), PALETTE["frame"]),
-        ("sled", sled(), PALETTE["sled"]),
-        ("battery", battery(), PALETTE["battery"]),
-        ("motor", winch_at(-65).add(winch_at(0)).add(winch_at(65)), PALETTE["motor"]),
-        ("s1", drives(), PALETTE["s1"]),
-        ("spreader", spreader(), PALETTE["spreader"]),
-        ("xt90", xt90().move(0, -100, 40).add(xt90().move(28, -100, 40)), PALETTE["xt90"]),
-        ("bullet", bullets(), PALETTE["bullet"]),
-        ("bulkhead", bulkhead(), PALETTE["bulkhead"]),
-        ("housing", housing(), PALETTE["housing"]),
-        ("strap", straps(), PALETTE["strap"]),
-    ]
-    for k, mesh in cables().items():
-        layers.append((k, mesh, PALETTE[k]))
+    layers=[('torso',ghost_torso(),PALETTE['torso'])] if with_body else []
+    functions={'frame':frame,'sled':sled,'battery':battery,'s1':drives,'spreader':spreader,
+               'bulkhead':bulkhead,'housing':housing,'strap':straps,'bullet':bullets}
+    for name,fn in functions.items():layers.append((name,fn(),PALETTE[name]))
+    motors=Mesh()
+    for y in WINCH_ROWS:motors.add(winch_at(y))
+    layers.append(('motor',motors,PALETTE['motor']))
+    layers.append(('xt90',xt90().move(-35,-231,51).add(xt90().move(35,-231,51)),PALETTE['xt90']))
     return layers
 
 
 def main():
-    OUT.mkdir(parents=True, exist_ok=True)
-    PUB.mkdir(parents=True, exist_ok=True)
-    parts = {
-        "print_frame": frame(),
-        "print_sled": sled(),
-        "print_drum": drum(),
-        "print_bulkhead": bulkhead(),
-        "ref_battery_DO_NOT_PRINT": battery(),
-        "ref_motor_DO_NOT_PRINT": motor(),
-        "ref_planetary_DO_NOT_PRINT": planetary(),
-        "ref_s1_DO_NOT_PRINT": s1(),
-        "assembly_preview": Mesh(),
-        "assembly_worn": Mesh(),
-    }
-    for _, mesh, _ in assembly_layers(False):
-        parts["assembly_preview"].add(mesh)
-    for _, mesh, _ in assembly_layers(True):
-        parts["assembly_worn"].add(mesh)
-    for name, mesh in parts.items():
-        write_stl(OUT / f"{name}.stl", mesh, name)
-        write_stl(PUB / f"{name}.stl", mesh, name)
-        print(f"  {name:32s} {len(mesh.tris):5d}")
-
-    asm_pub, asm_out = PUB / "asm", OUT / "asm"
-    asm_pub.mkdir(parents=True, exist_ok=True)
-    asm_out.mkdir(parents=True, exist_ok=True)
-    colors = {}
-    for name, mesh, hex_color in assembly_layers(True):
-        write_stl(asm_out / f"{name}.stl", mesh, name)
-        write_stl(asm_pub / f"{name}.stl", mesh, name)
-        colors[name] = hex_color
-        print(f"  asm/{name:20s} {len(mesh.tris):5d}  {hex_color}")
-    payload = json.dumps({"palette": PALETTE, "layers": colors}, indent=2)
-    (asm_pub / "colors.json").write_text(payload)
-    (asm_out / "colors.json").write_text(payload)
+    from export import export_kit
+    parts={'print_frame':frame(),'print_sled':sled(),'print_drum':drum(),'print_bulkhead':bulkhead(),
+           'ref_battery_DO_NOT_PRINT':battery(),'ref_motor_DO_NOT_PRINT':motor(),
+           'ref_planetary_DO_NOT_PRINT':planetary(),'ref_s1_DO_NOT_PRINT':s1()}
+    export_kit('backpack',assembly_layers,parts,PALETTE)
 
 
-if __name__ == "__main__":
-    main()
+if __name__=='__main__':main()

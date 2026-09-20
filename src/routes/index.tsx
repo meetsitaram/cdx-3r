@@ -510,15 +510,14 @@ function Cad() {
 
       <h3 className="mt-16 font-display text-2xl tracking-wide text-fg">03 — Backpack, three winches</h3>
       <p className="mt-3 mb-8 max-w-2xl text-base leading-relaxed text-muted">
-        Real motors and a real battery. 3× ODrive D6374 through 10:1
-        planetaries onto printed drums. 48 V brick in a 20 L shell (220 × 280 × 80 mm)
-        — not a 367 mm Hailong downtube hung as a wardrobe.
-        3× S1 on a heat spreader. Six M5 barrel adjusters at the bulkhead —
-        antagonist pair per axis. Housing stops here. Inners go to the drums.
+        Three transverse winch bays sit above a separate compact battery compartment
+        in a 250 × 392 × 120 mm frame. The 220 × 76 × 52 mm battery is a packaging
+        envelope; the final battery remains to be selected. Controllers sit behind
+        the motors, with six cable exits at the top bulkhead.
       </p>
       <img
         src="/cad/backpack/preview/worn.png"
-        alt="Backpack: Hailong battery, three D6374 winches, ODrive S1, cable bulkhead"
+        alt="Repacked backpack with three separated winch bays and a lower battery compartment"
         className="mb-4 w-full rounded-lg border border-border"
       />
       <LazyCadViewer kit="backpack" label="Orbit backpack in 3D — tap to load, then drag" />
@@ -644,15 +643,16 @@ function Cad() {
         </ul>
       </div>
 
-      <h3 className="mt-16 font-display text-2xl tracking-wide text-fg">05 — Circular window, sheave in the hole</h3>
+      <h3 className="mt-16 font-display text-2xl tracking-wide text-fg">05 — Sculpted shells, exposed joints</h3>
       <p className="mt-3 mb-8 max-w-2xl text-base leading-relaxed text-muted">
-        Not a tube. Deltoid is a carbon panel with a <strong className="text-fg">circular
-        cutout</strong>. Dual 3434T121 stack sits in that hole. Bicep plate
-        stops before the elbow sheave. Forearm starts 55 mm past the hinge.
+        A segmented shoulder cap leads into tapered upper-arm and forearm panels.
+        Metal borders, recessed light strips, and a passive wrist collar follow
+        the generated design references. Joint windows share the mechanical axes;
+        each carbon panel is available as a separate shell.
       </p>
       <img
-        src="/cad/armor/preview/joint.png?v=3"
-        alt="Circular carbon window around a dual McMaster sheave stack"
+        src="/cad/armor/preview/worn.png?v=shells-b"
+        alt="Rebuilt shoulder and arm shells with tapered panels, metal trim and exposed joint windows"
         className="mb-4 w-full rounded-lg border border-border"
       />
       <LazyCadViewer kit="armor" label="Orbit armor shells in 3D — tap Load 3D" />
@@ -667,7 +667,7 @@ function Cad() {
       <div className="mb-10 grid grid-cols-2 gap-3 lg:grid-cols-4">
         {ARMOR_PREVIEWS.filter((p) => !p.title.startsWith("Worn") && !p.title.startsWith("Joint")).map((p) => (
           <figure key={p.src} className="overflow-hidden rounded-lg border border-border bg-surface">
-            <img src={`${p.src}?v=3`} alt={p.title} className="aspect-[3/2] w-full object-cover" />
+            <img src={`${p.src}?v=shells-b`} alt={p.title} className="aspect-[3/2] w-full object-cover" />
             <figcaption className="px-3 py-2 font-mono text-[10px] tracking-[0.16em] text-subtle uppercase">
               {p.title}
             </figcaption>

@@ -5,13 +5,15 @@ from __future__ import annotations
 import json
 import math
 import struct
+import sys
 from pathlib import Path
 
 import numpy as np
 
 ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(ROOT.parent))
 OUT = ROOT / "stl"
-PUB = Path("/workspace/public/cad/elbow")
+PUB = ROOT.parents[1] / "public" / "cad" / "elbow"
 PARAMS = json.loads((ROOT.parent / "params.json").read_text())
 
 N = 56
@@ -394,22 +396,22 @@ def sheave() -> Mesh:
 
 
 PALETTE = {
-    "cuff_upper": "#12b5d4",
-    "cuff_forearm": "#5ee0ff",
-    "lateral": "#f2f4f7",
-    "distal": "#cbd5e1",
+    "cuff_upper": "#536574",
+    "cuff_forearm": "#536574",
+    "lateral": "#7b8e9d",
+    "distal": "#8396a5",
     "medial": "#4b5568",
-    "sheave": "#ffc93c",
-    "screw": "#111215",
+    "sheave": "#a8b6c2",
+    "screw": "#536573",
     "nylock": "#ef4444",
-    "bearing": "#ff6a1a",
-    "anchor": "#22c55e",
-    "stop": "#facc15",
+    "bearing": "#667a89",
+    "anchor": "#6e8190",
+    "stop": "#9daebc",
     "arm": "#f3c6a5",
     "housing": "#1f2937",
-    "cable_flex": "#e879f9",
-    "cable_ext": "#818cf8",
-    "clamp": "#fb7185",
+    "cable_flex": "#3b5060",
+    "cable_ext": "#3b5060",
+    "clamp": "#566b7c",
 }
 
 
@@ -469,21 +471,8 @@ def main():
         "assembly_preview": assembly(False),
         "assembly_worn": assembly(True),
     }
-    for name, mesh in parts.items():
-        write_stl(OUT / f"{name}.stl", mesh, name)
-        write_stl(PUB / f"{name}.stl", mesh, name)
-    asm_pub = PUB / "asm"
-    asm_out = OUT / "asm"
-    asm_pub.mkdir(parents=True, exist_ok=True)
-    asm_out.mkdir(parents=True, exist_ok=True)
-    colors = {}
-    for name, mesh, hex_color in assembly_layers(True):
-        write_stl(asm_out / f"{name}.stl", mesh, name)
-        write_stl(asm_pub / f"{name}.stl", mesh, name)
-        colors[name] = hex_color
-        print(f"  asm/{name:20s} {len(mesh.tris):5d}  {hex_color}")
-    (asm_pub / "colors.json").write_text(json.dumps({"palette": PALETTE, "layers": colors}, indent=2))
-    (asm_out / "colors.json").write_text(json.dumps({"palette": PALETTE, "layers": colors}, indent=2))
+    from export import export_kit
+    export_kit("elbow", assembly_layers, parts, PALETTE)
 
 
 if __name__ == "__main__":

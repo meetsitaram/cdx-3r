@@ -1,7 +1,7 @@
 {
   "units": "mm",
-  "stage": "elbow",
-  "next": "shoulder",
+  "stage": "integrated-shells",
+  "next": "wearer-fit-and-mount-detail",
   "human": {
     "note": "Adult male, right arm, parametric. Measure the wearer and edit.",
     "upper_arm_len": 290,
@@ -74,5 +74,28 @@
       "m4": "https://www.mcmaster.com/94180A351/",
       "m8": "https://www.mcmaster.com/94180A411/"
     }
+  },
+  "packaging": {
+    "note": "Concept envelopes, not vendor-verified parts. The compact battery is explicitly a different envelope from the old Hailong reference.",
+    "winch_rows_y": [
+      100,
+      10,
+      -80
+    ],
+    "winch_center_z": 69,
+    "battery_envelope_xyz": [
+      220,
+      76,
+      52
+    ],
+    "battery_center_xyz": [
+      0,
+      -183,
+      51
+    ],
+    "frame_width": 250,
+    "frame_y_min": -240,
+    "frame_y_max": 152,
+    "frame_depth": 120
   }
 }

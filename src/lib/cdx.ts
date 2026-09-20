@@ -149,9 +149,9 @@ export const SPONSOR_SPLIT = [
 export const CAD_STAGES = [
   { n: "01", name: "Elbow", status: "Done", blurb: "Hinge, McMaster sheave, printed forks and cuffs." },
   { n: "02", name: "Shoulder", status: "Done", blurb: "Flexion (lateral) + abduction (posterior)." },
-  { n: "03", name: "Backpack", status: "Done", blurb: "3× D6374 + 10:1, Hailong 48 V, 3× ODrive S1." },
+  { n: "03", name: "Backpack", status: "Done", blurb: "Three transverse winch bays, lower battery compartment, rear controllers." },
   { n: "04", name: "Connect", status: "Done", blurb: "One system. Saddle + hip belt take the weight, not the biceps." },
-  { n: "05", name: "Armor", status: "Now", blurb: "Circular window around the sheave. Dual 3434T121 in the hole." },
+  { n: "05", name: "Armor", status: "Now", blurb: "Segmented shoulder, tapered arm panels, metal borders and a passive wrist collar." },
 ] as const;
 
 export const ELBOW_HUMAN = [
@@ -322,7 +322,7 @@ export const PACK_PHYSICS = [
   { k: "Drum r", v: "20 mm", d: "Printed, on the 14 mm planetary output" },
   { k: "Elbow 5 kg", v: "9 N·m → 0.9 N·m", d: "After 10:1. D6374 is fine." },
   { k: "Shoulder 5 kg", v: "17 N·m → 1.7 N·m", d: "Peak. Not 15 kg." },
-  { k: "Bus", v: "48 V · 3× S1", d: "Pack brick ~220×80×70. Hailong downtube is 367 mm — too tall." },
+  { k: "Bus", v: "48 V · 3× S1", d: "Battery envelope 220×76×52 mm. Final battery selection pending." },
 ] as const;
 
 export const PACK_BUY = [
@@ -351,12 +351,6 @@ export const PACK_BUY = [
     href: "https://www.cuidevices.com/product/motion/rotary-encoders/incremental/modular/amt21-series",
   },
   {
-    qty: "1",
-    item: "Hailong 48 V 13 Ah",
-    why: "367×90×111 mm, ~4 kg, XT90. E-bike down-tube pack.",
-    href: "https://yosepower.com/products/48v-13ah-down-tube-hailong1-2-battery-lithium-ion-accu-e-bike-electric-bicycle-bottle-new-black-diy",
-  },
-  {
     qty: "6",
     item: "M5 barrel adjusters + Jagwire 5 mm ferrules",
     why: "Bulkhead. Antagonist pair per axis.",
@@ -372,7 +366,7 @@ export const PACK_BUY = [
 
 export const PACK_PRINT = [
   { file: "print_frame.stl", note: "Pack shell. Straps bolt to the sides." },
-  { file: "print_sled.stl", note: "Hailong dovetail. Battery slides in." },
+  { file: "print_sled.stl", note: "Sled for the compact battery envelope." },
   { file: "print_drum.stl", note: "Print three. 20 mm pitch radius." },
   { file: "print_bulkhead.stl", note: "Six M5 barrels. Housing stops here." },
 ] as const;
@@ -380,7 +374,7 @@ export const PACK_PRINT = [
 export const PACK_PREVIEWS = [
   { src: "/cad/backpack/preview/worn.png", title: "Worn — pack on the back" },
   { src: "/cad/backpack/preview/assembly.png", title: "Pack only" },
-  { src: "/cad/backpack/preview/battery.png", title: "Buy — Hailong 48 V" },
+  { src: "/cad/backpack/preview/battery.png", title: "Reference — compact battery envelope" },
   { src: "/cad/backpack/preview/motor.png", title: "Buy — D6374" },
   { src: "/cad/backpack/preview/gear.png", title: "Buy — 10:1 planetary" },
   { src: "/cad/backpack/preview/s1.png", title: "Buy — ODrive S1" },
@@ -389,7 +383,7 @@ export const PACK_PREVIEWS = [
 ] as const;
 
 export const PACK_SWATCHES = [
-  { id: "battery", label: "Hailong 48 V", hex: "#14532d" },
+  { id: "battery", label: "Battery envelope", hex: "#14532d" },
   { id: "motor", label: "D6374 + gearbox", hex: "#111215" },
   { id: "s1", label: "ODrive S1", hex: "#16a34a" },
   { id: "xt90", label: "XT90", hex: "#f97316" },
@@ -436,24 +430,29 @@ export const SYSTEM_SWATCHES = [
 ] as const;
 
 export const ARMOR_PRINT = [
-  { file: "print_fairing_deltoid.stl", note: "Circular window panel. Dual 3434T121 sits in the hole." },
-  { file: "print_fairing_ua.stl", note: "Floating bicep plate. Stops before the elbow sheave." },
-  { file: "print_fairing_fa.stl", note: "Forearm dish. Starts 55 mm past the hinge." },
-  { file: "print_fairing_scapula.stl", note: "Yoke dish over the scapula." },
-  { file: "print_fairing_pack_tub.stl", note: "Formed back plate. Three drum windows." },
-  { file: "print_fairing_pack_lid.stl", note: "Window bezels + cable trunk. Drums read through." },
+  { file: "print_fairing_deltoid.stl", note: "Shoulder crown — circular opening on the flexion axis." },
+  { file: "print_fairing_deltoid_front.stl", note: "Shoulder front segment." },
+  { file: "print_fairing_deltoid_rear.stl", note: "Shoulder rear segment." },
+  { file: "print_fairing_ua.stl", note: "Tapered upper-arm center panel." },
+  { file: "print_fairing_ua_front.stl", note: "Upper-arm front wing." },
+  { file: "print_fairing_ua_rear.stl", note: "Upper-arm rear wing." },
+  { file: "print_fairing_fa.stl", note: "Long tapered forearm panel." },
+  { file: "print_fairing_fa_front.stl", note: "Forearm front wing." },
+  { file: "print_fairing_fa_rear.stl", note: "Forearm rear wing." },
+  { file: "print_fairing_wrist.stl", note: "Passive wrist collar." },
+  { file: "print_fairing_scapula.stl", note: "Scapula cover." },
+  { file: "print_fairing_pack_tub.stl", note: "Left contoured pack rail." },
+  { file: "print_fairing_pack_right.stl", note: "Right contoured pack rail." },
+  { file: "print_fairing_pack_crown.stl", note: "Pack crown." },
+  { file: "print_fairing_pack_lid.stl", note: "Lower battery cover." },
 ] as const;
 
 export const ARMOR_SWATCHES = [
-  { id: "deltoid", label: "Deltoid window", hex: "#1c2024" },
-  { id: "bezel", label: "Window lip", hex: "#8a9199" },
-  { id: "sheave", label: "Dual 3434T121", hex: "#c5cad3" },
-  { id: "ua", label: "Bicep plate", hex: "#1f2328" },
-  { id: "fa", label: "Forearm dish", hex: "#252a31" },
-  { id: "scapula", label: "Yoke dish", hex: "#2a3038" },
-  { id: "pack", label: "Pack plate", hex: "#16191d" },
-  { id: "lid", label: "Drum bezels", hex: "#1a1e24" },
-  { id: "led", label: "LED channel", hex: "#3b82f6" },
+  { id: "carbon", label: "Center panels", hex: "#242d36" },
+  { id: "carbon_side", label: "Side panels", hex: "#303c47" },
+  { id: "metal", label: "Borders and bezels", hex: "#a5b3c0" },
+  { id: "dark_metal", label: "Wrist and ribs", hex: "#526477" },
+  { id: "led", label: "Light strips", hex: "#64d9f5" },
 ] as const;
 
 export const ARMOR_BUY = [
@@ -462,13 +461,13 @@ export const ARMOR_BUY = [
 ] as const;
 
 export const ARMOR_PREVIEWS = [
-  { src: "/cad/armor/preview/joint.png", title: "Joint — circular window, dual sheaves" },
-  { src: "/cad/armor/preview/worn.png", title: "Worn — plating on the skeleton" },
+  { src: "/cad/armor/preview/joint.png", title: "Joint — aligned shoulder window" },
+  { src: "/cad/armor/preview/worn.png", title: "Worn — sculpted shoulder and arm" },
   { src: "/cad/armor/preview/deltoid.png", title: "Print — deltoid window" },
   { src: "/cad/armor/preview/ua.png", title: "Print — bicep plate" },
   { src: "/cad/armor/preview/fa.png", title: "Print — forearm plate" },
   { src: "/cad/armor/preview/scapula.png", title: "Print — yoke" },
   { src: "/cad/armor/preview/pack.png", title: "Print — pack plate" },
-  { src: "/cad/armor/preview/lid.png", title: "Print — drum bezels" },
+  { src: "/cad/armor/preview/lid.png", title: "Print — battery cover" },
 ] as const;
 

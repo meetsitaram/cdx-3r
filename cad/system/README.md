@@ -22,3 +22,14 @@ The exo does **not** hang on the arm.
 - **Red park rest** — forearm shelf in rest. You can take your arm out. The exo stays.
 
 If the biceps are holding the suit, the load path is wrong.
+
+
+## Revision B
+
+The full assembly now includes every current shell and mechanism layer. The
+shoulder and elbow use shared datums from `cad/design.py`; all exported views
+use the same work pose. The elbow flexes forward without the former 45° yaw.
+The pack has separated winch bays, rear controllers and a lower battery envelope.
+The system harness replaces disconnected subsystem cable extensions.
+
+See [shell revision and verification](../armor/README.md).

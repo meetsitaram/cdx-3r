@@ -1,0 +1,463 @@
+{
+  "layer_comparison": {
+    "elbow": {
+      "matching": [
+        "arm",
+        "cuff_upper",
+        "cuff_forearm",
+        "lateral",
+        "distal",
+        "medial",
+        "sheave",
+        "screw",
+        "nylock",
+        "bearing",
+        "anchor",
+        "housing",
+        "cable_flex",
+        "cable_ext",
+        "clamp",
+        "stop"
+      ],
+      "different": [],
+      "missing": [],
+      "local_vs_public_different": []
+    },
+    "shoulder": {
+      "matching": [
+        "torso",
+        "arm",
+        "cuff",
+        "scapula",
+        "abd_yoke",
+        "flex_yoke",
+        "sheave_flex",
+        "sheave_abd",
+        "screw",
+        "bearing",
+        "cups",
+        "anchor",
+        "comb",
+        "housing",
+        "cable_flex",
+        "cable_abd",
+        "cable_elbow",
+        "clamp",
+        "stop"
+      ],
+      "different": [],
+      "missing": [],
+      "local_vs_public_different": []
+    },
+    "backpack": {
+      "matching": [
+        "torso",
+        "frame",
+        "sled",
+        "battery",
+        "motor",
+        "s1",
+        "spreader",
+        "xt90",
+        "bullet",
+        "bulkhead",
+        "housing",
+        "strap",
+        "cable_el",
+        "cable_flex",
+        "cable_abd"
+      ],
+      "different": [],
+      "missing": [],
+      "local_vs_public_different": []
+    },
+    "armor": {
+      "matching": [
+        "ghost_ua",
+        "ghost_fa",
+        "ghost_deltoid",
+        "ghost_frame",
+        "ua",
+        "fa",
+        "deltoid",
+        "bezel",
+        "sheave",
+        "scapula",
+        "pack",
+        "lid",
+        "led",
+        "screw"
+      ],
+      "different": [],
+      "missing": [],
+      "local_vs_public_different": []
+    },
+    "system": {
+      "matching": [
+        "human",
+        "saddle",
+        "yoke",
+        "beam",
+        "belt",
+        "park",
+        "strap",
+        "ferrule",
+        "housing",
+        "cable_el",
+        "cable_flex",
+        "cable_abd",
+        "pk_frame",
+        "pk_sled",
+        "pk_battery",
+        "pk_motor",
+        "pk_s1",
+        "pk_spreader",
+        "pk_xt90",
+        "pk_bulkhead",
+        "pk_housing",
+        "pk_cable_el",
+        "pk_cable_flex",
+        "pk_cable_abd",
+        "sh_cuff",
+        "sh_scapula",
+        "sh_abd_yoke",
+        "sh_flex_yoke",
+        "sh_sheave_flex",
+        "sh_sheave_abd",
+        "sh_screw",
+        "sh_bearing",
+        "sh_cups",
+        "sh_anchor",
+        "sh_comb",
+        "sh_housing",
+        "sh_cable_flex",
+        "sh_cable_abd",
+        "sh_cable_elbow",
+        "sh_clamp",
+        "sh_stop",
+        "el_cuff_upper",
+        "el_cuff_forearm",
+        "el_lateral",
+        "el_distal",
+        "el_medial",
+        "el_sheave",
+        "el_screw",
+        "el_nylock",
+        "el_bearing",
+        "el_anchor",
+        "el_housing",
+        "el_cable_flex",
+        "el_cable_ext",
+        "el_clamp",
+        "el_stop",
+        "ar_ua",
+        "ar_fa",
+        "ar_deltoid",
+        "ar_bezel",
+        "ar_sheave",
+        "ar_scapula",
+        "ar_pack",
+        "ar_lid",
+        "ar_led"
+      ],
+      "different": [],
+      "missing": [],
+      "local_vs_public_different": [
+        "assembly_preview.stl",
+        "assembly_worn.stl"
+      ]
+    }
+  },
+  "armor_prints": {
+    "print_fairing_ua": {
+      "triangles": 1276,
+      "bounds_mm": [
+        [
+          -70.98,
+          84.0,
+          -62.97
+        ],
+        [
+          58.16,
+          192.0,
+          32.28
+        ]
+      ],
+      "extents_mm": [
+        129.14,
+        108.0,
+        95.25
+      ],
+      "watertight": true,
+      "winding_consistent": false,
+      "boundary_edges": 0,
+      "nonmanifold_edges": 0
+    },
+    "print_fairing_fa": {
+      "triangles": 1276,
+      "bounds_mm": [
+        [
+          -156.0,
+          -26.62,
+          -38.55
+        ],
+        [
+          -50.0,
+          62.98,
+          68.99
+        ]
+      ],
+      "extents_mm": [
+        106.0,
+        89.6,
+        107.54
+      ],
+      "watertight": true,
+      "winding_consistent": false,
+      "boundary_edges": 0,
+      "nonmanifold_edges": 0
+    },
+    "print_fairing_deltoid": {
+      "triangles": 2348,
+      "bounds_mm": [
+        [
+          -69.38,
+          -81.87,
+          -34.43
+        ],
+        [
+          105.8,
+          101.87,
+          72.02
+        ]
+      ],
+      "extents_mm": [
+        175.17,
+        183.73,
+        106.45
+      ],
+      "watertight": true,
+      "winding_consistent": false,
+      "boundary_edges": 0,
+      "nonmanifold_edges": 0
+    },
+    "print_fairing_scapula": {
+      "triangles": 1456,
+      "bounds_mm": [
+        [
+          -80.0,
+          34.07,
+          38.94
+        ],
+        [
+          32.0,
+          130.57,
+          80.82
+        ]
+      ],
+      "extents_mm": [
+        112.0,
+        96.5,
+        41.87
+      ],
+      "watertight": false,
+      "winding_consistent": true,
+      "boundary_edges": 112,
+      "nonmanifold_edges": 0
+    },
+    "print_fairing_pack_tub": {
+      "triangles": 2800,
+      "bounds_mm": [
+        [
+          -118.0,
+          -148.0,
+          16.0
+        ],
+        [
+          118.0,
+          148.0,
+          90.84
+        ]
+      ],
+      "extents_mm": [
+        236.0,
+        296.0,
+        74.84
+      ],
+      "watertight": false,
+      "winding_consistent": true,
+      "boundary_edges": 240,
+      "nonmanifold_edges": 0
+    },
+    "print_fairing_pack_lid": {
+      "triangles": 1568,
+      "bounds_mm": [
+        [
+          -36.0,
+          -106.0,
+          54.0
+        ],
+        [
+          84.0,
+          144.0,
+          95.0
+        ]
+      ],
+      "extents_mm": [
+        120.0,
+        250.0,
+        41.0
+      ],
+      "watertight": true,
+      "winding_consistent": true,
+      "boundary_edges": 0,
+      "nonmanifold_edges": 0
+    },
+    "print_bezel_deltoid": {
+      "triangles": 896,
+      "bounds_mm": [
+        [
+          -38.0,
+          -42.0,
+          67.0
+        ],
+        [
+          66.0,
+          62.0,
+          77.0
+        ]
+      ],
+      "extents_mm": [
+        104.0,
+        104.0,
+        10.0
+      ],
+      "watertight": true,
+      "winding_consistent": true,
+      "boundary_edges": 0,
+      "nonmanifold_edges": 0
+    }
+  },
+  "pack_parts": {
+    "frame": {
+      "triangles": 72,
+      "bounds_mm": [
+        [
+          -110.0,
+          -140.0,
+          0.0
+        ],
+        [
+          110.0,
+          140.0,
+          80.0
+        ]
+      ],
+      "extents_mm": [
+        220.0,
+        280.0,
+        80.0
+      ],
+      "watertight": false,
+      "winding_consistent": true,
+      "boundary_edges": 0,
+      "nonmanifold_edges": 12
+    },
+    "battery": {
+      "triangles": 12,
+      "bounds_mm": [
+        [
+          -38.0,
+          -125.0,
+          18.0
+        ],
+        [
+          38.0,
+          95.0,
+          70.0
+        ]
+      ],
+      "extents_mm": [
+        76.0,
+        220.0,
+        52.0
+      ],
+      "watertight": true,
+      "winding_consistent": true,
+      "boundary_edges": 0,
+      "nonmanifold_edges": 0
+    },
+    "winch": {
+      "triangles": 2476,
+      "bounds_mm": [
+        [
+          -37.5,
+          -37.5,
+          -66.0
+        ],
+        [
+          37.5,
+          37.5,
+          137.5
+        ]
+      ],
+      "extents_mm": [
+        75.0,
+        75.0,
+        203.5
+      ],
+      "watertight": true,
+      "winding_consistent": true,
+      "boundary_edges": 0,
+      "nonmanifold_edges": 0
+    },
+    "drives": {
+      "triangles": 72,
+      "bounds_mm": [
+        [
+          -105.0,
+          77.0,
+          10.0
+        ],
+        [
+          105.0,
+          133.0,
+          26.0
+        ]
+      ],
+      "extents_mm": [
+        210.0,
+        56.0,
+        16.0
+      ],
+      "watertight": true,
+      "winding_consistent": true,
+      "boundary_edges": 0,
+      "nonmanifold_edges": 0
+    },
+    "winch_at": {
+      "triangles": 2476,
+      "bounds_mm": [
+        [
+          -37.5,
+          -11.0,
+          4.5
+        ],
+        [
+          37.5,
+          192.5,
+          79.5
+        ]
+      ],
+      "extents_mm": [
+        75.0,
+        203.5,
+        75.0
+      ],
+      "watertight": true,
+      "winding_consistent": true,
+      "boundary_edges": 0,
+      "nonmanifold_edges": 0
+    }
+  }
+}

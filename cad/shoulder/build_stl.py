@@ -31,15 +31,17 @@ from build_stl import (  # noqa: E402
 )
 
 ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(ROOT.parent))
 OUT = ROOT / "stl"
-PUB = Path("/workspace/public/cad/shoulder")
+PUB = ROOT.parents[1] / "public" / "cad" / "shoulder"
 PARAMS = json.loads((ROOT.parent / "params.json").read_text())
 
 # Origin = glenohumeral center.
 # +Y up (head). +X anterior (upper arm at 90° flexion). +Z lateral (right).
 PITCH = SHEAVE["pitch"] / 2
 W = SHEAVE["width"]
-Z_FLEX = 72.0  # flexion sheave, outboard of deltoid
+from design import SHOULDER_Z
+Z_FLEX = SHOULDER_Z  # shared shoulder flexion datum
 X_ABD = -78.0  # abduction sheave, behind the shoulder toward the pack
 CUFF_T = 8.0
 DELTOID_ID = 120.0
@@ -48,36 +50,36 @@ DELTOID_ID = 120.0
 PALETTE = {
     "arm": "#f3c6a5",
     "torso": "#e7d3c0",
-    "cuff": "#5ee0ff",
-    "scapula": "#f2f4f7",
+    "cuff": "#536574",
+    "scapula": "#7b8e9d",
     "abd_yoke": "#94a3b8",
-    "flex_yoke": "#cbd5e1",
-    "sheave_flex": "#ffc93c",
-    "sheave_abd": "#f97316",
-    "screw": "#111215",
-    "bearing": "#ff6a1a",
-    "anchor": "#22c55e",
-    "comb": "#14b8a6",
+    "flex_yoke": "#8396a5",
+    "sheave_flex": "#a8b6c2",
+    "sheave_abd": "#788b9a",
+    "screw": "#536573",
+    "bearing": "#667a89",
+    "anchor": "#6e8190",
+    "comb": "#687d8c",
     "housing": "#1f2937",
-    "cable_flex": "#e879f9",
-    "cable_abd": "#818cf8",
-    "cable_elbow": "#38bdf8",
-    "clamp": "#fb7185",
-    "stop": "#facc15",
+    "cable_flex": "#3b5060",
+    "cable_abd": "#3b5060",
+    "cable_elbow": "#3b5060",
+    "clamp": "#566b7c",
+    "stop": "#9daebc",
 }
 
 
 def scapula() -> Mesh:
     """Pad on top of the shoulder. Pack straps bolt here. Does not rotate."""
-    m = box(-70, 20, 40, 90, -50, 40)
-    m.add(box(-70, -20, 10, 90, -20, 20))
+    m = box(-65, 15, 40, 82, -40, 18)
+    m.add(box(-65, -25, 10, 82, -18, 18))
     return m
 
 
 def abd_yoke() -> Mesh:
     """Rotates about AP (X). Carries the flexion sheave."""
     m = box(-20, 20, -16, 16, 8, Z_FLEX - 8)
-    m.add(annulus(28, SHAFT / 2 + 0.2, 8).rx(90).move(X_ABD / 2, 0, 0))
+    m.add(annulus(28, SHAFT / 2 + 0.2, 8).ry(90).move(X_ABD, 0, 0))
     m.add(box(X_ABD + 8, 8, -16, 16, -12, 12))
     return m
 
@@ -101,7 +103,7 @@ def sheave_flex() -> Mesh:
 
 
 def sheave_abd() -> Mesh:
-    return annulus(SHEAVE["od"] / 2, SHEAVE["bore"] / 2, W).rx(90).move(X_ABD, 0, 0)
+    return annulus(SHEAVE["od"] / 2, SHEAVE["bore"] / 2, W).ry(90).move(X_ABD, 0, 0)
 
 
 def screw_flex() -> Mesh:
@@ -109,22 +111,22 @@ def screw_flex() -> Mesh:
 
 
 def screw_abd() -> Mesh:
-    return shoulder_screw().rx(90).move(X_ABD, 0, 0)
+    return shoulder_screw().ry(90).move(X_ABD, 0, 0)
 
 
 def bearings() -> Mesh:
     m = idler_bearing().move(28, 38, Z_FLEX - 4)
     m.add(idler_bearing().move(-22, 38, Z_FLEX - 4))
-    m.add(idler_bearing().move(X_ABD + 6, 36, 28))
-    m.add(idler_bearing().move(X_ABD + 6, -36, 28))
+    m.add(idler_bearing().ry(90).move(X_ABD + 6, 36, 28))
+    m.add(idler_bearing().ry(90).move(X_ABD + 6, -36, 28))
     return m
 
 
 def cups() -> Mesh:
     m = idler_cup().move(28, 38, Z_FLEX - 4)
     m.add(idler_cup().move(-22, 38, Z_FLEX - 4))
-    m.add(idler_cup().move(X_ABD + 6, 36, 28))
-    m.add(idler_cup().move(X_ABD + 6, -36, 28))
+    m.add(idler_cup().ry(90).move(X_ABD + 6, 36, 28))
+    m.add(idler_cup().ry(90).move(X_ABD + 6, -36, 28))
     return m
 
 
@@ -140,9 +142,9 @@ def anchors() -> Mesh:
 
 def comb() -> Mesh:
     """Elbow Bowden pass-through on the scapula — does not wrap the shoulder."""
-    m = box(-30, 10, 70, 95, -18, 18)
+    m = box(-30, 10, 58, 70, -18, 18)
     for x in (-18.0, -6.0, 6.0):
-        m.add(cylinder(4.0, 22).rx(90).move(x, 82, 0))
+        m.add(cylinder(4.0, 22).rx(90).move(x, 64, 0))
     return m
 
 
@@ -153,8 +155,8 @@ def housing() -> Mesh:
     m.add(polyline([np.array([-120.0, 80.0, 10]), np.array([X_ABD + 10, 50.0, 20])], 3.0))
     m.add(polyline([np.array([-120.0, 60.0, -10]), np.array([X_ABD + 10, -50.0, 20])], 3.0))
     # elbow pass-through up to pack
-    m.add(polyline([np.array([140.0, 8.0, 30]), np.array([-10.0, 82.0, 8]), np.array([-80.0, 140.0, 20])], 2.8))
-    m.add(polyline([np.array([140.0, -8.0, 30]), np.array([-10.0, 82.0, -8]), np.array([-90.0, 140.0, 10])], 2.8))
+    m.add(polyline([np.array([140.0, 8.0, 30]), np.array([-10.0, 64.0, 8]), np.array([-80.0, 140.0, 20])], 2.8))
+    m.add(polyline([np.array([140.0, -8.0, 30]), np.array([-10.0, 64.0, -8]), np.array([-90.0, 140.0, 10])], 2.8))
     return m
 
 
@@ -184,8 +186,8 @@ def cable_abd() -> Mesh:
 
 def cable_elbow() -> Mesh:
     """Elbow inners: along the upper arm, through the comb, to the pack. Do not wrap shoulder sheaves."""
-    m = polyline([np.array([200.0, 8.0, 28]), np.array([140.0, 8.0, 30]), np.array([-10.0, 82.0, 8])], 1.5)
-    m.add(polyline([np.array([200.0, -8.0, 28]), np.array([140.0, -8.0, 30]), np.array([-10.0, 82.0, -8])], 1.5))
+    m = polyline([np.array([200.0, 8.0, 28]), np.array([140.0, 8.0, 30]), np.array([-10.0, 64.0, 8])], 1.5)
+    m.add(polyline([np.array([200.0, -8.0, 28]), np.array([140.0, -8.0, 30]), np.array([-10.0, 64.0, -8])], 1.5))
     return m
 
 
@@ -259,24 +261,8 @@ def main():
     for _, mesh, _ in assembly_layers(True):
         parts["assembly_worn"].add(mesh)
 
-    for name, mesh in parts.items():
-        write_stl(OUT / f"{name}.stl", mesh, name)
-        write_stl(PUB / f"{name}.stl", mesh, name)
-        print(f"  {name:32s} {len(mesh.tris):5d}")
-
-    asm_pub = PUB / "asm"
-    asm_out = OUT / "asm"
-    asm_pub.mkdir(parents=True, exist_ok=True)
-    asm_out.mkdir(parents=True, exist_ok=True)
-    colors = {}
-    for name, mesh, hex_color in assembly_layers(True):
-        write_stl(asm_out / f"{name}.stl", mesh, name)
-        write_stl(asm_pub / f"{name}.stl", mesh, name)
-        colors[name] = hex_color
-        print(f"  asm/{name:20s} {len(mesh.tris):5d}  {hex_color}")
-    payload = json.dumps({"palette": PALETTE, "layers": colors}, indent=2)
-    (asm_pub / "colors.json").write_text(payload)
-    (asm_out / "colors.json").write_text(payload)
+    from export import export_kit
+    export_kit("shoulder", assembly_layers, parts, PALETTE)
 
 
 if __name__ == "__main__":
