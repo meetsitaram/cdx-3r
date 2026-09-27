@@ -17,3 +17,11 @@ data/
 .node_modules.lock
 *.zip
 .DS_Store
+
+# Fusion / print outputs
+.renders/
+__pycache__/
+prints/elbow-test-v1/
+prints/elbow-test-v2/
+prints/elbow-test-v3/
+prints/elbow-test-v4/
