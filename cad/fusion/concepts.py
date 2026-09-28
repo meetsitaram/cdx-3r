@@ -1,17 +1,16 @@
-"""Elbow joint concept B: PVC-pipe arm units on 6806 ball bearings.
+"""Elbow joint concept B: PVC-pipe arm units on two 6806 ball bearings.
 
-Each arm unit is four PVC pipes (21.5/15.5) held by two rings. A ring is a thin
-C-band around the arm (anterior opening for donning) with round bosses only
-where the pipes pass, so the medial side stays slim. The joint lugs are
-separate flat plates that screw onto a pad on the near ring (M4 heat-sets),
-so every part prints flat without supports:
-  ring   - flat on its face, pipe holes vertical
-  lug    - flat on its side, spigot / hub boss up
-  cover  - flat
-The bearings are bought 6806-2RS (30 x 42 x 7), not printed.
-
-  B   two-sided: a 6806 on the lateral and on the medial side
-  B1  lateral-only: two 6806s stacked in one lateral hub, nothing medial
+Each arm unit is three rear PVC pipes (21.5/15.5) held by two rings (a thin band
+with bosses where the pipes pass). The forearm pipes lean inward so the wrist ring
+can be smaller; every hole is drilled along its own pipe's line.
+At the elbow each unit is one printed part: its elbow-end ring (back half only),
+a cylindrical shell wrapping the back of the elbow, and a hub on each side.
+  forearm hubs      carry a bolted axle (pilot + 3 x M3) into each bearing's inner ring
+  upper-arm hubs    are the bearing housings (pocket + lip), with covers on M3 inserts
+  stops             rear ledge (hyperextension) and hub blocks (flexion at 135 deg)
+  wrist cuff        front half of the wrist ring, opens sideways on barrel hinges
+Every part prints flat or ring-down without supports (except inside the bearing pockets).
+The bearings are bought 6806-2RS (30 x 42 x 7); all screws are M3 into heat-sets.
 
 Frame (own document, Z up): X lateral (right arm), Y anterior, Z along the
 upper arm. The flexion axis is X through the origin; at 0 deg the forearm
@@ -27,11 +26,15 @@ from fxlib import Part
 
 P = dict(
     pipe_od=21.5, pipe_id=15.5, pipe_clear=0.4,
+    # pipe retention: one radial hole per pipe joint for a ~2.9 mm self-tapping pan-head screw
+    # (#4 x 3/8" or M3 x 10 self-tapping) straight into the PVC; drill a 2.2 mm pilot in the pipe
+    pipe_screw_hole=3.2, pipe_screw_len=12.0, pipe_screw_pitch=13.0,   # two per joint, 13 mm apart
     ua_d=120.0,                     # upper arm + padding; placeholder until the flexed-biceps measurement
     fa_d=113.0,                     # forearm 103 mm at its widest (near the elbow) + ~10 mm padding
     wrist_d=80.0,                   # wrist ring bore; placeholder (~70 mm wrist + 10) until measured.
                                     # The forearm pipes lean inward from fa_d to wrist_d.
     padding=10.0,                   # the bores above include ~10 mm of padding over the arm
+    skin_fillet=1.5,                # rounding on every skin-side edge (pipe holes are ~3 mm from the bore)
     band_t=5.0,                     # ring band thickness around the arm
     wall=3.0,                       # material between pipe hole and arm bore / boss rim
     ring_h=25.0,
@@ -51,6 +54,14 @@ P = dict(
     elbow_half=50.0,                # elbow_width/2 + padding + air: nothing inside this
     edge_fillet=2.0,
     bearing=(30.0, 42.0, 7.0),      # 6806-2RS: bore, OD, width
+    # axle-to-forearm flange: pilot + 3 x M3 x 10 socket head (heads sunk in the axle) into M3
+    # heat-sets (4 long, 4.0 hole) in the hub. One screw size (M3) for the whole elbow.
+    # shoulder_d stays on the 6806 inner ring (land ~Ø32.8); lip_d clears the seal (outer land ~Ø39.2)
+    axle=dict(pilot_d=16.0, pilot_len=3.0, shoulder_d=32.5, screws=3, screw_r=11.0, screw_clear=3.4,
+              head_d=5.8, head_depth=3.2, insert_d=4.0, insert_depth=5.5, lip_d=39.5,
+              screw=dict(d=3.0, len=10.0, head_d=5.5, head_h=3.0), insert_len=4.0),
+    m3=dict(insert_d=4.0, insert_depth=5.5),   # cover screws: M3 x 8 into M3 heat-sets (4 long) in the housing
+    cover_pcd=50.0,
     rom=(0, 135),
     # forearm door: the front halves of both forearm rings + a 5th pipe; hinged at the wrist ring,
     # pinned shut at the elbow ring. Each joint is a fork and tongue at the ring's side (y = 0):
@@ -71,10 +82,132 @@ P = dict(
 )
 
 UA_COLOR, FA_COLOR, HW_COLOR, BRG_COLOR, GHOST = '#647684', '#8fa3b3', '#c9d2d9', '#d4a017', '#e8c9a8'
+SCREW_COLOR = '#3a3f44'
 
 
 def band_out(d):
     return d / 2 + P['band_t']
+
+
+def _fillet(p, edges, r):
+    # tangent chain off: every edge is picked explicitly, and chaining into the existing end
+    # rounds made whole sets fail
+    """Fillet edges at r; if Fusion rejects the set, try one edge at a time and skip the ones that
+    can't take it. Returns (done, skipped)."""
+    if not edges:
+        return 0, 0
+    ff = p.comp.features.filletFeatures
+
+    def attempt(es):
+        fi = ff.createInput()
+        try:
+            fi.edgeSetInputs.addConstantRadiusEdgeSet(fx.coll(es), fx.VI.createByReal(r / 10.0), False)
+        except AttributeError:
+            fi.addConstantRadiusEdgeSet(fx.coll(es), fx.VI.createByReal(r / 10.0), False)
+        ff.add(fi)
+    try:
+        attempt(edges)
+        return len(edges), 0
+    except Exception:
+        # one at a time, longest first: a long rim rounded before its short neighbours has room;
+        # anything that still fails gets a second pass once the rest are done
+        edges = sorted(edges, key=lambda e: -e.length)
+        first = _one_by_one(p, ff, edges, r, chamfer=False)
+        second = _one_by_one(p, ff, first[2], r, chamfer=True)
+        return first[0] + second[0], second[1]
+
+
+def _one_by_one(p, ff, edges, r, chamfer):
+    """Fillet each edge alone (r, then 2/3 r); with chamfer=True, fall back to a small chamfer.
+    Returns (done, skipped_count, skipped_edges)."""
+    done, left = 0, []
+    for e in edges:
+        if not e.isValid:
+            continue
+        ok = False
+        for rr in (r, r * 2 / 3):                         # tight spots get a smaller round
+            try:
+                fi = ff.createInput()
+                try:
+                    fi.edgeSetInputs.addConstantRadiusEdgeSet(fx.coll([e]), fx.VI.createByReal(rr / 10.0), False)
+                except AttributeError:
+                    fi.addConstantRadiusEdgeSet(fx.coll([e]), fx.VI.createByReal(rr / 10.0), False)
+                ff.add(fi)
+                ok = True
+                break
+            except Exception:
+                continue
+        if not ok and chamfer and e.isValid:
+            ok = chamfer_edge(p, e)                       # couldn't round it: take the edge off
+        if ok:
+            done += 1
+        else:
+            left.append(e)
+    return done, len(left), left
+
+
+def chamfer_edge(p, e):
+    ch = p.comp.features.chamferFeatures
+    for d in (1.0, 0.6):
+        try:
+            try:
+                ci = ch.createInput2()
+                ci.chamferEdgeSets.addEqualDistanceChamferEdgeSet(fx.coll([e]), fx.VI.createByReal(d / 10.0), False)
+            except AttributeError:
+                ci = ch.createInput(fx.coll([e]), False)
+                ci.setToEqualDistance(fx.VI.createByReal(d / 10.0))
+            ch.add(ci)
+            return True
+        except Exception:
+            continue
+    return False
+
+
+def is_sharp(e):
+    """True unless the two faces meet smoothly (already rounded / tangent)."""
+    if e.faces.count != 2:
+        return False
+    mid = e.pointOnEdge
+    n = []
+    for f in e.faces:
+        ok, v = f.evaluator.getNormalAtPoint(mid)
+        if not ok:
+            return True
+        n.append(v)
+    return abs(n[0].dotProduct(n[1])) < 0.995
+
+
+def soft_edges(p, body, r=1.5, r_max=75.0):
+    """Round the skin side: every edge of an inward-facing cylindrical surface around the arm
+    axis (ring bores, shell insides, cuff inside) within r_max of the axis."""
+    edges, seen = [], set()
+    for f in body.faces:
+        g = f.geometry
+        if not isinstance(g, adsk.core.Cylinder) or g.radius * 10 > r_max:
+            continue
+        ax = g.axis
+        if abs(abs(ax.z) - ax.length) > 1e-6 or math.hypot(g.origin.x, g.origin.y) > 1e-4:
+            continue                                      # only surfaces around the arm (Z) axis
+        pt = f.pointOnFace
+        ok, n = f.evaluator.getNormalAtPoint(pt)
+        if not ok or n.x * pt.x + n.y * pt.y >= 0:
+            continue                                      # outward-facing: not skin side
+        for e in f.edges:
+            if e.tempId not in seen and is_sharp(e):
+                seen.add(e.tempId)
+                edges.append(e)
+    return _fillet(p, edges, r)
+
+
+def soft_ledge(p, body, z0, z1, r0, r1, r=1.0):
+    """Round the stepped edges of the hyperextension ledge (circular edges about Z in its band)."""
+    edges = []
+    for e in body.edges:
+        g = e.geometry
+        if isinstance(g, (adsk.core.Circle3D, adsk.core.Arc3D)) and math.hypot(g.center.x, g.center.y) < 1e-4:
+            if z0 <= g.center.z * 10 <= z1 and r0 <= g.radius * 10 <= r1 and is_sharp(e):
+                edges.append(e)
+    return _fillet(p, edges, r)
 
 
 def fillet_vertical(p, body, r):
@@ -92,9 +225,9 @@ def fillet_vertical(p, body, r):
     try:
         fi = ff.createInput()
         try:
-            fi.edgeSetInputs.addConstantRadiusEdgeSet(fx.coll(edges), fx.VI.createByReal(r / 10.0), True)
+            fi.edgeSetInputs.addConstantRadiusEdgeSet(fx.coll(edges), fx.VI.createByReal(r / 10.0), False)
         except AttributeError:
-            fi.addConstantRadiusEdgeSet(fx.coll(edges), fx.VI.createByReal(r / 10.0), True)
+            fi.addConstantRadiusEdgeSet(fx.coll(edges), fx.VI.createByReal(r / 10.0), False)
         ff.add(fi)
     except Exception:
         pass  # rounding is cosmetic; keep the part
@@ -148,27 +281,44 @@ def ring(p, d, zc, lines, flange=None, open_deg=None):
     if flange:
         parts += p.cring('z', [0, 0, zc], flange[0], flange[1], h, 90, open_deg, name='shell flange')
     body = p.join(parts)[0]
-    # round the edges BEFORE drilling: a fillet added afterwards can put a fin back into a
-    # leaning hole where it runs close to the arm-side edge
-    body = fillet_vertical(p, body, P['edge_fillet'])
-    return drill(p, body, lines, zc)
+    # rounded now; the pipe holes are drilled last of all (drill_all), after every join and
+    # fillet, so nothing added later can put a fin into a leaning hole
+    return fillet_vertical(p, body, P['edge_fillet'])
+
+
+def pipe_step():
+    """The pipes are evenly spaced about the arm axis, so one pipe's features are modelled and
+    circular-patterned about Z for the rest (the lean of the forearm pipes is radial, so it
+    patterns too)."""
+    a = P['pipe_angles']
+    step = a[1] - a[0] if len(a) > 1 else 0
+    if any(abs((a[i + 1] - a[i]) - step) > 1e-6 for i in range(len(a) - 1)):
+        raise ValueError('pipe_angles must be evenly spaced to be patterned')
+    return len(a), step
 
 
 def drill(p, body, lines, zc):
-    """Pipe holes along each pipe's own line through the ring at height zc. The cutter overshoots
-    each face by 3 mm: with only 1 mm a leaning hole left a 0.04 mm skin at the face."""
-    holes = []
-    for line in lines:
-        ez = along(line)[2]
-        holes += p.cyl(along(line), point_at(line, zc), (P['pipe_od'] + P['pipe_clear']) / 2,
-                       P['ring_h'] / abs(ez[2]) + 6)
-    return p.cut([body], holes)[0]
+    """Pipe holes along each pipe's own line through the ring at height zc: one hole cut for the
+    first pipe, circular-patterned to the others. The cutter overshoots each face by 3 mm: with
+    only 1 mm a leaning hole left a 0.04 mm skin at the face."""
+    n, step = pipe_step()
+    ez = along(lines[0])[2]
+    seed = p.hole(along(lines[0]), point_at(lines[0], zc), P['pipe_od'] + P['pipe_clear'],
+                  P['ring_h'] / abs(ez[2]) + 6, body, name='pipe hole')
+    if n > 1:
+        p.circular([seed], 'z', n, step, name='pipe holes')
+    return body
 
 
-def pipe(p, line, z0, z1, name='PVC pipe 21.5/15.5'):
+def pipe(p, line, z0, z1, name='PVC pipe 21.5/15.5', copies=1):
+    """One pipe along line from z0 to z1, circular-patterned to `copies` pipes."""
     a, b = point_at(line, z0), point_at(line, z1)
     body = p.ann(along(line), fx.mul(fx.add(a, b), 0.5), P['pipe_od'] / 2, P['pipe_id'] / 2, fx.norm(fx.sub(b, a)))[0]
     body.name = name
+    if copies > 1:
+        f = p.circular([body], 'z', copies, pipe_step()[1], name='pipes')
+        for i in range(f.bodies.count):
+            f.bodies.item(i).name = f'{name} ({i + 1})'
     return body
 
 
@@ -185,22 +335,43 @@ def unit(parent, name, d, sign, far, color, flange, far_open=None, d_far=None):
     # a leaning pipe's square-cut end dips by r*tan(lean) on one side: start it that much higher
     # so the end rests on the shell edge instead of cutting into it
     dip = P['pipe_od'] / 2 * math.tan(lean) + (0.1 if lean else 0)
-    for line in lines:
-        pipe(p, line, sign * (P['ring_off'] + dip), sign * (far + h))
+    pipe(p, lines[0], sign * (P['ring_off'] + dip), sign * (far + h), copies=len(lines))
     p.lean = lean
     p.lines, p.ring_z = lines, (zn, zf)
     return p
 
 
-def redrill(p):
-    """Last step for a unit: drill every pipe hole again through both rings, so nothing joined
-    or rounded after the rings were made (shell, hubs, knuckles, fillets) can sit in a hole."""
+def drill_all(p):
+    """Last step for a unit: drill the pipe holes through both rings, after everything joined or
+    rounded (shell, hubs, knuckles, fillets), so nothing can sit in a hole.
+    Then two radial screw holes per pipe joint, one above the other along the pipe: small
+    self-tapping screws through the boss bite straight into the PVC (no insert), so the pipe
+    can't slide, turn or rock in its ring. Each is one seed + a circular pattern."""
     zn, zf = p.ring_z
+    n, step = pipe_step()
+    line = p.lines[0]
     for key, zc in (('near ring', zn), ('far ring', zf)):
         body = next(b for b in p.comp.bRepBodies if key in b.name)
-        name = body.name
-        drill(p, body, p.lines, zc).name = name
-    return p
+        body = drill(p, body, p.lines, zc)
+        # the first pipe's two screw holes, then the same circular pattern as the pipes
+        c = point_at(line, zc)
+        ez = along(line)[2]
+        out = fx.unit(fx.sub([c[0], c[1], 0.0], fx.mul(ez, dot2(c, ez))))   # outward, square to the pipe
+        ex = fx.unit(fx.cross(out, [0, 0, 1])) if abs(out[2]) < 0.999 else [1.0, 0.0, 0.0]
+        L = P['pipe_screw_len']
+        start = P['pipe_od'] / 2 - 1.0                                     # from inside the pipe wall
+        seeds = []
+        for off in (-P['pipe_screw_pitch'] / 2, P['pipe_screw_pitch'] / 2):
+            cc = fx.add(c, fx.mul(ez, off / abs(ez[2])))                   # step along the pipe
+            seeds.append(p.hole((ex, fx.cross(out, ex), out), fx.add(cc, fx.mul(out, start + L / 2)),
+                                P['pipe_screw_hole'], L, body, name='pipe screw hole'))
+        if n > 1:
+            p.circular(seeds, 'z', n, step, name='pipe screw holes')
+
+
+def dot2(c, ez):
+    """Component along the pipe axis of the horizontal radius vector to c."""
+    return c[0] * ez[0] + c[1] * ez[1]
 
 
 def fork_x(d):
@@ -409,6 +580,33 @@ def flexion_stops(p, fx0, fx1, ux0):
                     alpha_c - 180, 360 - P['stop_span'], name='flexion stop')]
 
 
+def name_like(new_bodies, seeds):
+    """Pattern and mirror copies come out as 'Body12', in no reliable order; give each the name
+    of the seed with the same volume (a pattern or mirror never changes a body's volume)."""
+    out = []
+    for i in range(new_bodies.count):
+        b = new_bodies.item(i)
+        seed = min(seeds, key=lambda s: abs(s.volume - b.volume))
+        b.name = seed.name
+        out.append(b)
+    return out
+
+
+def fastener(p, s, y, z, seat_x, length, d, head_d, head_h, name):
+    """Socket head screw along X on side s: head outboard of seat_x, shank inward."""
+    b = p.join(p.cyl('x', [s * (seat_x - length / 2), y, z], d / 2, length)
+               + p.cyl('x', [s * (seat_x + head_h / 2), y, z], head_d / 2, head_h))[0]
+    b.name = name
+    return b
+
+
+def insert(p, s, y, z, face_x, length, d, thread_d, name):
+    """Heat-set insert set flush into a face at x = face_x, reaching inward."""
+    b = p.ann('x', [s * (face_x - length / 2), y, z], d / 2, thread_d / 2, length)[0]
+    b.name = name
+    return b
+
+
 def cut_axis(p, body, d, xa, xb, r_extra=0.0):
     a, b = sorted([xa, xb])
     return p.cut([body], p.cyl('x', [(a + b) / 2, 0, 0], d / 2 + r_extra, b - a))[0]
@@ -442,9 +640,22 @@ def variant(parent, key, offset):
         parts += fa.cring('z', [0, 0, top - step / 2], fx1 - 0.5, r_out, step, 90, 270, name='stop ledge')
         top, r_out = top - step, r_out - step
     fbody = fa.join(parts)[0]
-    for s in (1, -1):
-        fbody = cut_axis(fa, fbody, 8.4, s * (fx0 - 1), s * (fx1 + 1))
     fbody = fillet_vertical(fa, fbody, P['edge_fillet'])
+    # axle seat on the lateral hub face (pilot recess, relief so the hub clears the bearing's outer
+    # ring and seal, one heat-set hole patterned x3), then the whole seat mirrored to the medial hub
+    c = P['axle']
+    n_sc, step_sc = c['screws'], 360.0 / c['screws']
+    seat = [fa.hole('x', [fx1 - (c['pilot_len'] + 0.2) / 2 + 0.5, 0, 0], c['pilot_d'] + 0.3, c['pilot_len'] + 1.2, fbody,
+                    name='axle pilot recess'),
+            fa.ring_cut('x', [fx1, 0, 0], od / 2 + 2, c['shoulder_d'] / 2 + 0.5, 2.0, fbody, name='bearing relief'),
+            # inner-ring shoulder: a 0.5 mm raised ring on the hub face, backed by the whole hub. It
+            # lives here, not on the axle, because the axle has to pass through the Ø30 bearing bore
+            fa.ring_cut('x', [fx1 + gap / 2, 0, 0], c['shoulder_d'] / 2, bore / 2 + 0.1, gap, fbody,
+                        name='inner-ring shoulder', op=fx.JOIN),
+            fa.hole('x', [fx1 - c['insert_depth'] / 2 + 0.5, 0, c['screw_r']], c['insert_d'], c['insert_depth'] + 1, fbody,
+                    name='axle screw insert hole')]
+    seat.append(fa.circular([seat[-1]], 'x', n_sc, step_sc, name='axle screw insert holes'))
+    fa.mirror(seat, name='axle seat, medial')
     fbody.name = 'forearm: near ring + elbow shell + hubs (print ring down)'
 
     # upper arm: near ring + shell + bearing housings, one part; clearance where the forearm hub turns
@@ -456,26 +667,62 @@ def variant(parent, key, offset):
     for s in (1, -1):
         ubody = cut_axis(ua, ubody, 2 * P['hub_r'], s * (fx0 - gap), s * (fx1 + gap), r_extra=0.5)
         ubody = cut_axis(ua, ubody, od + 0.05, s * (ux0 - 1), s * (ux0 + w + 0.1))          # bearing pocket
-        ubody = cut_axis(ua, ubody, od - 6, s * (ux0 + w + 0.1), s * (ux1 + 1))             # retaining lip
+        # retaining lip: touches only the outer ring's face (6806 outer-ring land ~Ø39.2 up), not the seal
+        ubody = cut_axis(ua, ubody, P['axle']['lip_d'], s * (ux0 + w + 0.1), s * (ux1 + 1))
     ubody = fillet_vertical(ua, ubody, P['edge_fillet'])
     ubody.name = 'upper arm: near ring + elbow shell + bearing housings (print ring down)'
 
-    for s in (1, -1):
-        # axle through the bearing: separate flat-printed part on the forearm hub, clamped by the M8
-        ax = fa.cyl('x', [s * (fx1 + (w + gap) / 2), 0, 0], bore / 2, w + gap)[0]
-        cut_axis(fa, ax, 8.4, s * fx1, s * (fx1 + w + gap + 1)).name = 'bearing axle (print flat, M8 through)'
-        b = hw.ann('x', [s * (ux0 + w / 2), 0, 0], od / 2, bore / 2, w, name='6806-2RS')[0]
-        b.name = '6806-2RS bearing (buy)'
-        b.appearance = fx.appearance(BRG_COLOR)
-        cover = hw.cyl('x', [s * (ux1 + 1.5), 0, 0], P['hub_r'], 3)[0]
-        pcd = [(25 * math.cos(math.radians(k * 60)), 25 * math.sin(math.radians(k * 60))) for k in range(6)]
-        tools = [t for y, z in pcd for t in hw.cyl('x', [s * (ux1 + 1.5), y, z], 1.7, 5)]
-        tools += hw.cyl('x', [s * (ux1 + 1.5), 0, 0], 4.2, 5)
-        hw.cut([cover], tools)[0].name = 'cover (print flat)'
-    for part in (ua, fa):
-        a = fx.appearance(UA_COLOR if part is ua else FA_COLOR)
+    # --- lateral bearing set, modelled once; the medial set is a mirror of all of it -------------
+    # bearing axle: a plain Ø30 stub with a pilot, bolted to the forearm hub like a wheel on its hub.
+    # The pilot in the hub recess centres it and carries the load in shear; 3 x M3 screws (heads
+    # sunk in the axle) into heat-sets clamp it and stop it turning. Nothing on it is wider than the
+    # bearing bore: it goes in from outside, through the bearing, after the forearm is in place.
+    # Prints flat, pilot up.
+    sc = c['screw']
+    x_in = fx1 + gap                                       # bearing's inner face (= ux0)
+    x_out = x_in + w + 0.5
+    ax = fa.join(fa.cyl('x', [(fx1 + x_out) / 2, 0, 0], bore / 2, x_out - fx1)
+                 + fa.cyl('x', [fx1 - c['pilot_len'] / 2, 0, 0], c['pilot_d'] / 2, c['pilot_len']))[0]
+    ax.name = 'bearing axle (print flat, pilot up; 3 x M3 to hub)'
+    thru = x_out - fx1 + c['pilot_len']
+    holes = [fa.hole('x', [x_out - thru / 2, 0, c['screw_r']], c['screw_clear'], thru + 1, ax, name='axle screw hole'),
+             fa.hole('x', [x_out - c['head_depth'] / 2 + 0.5, 0, c['screw_r']], c['head_d'], c['head_depth'] + 1, ax,
+                     name='axle screw counterbore')]
+    fa.circular(holes, 'x', n_sc, step_sc, name='axle screw holes')
+    # the axle's bought fasteners (they turn with the forearm): one screw + insert, patterned x3
+    seat_x = x_out - c['head_depth']                       # counterbore floor
+    ax_hw = [fastener(fa, 1, 0, c['screw_r'], seat_x, sc['len'], sc['d'], sc['head_d'], sc['head_h'], 'M3 x 10 socket head (buy)'),
+             insert(fa, 1, 0, c['screw_r'], fx1, c['insert_len'], c['insert_d'], sc['d'], 'M3 heat-set insert, 4 long (buy)')]
+    f = fa.circular(ax_hw, 'x', n_sc, step_sc, name='axle screws + inserts')
+    ax_hw += name_like(f.bodies, ax_hw)
+    f = fa.mirror([ax] + ax_hw, name='axle + screws, medial')
+    name_like(f.bodies, [ax] + ax_hw)
+
+    # bearing, cover (6 holes), and the cover's M3 screws + inserts in the housing
+    m3 = P['m3']
+    brg = hw.ann('x', [ux0 + w / 2, 0, 0], od / 2, bore / 2, w, name='6806-2RS')[0]
+    brg.name = '6806-2RS bearing (buy)'
+    cover = hw.cyl('x', [ux1 + 1.5, 0, 0], P['hub_r'], 3)[0]
+    cover.name = 'cover (print flat)'
+    seed = hw.hole('x', [ux1 + 1.5, P['cover_pcd'] / 2, 0], 3.4, 5, cover, name='cover screw hole')
+    hw.circular([seed], 'x', 6, 60, name='cover screw holes')
+    hw.hole('x', [ux1 + 1.5, 0, 0], 8.4, 5, cover, name='cover centre hole')
+    seed = ua.hole('x', [ux1 - m3['insert_depth'] / 2 + 0.5, P['cover_pcd'] / 2, 0], m3['insert_d'], m3['insert_depth'] + 1,
+                   ubody, name='cover insert hole')
+    pat = ua.circular([seed], 'x', 6, 60, name='cover insert holes')
+    ua.mirror([seed, pat], name='cover insert holes, medial')
+    cov_hw = [fastener(hw, 1, P['cover_pcd'] / 2, 0, ux1 + 3, 8, 3.0, 5.5, 3.0, 'M3 x 8 socket head (buy)'),
+              insert(hw, 1, P['cover_pcd'] / 2, 0, ux1, 4.0, m3['insert_d'], 3.0, 'M3 heat-set insert, 4 long (buy)')]
+    f = hw.circular(cov_hw, 'x', 6, 60, name='cover screws + inserts')
+    cov_hw += name_like(f.bodies, cov_hw)
+    f = hw.mirror([brg, cover] + cov_hw, name='bearing + cover + screws, medial')
+    name_like(f.bodies, [brg, cover] + cov_hw)
+
+    ubody.name = 'upper arm: near ring + elbow shell + bearing housings (print ring down)'
+    for part, color in ((ua, UA_COLOR), (fa, FA_COLOR), (hw, HW_COLOR)):
         for b in part.comp.bRepBodies:
-            b.appearance = a
+            b.appearance = fx.appearance(SCREW_COLOR if ('socket head' in b.name or 'insert' in b.name)
+                                         else BRG_COLOR if '6806' in b.name else color)
     dp = None
     if P['door'] and not P['door_elbow']:
         dp = wrist_cuff(g, fa, P['wrist_d'], -1, P['fa_far'])
@@ -483,8 +730,19 @@ def variant(parent, key, offset):
     elif P['door']:
         dp, yh, zw = door(g, fa, P['fa_d'], -1, P['fa_far'], P['wrist_d'])
         dp.door_axis = (yh, zw)
+    # skin side: round every inward-facing edge around the arm, then the ledge steps; before the
+    # pipe holes are drilled, so no fillet can creep into a hole
+    soft = {}
+    for part in [ua, fa] + ([dp] if dp else []):
+        for b in list(part.comp.bRepBodies):
+            if '(buy)' in b.name or b.name.startswith('PVC') or 'axle' in b.name or b.name == 'arm ghost':
+                continue
+            soft[part.comp.name[:12] + ' / ' + b.name[:26]] = soft_edges(part, b, P['skin_fillet'])
+    fb = next(b for b in fa.comp.bRepBodies if 'forearm: near ring' in b.name)
+    soft['stop ledge'] = soft_ledge(fa, fb, -12.0, 0.0, fx1 - 1, ux1, 1.0)
+    variant.soft_report = soft
     for part in (ua, fa):
-        redrill(part)
+        drill_all(part)
     # arm stand-ins at the real size (bore minus the ~10 mm padding): used for the soft-tissue check
     tissue = {'ua': (P['ua_d'] - P['padding']) / 2, 'fa': (P['fa_d'] - P['padding']) / 2}
     for part, sign, r, L in ((ua, 1, tissue['ua'], P['ua_len']), (fa, -1, tissue['fa'], P['fa_len'])):
@@ -521,11 +779,13 @@ def flex(joint, sign, deg):
     adsk.fusion.RevoluteJointMotion.cast(joint.jointMotion).rotationValue = sign * math.radians(deg)
 
 
-def solids(parts):
+def solids(parts, bought=False):
+    """Bodies for a sweep. Bought hardware (screws, inserts, bearings: '(buy)') sits in its own
+    holes and turns with its part, so the sweeps skip it; it is checked once at rest instead."""
     items = adsk.core.ObjectCollection.create()
     for o in parts:
         for b in o.comp.bRepBodies:
-            if b.name != 'arm ghost':
+            if b.name != 'arm ghost' and (bought or '(buy)' not in b.name):
                 items.add(b.createForAssemblyContext(o.occ))
     return items
 

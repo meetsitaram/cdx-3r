@@ -16,6 +16,7 @@ TOP = 'CDX-3R (Fusion)'
 VI = adsk.core.ValueInput
 NEW = adsk.fusion.FeatureOperations.NewBodyFeatureOperation
 JOIN = adsk.fusion.FeatureOperations.JoinFeatureOperation
+CUT = adsk.fusion.FeatureOperations.CutFeatureOperation
 
 app = None
 design = None
@@ -259,8 +260,9 @@ class Part:
         return pl
 
     # -- extrusions
-    def prism(self, origin, frame, z0, z1, draw, pick=None, name='prism'):
-        """Sketch in the plane origin + z0*ez, extrude to z1 along ez. draw(sketch, to)."""
+    def prism(self, origin, frame, z0, z1, draw, pick=None, name='prism', op=NEW, targets=None):
+        """Sketch in the plane origin + z0*ez, extrude to z1 along ez. draw(sketch, to).
+        op/targets: e.g. a cut feature (op=CUT) limited to the target bodies."""
         ex, ey, ez = [unit(v) for v in frame]
         o = add(origin, mul(ez, z0))
         pl = self.plane(o, ez, ex)
@@ -270,7 +272,9 @@ class Part:
         profs = [sk.profiles.item(i) for i in range(sk.profiles.count)]
         if pick:
             profs = pick(profs)
-        ei = self.comp.features.extrudeFeatures.createInput(coll(profs), NEW)
+        ei = self.comp.features.extrudeFeatures.createInput(coll(profs), op)
+        if targets:
+            ei.participantBodies = list(targets)
         zs = sk.transform.getAsCoordinateSystem()[3]
         direction = (adsk.fusion.ExtentDirections.PositiveExtentDirection if dot([zs.x, zs.y, zs.z], ez) > 0
                      else adsk.fusion.ExtentDirections.NegativeExtentDirection)
@@ -454,6 +458,43 @@ class Part:
             except Exception:
                 left.append(tool)
         return [target] + left
+
+    # -- one model, many copies: Fusion patterns and mirrors, so editing the seed updates them all
+    def hole(self, frame, center, d, length, target, name='hole'):
+        """A cut feature (not a tool body): a Ø d cylinder along frame's ez, centred on center."""
+        f = self.prism(center, self._frame(frame), -length / 2, length / 2,
+                       lambda sk, to: sk.sketchCurves.sketchCircles.addByCenterRadius(to(0, 0), d / 20.0),
+                       name=name, op=CUT, targets=[target])
+        return f
+
+    def ring_cut(self, frame, center, ro, ri, length, target, name='ring cut', op=CUT):
+        """An annular cut (or, with op=JOIN, a raised ring) feature along frame's ez, centred on center."""
+        def draw(sk, to):
+            sk.sketchCurves.sketchCircles.addByCenterRadius(to(0, 0), ro / 10.0)
+            sk.sketchCurves.sketchCircles.addByCenterRadius(to(0, 0), ri / 10.0)
+        return self.prism(center, self._frame(frame), -length / 2, length / 2, draw,
+                          lambda ps: [p for p in ps if p.profileLoops.count == 2], name=name, op=op, targets=[target])
+
+    def axis(self, which):
+        return getattr(self.comp, which + 'ConstructionAxis')
+
+    def circular(self, entities, which, count, step_deg, name='pattern'):
+        """Circular pattern of features or bodies about the component's X/Y/Z axis:
+        count instances, step_deg apart, counter-clockwise about +axis from the seed."""
+        cp = self.comp.features.circularPatternFeatures
+        ci = cp.createInput(coll(entities), self.axis(which))
+        ci.quantity = VI.createByReal(count)
+        ci.totalAngle = VI.createByString(f'{step_deg * (count - 1) if count > 1 else 0} deg')
+        ci.isSymmetric = False
+        f = cp.add(ci)
+        f.name = name
+        return f
+
+    def mirror(self, entities, plane='yZ', name='mirror'):
+        mf = self.comp.features.mirrorFeatures
+        f = mf.add(mf.createInput(coll(entities), getattr(self.comp, plane + 'ConstructionPlane')))
+        f.name = name
+        return f
 
     def cut(self, targets, tools):
         """Subtract tool bodies from each target; tools are consumed."""
