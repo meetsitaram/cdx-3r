@@ -12,7 +12,7 @@ Buy extra of the small parts (see the fastener notes).
 | Item | Spec | Right arm + back | Where | + Left arm | Buy |
 |---|---|---|---|---|---|
 | Deep-groove ball bearing | **6806-2RS**, 30 × 42 × 7 mm, sealed | **4** | elbow 2 (upper-arm housings); shoulder abduction 2 (right mount block) | 4 | [uxcell 6806-2RS, 2-pack](https://www.amazon.com/uxcell-6806-2RS-Bearing-30x42x7mm-Bearings/dp/B07TV2HVZ3) |
-| Deep-groove ball bearing | **6808-2RS**, 40 × 52 × 7 mm, sealed | **2** | shoulder flexion (yoke housing: the shoulder carries the whole arm) | 2 | [6808-2RS, 5 pcs](https://www.amazon.com/6808-2RS-61808RS-Bearing-40x52x7-Bearings/dp/B0DPZC1TFP) · [VXB 6808-2RS](https://www.amazon.com/6808-2RS-Bearing-40x52x7-Bearings-VXB/dp/B002BBJPK2) |
+| Deep-groove ball bearing | **6808-2RS**, 40 × 52 × 7 mm, sealed | **2** | shoulder flexion (yoke housing: the shoulder carries the whole arm) | 2 | [XIKE 6808-2RS 40 × 52 × 7, 10 pcs](https://www.amazon.com/XIKE-6808-2RS-Bearings-40x52x7mm-Pre-Lubricated/dp/B09D2VY3BK) |
 
 ## Fasteners
 
