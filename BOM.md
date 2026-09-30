@@ -16,44 +16,29 @@ Buy extra of the small parts (see the fastener notes).
 
 ## Fasteners
 
-**Small screws are two kinds:** **M3 × 8 socket head** machine screws where they go into heat-set inserts,
-and **self-drilling (Tek) screws** where they go straight into the PVC pipes: no pilot hole. Where a wall is thicker, the
-head sits in a Ø6.5 counterbore, so the screw always reaches. The two hinge bolts are M8 socket heads.
+**Small screws are two kinds:** **M3 × 8 socket head** machine screws into M3 heat-set inserts, and **#4 × 3/8" pan-head
+self-tapping screws** straight into the PVC pipes. Where a wall is thicker, the head sits in a Ø6.5 counterbore, so the
+screw always reaches. The two hinge bolts are M8 socket heads.
 
-| Item | Spec | Qty | Where | + Left arm |
-|---|---|---|---|---|
-| Socket head cap screw | **M3 × 8** (ISO 4762) | **26** | into M3 inserts: elbow axles 6 (heads 4.2 mm deep in the axle), elbow covers 12, bottom-node splice channel 8 (2 mm counterbores) | 18 |
-| Self-drilling (Tek) screw | **2.9 × 9.5 mm pan head, DIN 7504 N** (#4 × 3/8" self-drilling) | **48** | into the PVC pipes: elbow 18, link pipe head 6, frame 24 | 24 |
-| Heat-set insert | **M3**, 4 mm long, for a Ø4.0 hole | **26** | elbow: 6 in the forearm hubs, 12 around the housings; splice: 8 in the bottom-node halves | 18 |
-| Socket head cap screw | M8 × 100 (ISO 4762) | 1 | shoulder abduction hinge: yoke root → sleeve through both bearings → washer + nut behind the mount block | 1 |
-| Socket head cap screw | M8 × 55 (ISO 4762) | 1 | shoulder flexion hinge: through the printed Ø40 sleeve in the 6808s; head sunk flush on the arm side of the link fork, nut captured in the outer plate | 1 |
-| Nyloc nut | M8 | 2 | one per hinge | 2 |
-| Fender washer | M8, 30 mm OD, 1.5 thick | 1 | behind the abduction mount block (clamps the rear bearing's inner ring) | 1 |
-| Pin | Ø4 mm, about 25 mm long | 1 | elbow: wrist-cuff hinge (inner side) | 1 |
-| Quick-release pin | Ø4 mm | 1 | elbow: wrist-cuff latch (outer side) | 1 |
+| Item | Spec | Qty | Where | + Left arm | Buy |
+|---|---|---|---|---|---|
+| Socket head cap screw | **M3 × 8** (ISO 4762), 304 stainless | **26** | into M3 inserts: elbow axles 6 (heads 4.2 mm deep in the axle), elbow covers 12, bottom-node splice channel 8 (2 mm counterbores) | 18 | [Fgruh 720 pcs M3 kit, M3 × 6–30 (has 25 × M3 × 8: use one M3 × 10 for the 26th)](https://www.amazon.com/dp/B0FG2BRXL3) |
+| Heat-set insert | **ruthex RX-M3 × 5.7**, brass, Ø4.0 hole | **26** | elbow: 6 in the forearm hubs, 12 around the housings; splice: 8 in the bottom-node halves | 18 | [ruthex M3 × 5.7, 100 pcs](https://www.amazon.com/dp/B08BCRZZS3) |
+| Self-tapping pan-head screw | **#4 × 3/8"** (2.9 × 9.5 mm), Phillips, 18-8 stainless, pointed | **48** | into the PVC pipes: elbow 18, link pipe head 6, frame 24 | 24 | [Fastenere #4 × 3/8" pan head, 100 pcs](https://www.amazon.com/Screws-Phillips-Stainless-Self-Tapping-Quantity/dp/B01CEZSZAA) |
+| Socket head cap screw | M8 × 100 (ISO 4762) | 1 | shoulder abduction hinge: yoke root → sleeve through both bearings → washer + nut behind the mount block | 1 | |
+| Socket head cap screw | M8 × 55 (ISO 4762) | 1 | shoulder flexion hinge: through the printed Ø40 sleeve in the 6808s; head sunk flush on the arm side of the link fork, nut captured in the outer plate | 1 | |
+| Nyloc nut | M8 | 2 | one per hinge | 2 | |
+| Fender washer | M8, 30 mm OD, 1.5 thick | 1 | behind the abduction mount block (clamps the rear bearing's inner ring) | 1 | |
+| Pin | Ø4 mm, about 25 mm long | 1 | elbow: wrist-cuff hinge (inner side) | 1 | |
+| Quick-release pin | Ø4 mm | 1 | elbow: wrist-cuff latch (outer side) | 1 | |
 
-Pipe screws: seat the pipe, then drive the self-drilling screw through the Ø3.2 hole. The printed hole guides it, the
-drill point makes its own hole in the PVC (**no pilot needed**), and the extra length ends inside the hollow pipe.
-Use a low clutch setting: snug is enough, and over-tightening strips the thin pipe wall. Buy boxes of 50 of each small
-screw and 50 × M3 inserts: they are cheap, and some always get lost.
+**Pipe screws:** seat the pipe, then drive the #4 self-tapping screw through the Ø3.2 hole. The printed hole centres
+the point, and the screw cuts its own thread in the PVC, usually with no pilot needed. If one skates on the round pipe,
+drill a 2 mm pilot through the hole. Snug is enough: over-tightening strips the thin pipe wall. 3/8" is the right
+length: about 7 mm of plastic + PVC wall before the thread bites, and the tip ends inside the hollow pipe.
 
-### Where to buy the pipe screws (Amazon)
-
-The current CAD holes (Ø3.2, Ø6.5 head counterbores) fit **#4 / 2.9 mm** screws. 2.9 mm self-drilling screws are hard
-to find on Amazon, so there are two routes:
-
-**A. #6 × 3/8" (3.5 × 9.5 mm) self-drilling (Tek), pan head Phillips: recommended, easy to buy.**
-*Needs a CAD update first: pipe-screw holes Ø3.2 → Ø3.8, head counterbores Ø6.5 → Ø7.5 (not done yet).*
-- [Hillman 560258: #6-20 × 3/8" pan head Phillips self-drilling, 100-pack](https://www.amazon.com/Hillman-560258-6-20-Inch-Phillips-Drilling/dp/B000BDB6CW) (best quantity for this build)
-- [Phillips pan head self-driller TEK, 410 stainless, #6 × 3/8", qty 250](https://www.amazon.com/Phillips-Head-Driller-Stainless-Steel/dp/B00FAUZ0FU)
-- [Phillips pan head self-driller TEK, 410 stainless, #6 × 3/8", qty 1,000](https://www.amazon.com/Phillips-Head-Driller-Stainless-Steel/dp/B00FAUZ15O)
-- [#6-20 × 3/8" self-drilling, 410 stainless, pan head, #2 point, qty 1,000](https://www.amazon.com/Drilling-Hardened-Stainless-Phillips-Quantity/dp/B07F225GQ8)
-
-**B. #4 × 3/8" (2.9 × 9.5 mm) pointed self-tapping, pan head: fits the current CAD as is.**
-No drill tip: press firmly (the printed hole centres it), or drill a 2.2 mm pilot if it skates on the round pipe.
-- [Fastenere #4 × 3/8" pan head, 18-8 stainless, self-tapping, qty 100](https://amazon.com/Screws-Phillips-Stainless-Self-Tapping-Quantity/dp/B01CEZSZAA)
-- [#4 × 3/8" type A self-tapping, 316 stainless, pan head, qty 1,000](https://www.amazon.com/Self-Tapping-Screws-Stainless-Phillips/dp/B07F1Z4VJB)
-- [Amazon search: ST2.9 × 9.5](https://www.amazon.com/st2-9x9-5/s?k=st2.9x9.5) (for a true 2.9 mm self-drilling screw, if a listing turns up)
+**Inserts:** the ruthex RX-M3 × 5.7 wants a Ø4.0 hole about 6.7 mm deep. The current CAD holes are 5.5–6 mm deep
+(designed for 4 mm inserts), so set each insert flush and don't push it deeper; deepening the holes is on the to-do list.
 
 ## PVC pipe (21.5 mm OD / 15.5 mm ID)
 
