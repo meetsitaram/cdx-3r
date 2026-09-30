@@ -9,10 +9,10 @@ Buy extra of the small parts (see the fastener notes).
 
 ## Bearings
 
-| Item | Spec | Right arm + back | Where | + Left arm |
-|---|---|---|---|---|
-| Deep-groove ball bearing | **6806-2RS**, 30 × 42 × 7 mm, sealed | **4** | elbow 2 (upper-arm housings); shoulder abduction 2 (right mount block) | 4 |
-| Deep-groove ball bearing | **6808-2RS**, 40 × 52 × 7 mm, sealed | **2** | shoulder flexion (yoke housing: the shoulder carries the whole arm) | 2 |
+| Item | Spec | Right arm + back | Where | + Left arm | Buy |
+|---|---|---|---|---|---|
+| Deep-groove ball bearing | **6806-2RS**, 30 × 42 × 7 mm, sealed | **4** | elbow 2 (upper-arm housings); shoulder abduction 2 (right mount block) | 4 | [uxcell 6806-2RS, 2-pack](https://www.amazon.com/uxcell-6806-2RS-Bearing-30x42x7mm-Bearings/dp/B07TV2HVZ3) |
+| Deep-groove ball bearing | **6808-2RS**, 40 × 52 × 7 mm, sealed | **2** | shoulder flexion (yoke housing: the shoulder carries the whole arm) | 2 | [6808-2RS, 5 pcs](https://www.amazon.com/6808-2RS-61808RS-Bearing-40x52x7-Bearings/dp/B0DPZC1TFP) · [VXB 6808-2RS](https://www.amazon.com/6808-2RS-Bearing-40x52x7-Bearings-VXB/dp/B002BBJPK2) |
 
 ## Fasteners
 
@@ -30,7 +30,7 @@ screw always reaches. The two hinge bolts are M8 socket heads.
 | Nyloc nut | **M8-1.25**, nylon-insert lock nut (DIN 985, 13 mm AF × ~8 mm), 304 stainless | 2 | flexion: drops into the 8 mm hex pocket in the link (can't turn); abduction: behind the mount block, on the fender washer | 2 | [Vifmy M8-1.25 nyloc, 304 (A2-70), 90 pcs](https://www.amazon.com/Vifmy-M8-1-25mm-Locknuts-Stainless-Standard/dp/B0CPJH281Y) |
 | Fender washer | M8, **30 mm OD × 1.8 mm**, 304 stainless | 1 | behind the abduction mount block, under the nyloc | 1 | [M8 × 30 mm OD flat washer, 304, 1.8 mm, 30 pcs](https://www.amazon.com/Washer-Stainless-Steel-Washers-Thickness/dp/B0DDY6M8TN) |
 | Dowel pin | **Ø4 × 25 mm**, 304 stainless | 1 | elbow: wrist-cuff hinge (inner side), through the 25 mm knuckle stack (Ø4.2 bores); a drop of CA glue at one end so it cannot slide out (or use an M4 × 30 + nyloc instead) | 1 | [uxcell 4 × 25 mm dowel pin, 304, chamfered ends, 10 pcs](https://www.amazon.com/uxcell-Stainless-Chamfered-Support-Elements/dp/B0BCFKNDMQ) |
-| Ball-lock quick-release pin | **Ø4 mm, usable length ~30 mm** (balls must clear the far face of the 25 mm stack), stainless, with lanyard | 1 | elbow: wrist-cuff latch (outer side) | 1 | [Ball-lock quick-release pins, choose 4 mm × 30 mm](https://www.amazon.com/Quick-Release-Pins-Stainless-Self-Locking/dp/B0GLNMSTFW) |
+| Ball-lock quick-release pin | **Ø5 mm, 30 mm usable length**, 304 stainless, push button + lanyard (the latch knuckles have Ø5.2 holes; 30 mm clears the 25 mm stack so the balls lock) | 1 | elbow: wrist-cuff latch (outer side) | 1 | [M METERXITY Ø5 × 30 mm ball-lock pin](https://www.amazon.com/METERXITY-Push-Button-Locking-Release-Stainless/dp/B0DWN3QCT6) |
 
 **Pipe screws:** seat the pipe, then drive the #4 self-tapping screw through the Ø3.2 hole. The printed hole centres
 the point, and the screw cuts its own thread in the PVC, usually with no pilot needed. If one skates on the round pipe,

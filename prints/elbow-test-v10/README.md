@@ -11,6 +11,7 @@ is in `BOM.md` at the repo root. It pairs with `prints/shoulder-back-v2/`.
 - **Covers `04`:** spoked, with an open Ø38.5 centre and 6 windows, so the bearing and axle show. They still hold the bearing's outer ring.
 - **Insert holes are Ø4.0 × 7 mm deep** for ruthex RX-M3 × 5.7 inserts (forearm hubs `02`, housings `01`).
 - Pipe screws: #4 × 3/8" pan-head self-tapping, 2 per joint, through the Ø3.2 holes.
+- **Wrist cuff latch (`05`, `06`, +X side):** Ø5.2 holes for a Ø5 × 30 mm ball-lock quick-release pin; the hinge side stays Ø4.2 for the Ø4 × 25 dowel.
 - `01`, `02`, `05` and `06` are otherwise unchanged in shape (re-exported). `01` has the same few mesh defects as in v9. Bambu Studio
   repairs them on import; the v9 print was fine.
 

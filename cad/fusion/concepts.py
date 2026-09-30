@@ -85,7 +85,8 @@ P = dict(
     # clasp, locked by a 3 mm pin through each fork); the elbow end is left for a soft strap.
     door_elbow=False, lock_pin_d=3.0, lock_pin_r=6.5,
     # wrist cuff: barrel hinges along the forearm at both sides of the wrist ring
-    cuff_knuckle_r=6.0, cuff_pin_d=4.0,
+    cuff_knuckle_r=6.0, cuff_pin_d=4.0, cuff_latch_d=5.0,   # hinge: Ø4 x 25 dowel; latch (+X): Ø5 ball-lock,
+                                                          # 30 mm usable (METERXITY), clears the 25 mm knuckle stack
     # Flexion hard stop: a block on each upper-arm hub catches the forearm shell's leading edge.
     # stop_gap_deg trims where contact happens (the lead estimate is conservative by a few deg);
     # measured: -3.5 touches at 134, +2 at 140, so -2 puts first contact just past 135
@@ -514,25 +515,29 @@ def wrist_cuff(g, fa, d, sign, far):
     cuff_z = [(z0 + third + gz, z1 - third - gz)]
     kerf_deg = math.degrees(kerf / (d / 2 + P['band_t'] / 2))
 
-    def barrels(p, zs, r, grow=0.0):
-        return [b for s in (1, -1) for a, c in zs for b in
+    def barrels(p, zs, r, grow=0.0, sides=(1, -1)):
+        return [b for s in sides for a, c in zs for b in
                 p.cyl('z', [s * xk, 0, (a + c) / 2], r, c - a + grow, name='knuckle')]
+
+    def pin_holes(p, body):                         # hinge (-X) Ø4 dowel; latch (+X) Ø5 quick-release
+        body = p.cut([body], barrels(p, [(z0 - 1, z1 + 1)], (P['cuff_pin_d'] + 0.2) / 2, sides=(-1,)))[0]
+        return p.cut([body], barrels(p, [(z0 - 1, z1 + 1)], (P['cuff_latch_d'] + 0.2) / 2, sides=(1,)))[0]
 
     cp = Part(g, 'Wrist cuff (print flat)', color=FA_COLOR)
     arc = cp.cring('z', [0, 0, zc], d / 2, band_out(d), h, 270, 180 + 2 * kerf_deg, name='cuff arc')
     body = cp.join(arc + barrels(cp, cuff_z, kr))[0]
     body = cp.cut([body], barrels(cp, ring_z, kr + 0.5, 0.8))[0]            # room for the ring's knuckles
-    body = cp.cut([body], barrels(cp, [(z0 - 1, z1 + 1)], (P['cuff_pin_d'] + 0.2) / 2))[0]
+    body = pin_holes(cp, body)
     fillet_vertical(cp, body, P['edge_fillet'])
     body.name = 'wrist cuff (print flat)'
 
     ring = next(b for b in fa.comp.bRepBodies if 'far ring' in b.name)
     ring = fa.join([ring] + barrels(fa, ring_z, kr))[0]
     ring = fa.cut([ring], barrels(fa, cuff_z, kr + 0.5, 0.8))[0]               # room for the cuff's knuckle
-    fa.cut([ring], barrels(fa, [(z0 - 1, z1 + 1)], (P['cuff_pin_d'] + 0.2) / 2))
+    pin_holes(fa, ring)
 
     pin = cp.cyl('z', [-xk, 0, zc], P['cuff_pin_d'] / 2, h)[0]
-    pin.name = 'hinge pin 4 mm (buy); the +X side takes a 4 mm quick-release pin'
+    pin.name = 'hinge pin 4 x 25 dowel (buy); the +X side takes a 5 mm ball-lock quick-release pin'
     pin.appearance = fx.appearance(HW_COLOR)
     cp.hinge = ([-xk, 0.0, zc], 'z')                 # medial barrel: the cuff opens about this
     return cp
