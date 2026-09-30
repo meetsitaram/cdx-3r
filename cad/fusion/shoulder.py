@@ -44,7 +44,7 @@ S = dict(
                 flange_holes=(30.0,),                                                 # dz of the top/bottom M4s
                 m4_clear=3.4, m4_insert=(4.0, 7.0), cb=2.0),   # M3 x 8 into ruthex 5.7 (Ø4 x 7 holes; names kept)
     shoulder_tab=dict(w=36.0, slot=(26.0, 5.0)),          # 25 mm webbing: shoulder straps, top and bottom ends
-    waist_tab=dict(w=52.0, slot=(40.0, 5.0)),             # 38 mm webbing: waist strap
+    waist_tab=dict(w=36.0, slot=(26.0, 5.0)),             # 25 mm (1") webbing too: one webbing size everywhere
     bearing=(30.0, 42.0, 7.0), bearing_clear=0.1,          # 6806-2RS
     housing_r=40.0, housing_len=25.0,
     block=(44.0, 150.0, 80.0),                             # X, Y, Z
