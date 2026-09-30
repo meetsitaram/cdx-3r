@@ -28,7 +28,8 @@ P = dict(
     pipe_od=21.5, pipe_id=15.5, pipe_clear=0.4,
     # pipe retention: one radial hole per pipe joint for a ~2.9 mm self-tapping pan-head screw
     # (#4 x 3/8" or M3 x 10 self-tapping) straight into the PVC; drill a 2.2 mm pilot in the pipe
-    pipe_screw_hole=3.2, pipe_screw_len=12.0, pipe_screw_pitch=13.0,   # two per joint, 13 mm apart
+    pipe_screw_hole=3.2, pipe_screw_len=12.0, pipe_screw_pitch=13.0,   # two #4 x 3/8" pan-head self-tapping
+                                                                      # per joint, 13 mm apart, straight into the PVC
     ua_d=120.0,                     # upper arm + padding; placeholder until the flexed-biceps measurement
     fa_d=113.0,                     # forearm 103 mm at its widest (near the elbow) + ~10 mm padding
     wrist_d=80.0,                   # wrist ring bore; placeholder (~70 mm wrist + 10) until measured.
@@ -64,9 +65,10 @@ P = dict(
     # heat-sets (4 long, 4.0 hole) in the hub. One screw size (M3) for the whole elbow.
     # shoulder_d stays on the 6806 inner ring (land ~Ø32.8); lip_d clears the seal (outer land ~Ø39.2)
     axle=dict(pilot_d=16.0, pilot_len=3.0, shoulder_d=32.5, screws=3, screw_r=11.0, screw_clear=3.4,
-              head_d=5.8, head_depth=4.2, insert_d=4.0, insert_depth=5.5, lip_d=39.5,   # M3 x 8: head 1 mm deeper
-              screw=dict(d=3.0, len=8.0, head_d=5.5, head_h=3.0), insert_len=4.0),
-    m3=dict(insert_d=4.0, insert_depth=5.5),   # cover screws: M3 x 8 into M3 heat-sets (4 long) in the housing
+              head_d=5.8, head_depth=4.2, insert_d=4.0, insert_depth=7.0, lip_d=39.5,   # M3 x 8: head 1 mm deeper
+              screw=dict(d=3.0, len=8.0, head_d=5.5, head_h=3.0), insert_len=5.7),   # ruthex RX-M3 x 5.7
+    m3=dict(insert_d=4.0, insert_depth=7.0, insert_len=5.7),   # cover screws: M3 x 8 into ruthex RX-M3 x 5.7
+                                                               # (Ø4.0 x 7 deep holes)
     cover_pcd=50.0,
     cover_bore=38.5,                # open centre: bearing seal, inner ring and the turning axle show (still
                                     # overlaps the outer ring ~1.5 mm, so the cover keeps retaining it)
@@ -706,7 +708,7 @@ def variant(parent, key, offset):
     # the axle's bought fasteners (they turn with the forearm): one screw + insert, patterned x3
     seat_x = x_out - c['head_depth']                       # counterbore floor
     ax_hw = [fastener(fa, 1, 0, c['screw_r'], seat_x, sc['len'], sc['d'], sc['head_d'], sc['head_h'], 'M3 x 8 socket head (buy)'),
-             insert(fa, 1, 0, c['screw_r'], fx1, c['insert_len'], c['insert_d'], sc['d'], 'M3 heat-set insert, 4 long (buy)')]
+             insert(fa, 1, 0, c['screw_r'], fx1, c['insert_len'], c['insert_d'], sc['d'], 'M3 heat-set insert ruthex 5.7 (buy)')]
     f = fa.circular(ax_hw, 'x', n_sc, step_sc, name='axle screws + inserts')
     ax_hw += name_like(f.bodies, ax_hw)
     f = fa.mirror([ax] + ax_hw, name='axle + screws, medial')
@@ -730,7 +732,7 @@ def variant(parent, key, offset):
     pat = ua.circular([seed], 'x', 6, 60, name='cover insert holes')
     ua.mirror([seed, pat], name='cover insert holes, medial')
     cov_hw = [fastener(hw, 1, P['cover_pcd'] / 2, 0, ux1 + 3, 8, 3.0, 5.5, 3.0, 'M3 x 8 socket head (buy)'),
-              insert(hw, 1, P['cover_pcd'] / 2, 0, ux1, 4.0, m3['insert_d'], 3.0, 'M3 heat-set insert, 4 long (buy)')]
+              insert(hw, 1, P['cover_pcd'] / 2, 0, ux1, m3['insert_len'], m3['insert_d'], 3.0, 'M3 heat-set insert ruthex 5.7 (buy)')]
     f = hw.circular(cov_hw, 'x', 6, 60, name='cover screws + inserts')
     cov_hw += name_like(f.bodies, cov_hw)
     f = hw.mirror([brg, cover] + cov_hw, name='bearing + cover + screws, medial')

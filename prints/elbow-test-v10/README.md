@@ -9,7 +9,9 @@ is in `BOM.md` at the repo root. It pairs with `prints/shoulder-back-v2/`.
   pipe head on the shoulder's upper-arm link. The upper-arm pipes are **127.5 mm** long (the forearm pipes stay 184.8 mm).
 - **Axles `03`:** the screw heads sit 1 mm deeper, so all small screws are **M3 × 8** (no more M3 × 10).
 - **Covers `04`:** spoked, with an open Ø38.5 centre and 6 windows, so the bearing and axle show. They still hold the bearing's outer ring.
-- `01`, `02`, `05` and `06` are unchanged in shape (re-exported). `01` has the same few mesh defects as in v9. Bambu Studio
+- **Insert holes are Ø4.0 × 7 mm deep** for ruthex RX-M3 × 5.7 inserts (forearm hubs `02`, housings `01`).
+- Pipe screws: #4 × 3/8" pan-head self-tapping, 2 per joint, through the Ø3.2 holes.
+- `01`, `02`, `05` and `06` are otherwise unchanged in shape (re-exported). `01` has the same few mesh defects as in v9. Bambu Studio
   repairs them on import; the v9 print was fine.
 
 ## Parts
@@ -24,4 +26,6 @@ is in `BOM.md` at the repo root. It pairs with `prints/shoulder-back-v2/`.
 | `05_wrist_ring.stl` | 1 | flat |
 | `06_wrist_cuff.stl` | 1 | flat |
 
-Only `03` and `04` need reprinting if you already have v9 printed. The v9 `07` far ring is no longer used.
+Already printed v9? It still works: press the 5.7 mm inserts flush into the 5.5 mm holes (or run a 4 mm drill to
+~7 mm first), and use **M3 × 10** in the v9 axles (their head pocket is 1 mm shallower). Reprint `03` and `04` only if
+you want the spoked covers and M3 × 8 everywhere. The v9 `07` far ring is no longer used.

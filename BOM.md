@@ -37,8 +37,9 @@ the point, and the screw cuts its own thread in the PVC, usually with no pilot n
 drill a 2 mm pilot through the hole. Snug is enough: over-tightening strips the thin pipe wall. 3/8" is the right
 length: about 7 mm of plastic + PVC wall before the thread bites, and the tip ends inside the hollow pipe.
 
-**Inserts:** the ruthex RX-M3 × 5.7 wants a Ø4.0 hole about 6.7 mm deep. The current CAD holes are 5.5–6 mm deep
-(designed for 4 mm inserts), so set each insert flush and don't push it deeper; deepening the holes is on the to-do list.
+**Inserts:** all insert holes are Ø4.0 × 7 mm deep for the ruthex RX-M3 × 5.7 (elbow v10, shoulder-back v2). Parts
+already printed from elbow v9 have 5.5 mm holes: press the insert flush (or run a 4 mm drill to ~7 mm first), and use
+**M3 × 10** in the v9 axles.
 
 ## PVC pipe (21.5 mm OD / 15.5 mm ID)
 

@@ -33,15 +33,16 @@ S = dict(
     ring_land=33.0,                                        # 6806 inner-ring land: bosses/washers stay <= this
     flex_bearing=(40.0, 52.0, 7.0), flex_ring_land=43.0,   # shoulder flexion: 6808-2RS (40 x 52 x 7), bigger than
                                                            # the elbow's 6806: the shoulder carries the whole arm
-    pipe_screw=dict(hole=3.2, len=12.0),                   # M3 x 8 machine screw into a 2.5 mm pilot in the PVC
-    m3=dict(clear=3.4, cbore=6.5, under_head=4.0, head=(5.5, 3.0), screw_len=8.0),   # ONE small screw: M3 x 8                                # top/mid node sockets: keeps those nodes < 250 mm
+    pipe_screw=dict(hole=3.2, len=12.0),                   # #4 x 3/8" (2.9 x 9.5) pan-head self-tapping into the PVC
+    m3=dict(clear=3.4, cbore=6.5, under_head=4.0, head=(5.5, 3.0), screw_len=8.0,    # M3 x 8 into inserts; cbore also
+            insert=(4.0, 7.0), insert_len=5.7),       # takes the #4 pipe screw's Ø5.6 head. ruthex RX-M3 x 5.7                                # top/mid node sockets: keeps those nodes < 250 mm
     node_depth=36.0, node_h=(64.0, 36.0, 40.0),          # bottom, mid, top
     # webbing anchors (tabs with a slot the strap loops through; buckles / ladder locks live on the straps)
     tab_t=10.0, tab_len=30.0, tab_edge=4.0, tab_flare=10.0,   # tabs: 10 thick, base 2 x 10 mm wider than the slot end
     # Bambu P1S bed is 256 mm: the bottom node (376 mm) prints as two halves + a splice plate on its back face
     splice=dict(t=6.0, flange=5.0, half_w=50.0, holes=((-16.0, 30.0), (16.0, 30.0)),   # (dy, dz from MID_Z)
                 flange_holes=(30.0,),                                                 # dz of the top/bottom M4s
-                m4_clear=3.4, m4_insert=(4.0, 6.0), cb=2.0),   # M3 x 8 (names kept)
+                m4_clear=3.4, m4_insert=(4.0, 7.0), cb=2.0),   # M3 x 8 into ruthex 5.7 (Ø4 x 7 holes; names kept)
     shoulder_tab=dict(w=36.0, slot=(26.0, 5.0)),          # 25 mm webbing: shoulder straps, top and bottom ends
     waist_tab=dict(w=52.0, slot=(40.0, 5.0)),             # 38 mm webbing: waist strap
     bearing=(30.0, 42.0, 7.0), bearing_clear=0.1,          # 6806-2RS
@@ -353,17 +354,17 @@ def build_frame(parent):
             zz = MID_Z + sz * dz
             hw_bolt(hw, [xb_face - sp['t'] + sp['cb'], y_bot + dy, zz], fx.AX['x'], L4, S['m3']['head'],
                     'M3 x 8 socket head (buy)', dia=3.0)
-            ins = hw.ann(fx.AX['x'], [xb_face + 2, y_bot + dy, zz], 2.0, 1.5, 4.0, name='M3 insert')[0]
-            ins.name = 'M3 heat-set insert, 4 long (buy)'
+            ins = hw.ann(fx.AX['x'], [xb_face + 2.85, y_bot + dy, zz], 2.0, 1.5, 5.7, name='M3 insert')[0]
+            ins.name = 'M3 heat-set insert ruthex 5.7 (buy)'
     for dz in sp['flange_holes']:
         for sz in (1, -1):
             zz = MID_Z + sz * dz
             for ys, fr, sg in ((yt + fl - sp['cb'], ([1, 0, 0], [0, 0, 1], [0, -1, 0]), 1),
                                (yb_ - fl + sp['cb'], fx.AX['y'], -1)):
                 hw_bolt(hw, [xf, ys, zz], fr, L4, S['m3']['head'], 'M3 x 8 socket head (buy)', dia=3.0)
-                c_ins = [xf, (yt - 2) if sg > 0 else (yb_ + 2), zz]
-                ins = hw.ann(fx.AX['y'], c_ins, 2.0, 1.5, 4.0, name='M3 insert')[0]
-                ins.name = 'M3 heat-set insert, 4 long (buy)'
+                c_ins = [xf, (yt - 2.85) if sg > 0 else (yb_ + 2.85), zz]
+                ins = hw.ann(fx.AX['y'], c_ins, 2.0, 1.5, 5.7, name='M3 insert')[0]
+                ins.name = 'M3 heat-set insert ruthex 5.7 (buy)'
     HWLOG.append(('splice M3 x 8 (back)', L4, 'web %.0f - %.0f counterbore = %.0f plastic, %.0f into the insert'
                   % (sp['t'], sp['cb'], sp['t'] - sp['cb'], L4 - sp['t'] + sp['cb'])))
     HWLOG.append(('splice M3 x 8 (flanges)', L4, 'flange %.0f - %.0f = %.0f plastic, %.0f into the insert'

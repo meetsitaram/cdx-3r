@@ -32,12 +32,13 @@ Print `prints/elbow-test-v10/00_fit_coupon_bearing_pockets.stl` first if bearing
 - The abduction hinge uses a printed Ø30 sleeve through 2 × 6806 and an M8 × 100 through-bolt (no printed axle).
 - The bottom-node splice is a U-channel held by 8 × M3 × 8 into M3 heat-set inserts.
 - The strap tabs are 10 mm thick, with flared bases.
-- The pipe-screw holes are Ø3.2 for #4 self-tapping / self-drilling screws. For #6 screws, open them to Ø3.8.
+- Pipe screws: **#4 × 3/8" pan-head self-tapping** through the Ø3.2 holes (Ø6.5 head counterbores where the wall is thick).
+- Insert holes (splice) are Ø4.0 × 7 mm deep for **ruthex RX-M3 × 5.7** inserts.
 - The load-lifter stays are gone: the backbone pipes (2 × 412 mm) end inside the top node.
 
 ## Assembly
 
-1. Heat-set 8 × M3 inserts into the bottom-node halves. Bolt on the splice channel (8 × M3 × 8).
+1. Heat-set 8 × ruthex M3 × 5.7 inserts (flush) into the bottom-node halves. Bolt on the splice channel (8 × M3 × 8).
 2. Push the backbone pipes into the bottom node, then slide on the mid and top nodes. Fit the beams and diagonals to the
    mount blocks. Drive the pipe screws.
 3. Press 2 × 6806 into the right mount block. Pass the abduction sleeve through, set the yoke root against the front
