@@ -1,0 +1,91 @@
+# CDX-3R bill of materials: parts to buy
+
+This is for one right arm (elbow concept B) plus the shoulder and back system, as of 2026-09-29. Quantities come
+from the current CAD: `cad/fusion/concepts.py` (elbow) and `cad/fusion/shoulder.py` (shoulder + back). Print
+details are in `prints/elbow-test-v10/` and `prints/shoulder-back-v2/`.
+The last column is what a future **left arm** would add; the frame and harness are shared.
+
+Buy extra of the small parts (see the fastener notes).
+
+## Bearings
+
+| Item | Spec | Right arm + back | Where | + Left arm |
+|---|---|---|---|---|
+| Deep-groove ball bearing | **6806-2RS**, 30 × 42 × 7 mm, sealed | **4** | elbow 2 (upper-arm housings); shoulder abduction 2 (right mount block) | 4 |
+| Deep-groove ball bearing | **6808-2RS**, 40 × 52 × 7 mm, sealed | **2** | shoulder flexion (yoke housing: the shoulder carries the whole arm) | 2 |
+
+## Fasteners
+
+**Small screws are two kinds:** **M3 × 8 socket head** machine screws where they go into heat-set inserts,
+and **self-drilling (Tek) screws** where they go straight into the PVC pipes: no pilot hole. Where a wall is thicker, the
+head sits in a Ø6.5 counterbore, so the screw always reaches. The two hinge bolts are M8 socket heads.
+
+| Item | Spec | Qty | Where | + Left arm |
+|---|---|---|---|---|
+| Socket head cap screw | **M3 × 8** (ISO 4762) | **26** | into M3 inserts: elbow axles 6 (heads 4.2 mm deep in the axle), elbow covers 12, bottom-node splice channel 8 (2 mm counterbores) | 18 |
+| Self-drilling (Tek) screw | **2.9 × 9.5 mm pan head, DIN 7504 N** (#4 × 3/8" self-drilling) | **48** | into the PVC pipes: elbow 18, link pipe head 6, frame 24 | 24 |
+| Heat-set insert | **M3**, 4 mm long, for a Ø4.0 hole | **26** | elbow: 6 in the forearm hubs, 12 around the housings; splice: 8 in the bottom-node halves | 18 |
+| Socket head cap screw | M8 × 100 (ISO 4762) | 1 | shoulder abduction hinge: yoke root → sleeve through both bearings → washer + nut behind the mount block | 1 |
+| Socket head cap screw | M8 × 55 (ISO 4762) | 1 | shoulder flexion hinge: through the printed Ø40 sleeve in the 6808s; head sunk flush on the arm side of the link fork, nut captured in the outer plate | 1 |
+| Nyloc nut | M8 | 2 | one per hinge | 2 |
+| Fender washer | M8, 30 mm OD, 1.5 thick | 1 | behind the abduction mount block (clamps the rear bearing's inner ring) | 1 |
+| Pin | Ø4 mm, about 25 mm long | 1 | elbow: wrist-cuff hinge (inner side) | 1 |
+| Quick-release pin | Ø4 mm | 1 | elbow: wrist-cuff latch (outer side) | 1 |
+
+Pipe screws: seat the pipe, then drive the self-drilling screw through the Ø3.2 hole. The printed hole guides it, the
+drill point makes its own hole in the PVC (**no pilot needed**), and the extra length ends inside the hollow pipe.
+Use a low clutch setting: snug is enough, and over-tightening strips the thin pipe wall. Buy boxes of 50 of each small
+screw and 50 × M3 inserts: they are cheap, and some always get lost.
+
+### Where to buy the pipe screws (Amazon)
+
+The current CAD holes (Ø3.2, Ø6.5 head counterbores) fit **#4 / 2.9 mm** screws. 2.9 mm self-drilling screws are hard
+to find on Amazon, so there are two routes:
+
+**A. #6 × 3/8" (3.5 × 9.5 mm) self-drilling (Tek), pan head Phillips: recommended, easy to buy.**
+*Needs a CAD update first: pipe-screw holes Ø3.2 → Ø3.8, head counterbores Ø6.5 → Ø7.5 (not done yet).*
+- [Hillman 560258: #6-20 × 3/8" pan head Phillips self-drilling, 100-pack](https://www.amazon.com/Hillman-560258-6-20-Inch-Phillips-Drilling/dp/B000BDB6CW) (best quantity for this build)
+- [Phillips pan head self-driller TEK, 410 stainless, #6 × 3/8", qty 250](https://www.amazon.com/Phillips-Head-Driller-Stainless-Steel/dp/B00FAUZ0FU)
+- [Phillips pan head self-driller TEK, 410 stainless, #6 × 3/8", qty 1,000](https://www.amazon.com/Phillips-Head-Driller-Stainless-Steel/dp/B00FAUZ15O)
+- [#6-20 × 3/8" self-drilling, 410 stainless, pan head, #2 point, qty 1,000](https://www.amazon.com/Drilling-Hardened-Stainless-Phillips-Quantity/dp/B07F225GQ8)
+
+**B. #4 × 3/8" (2.9 × 9.5 mm) pointed self-tapping, pan head: fits the current CAD as is.**
+No drill tip: press firmly (the printed hole centres it), or drill a 2.2 mm pilot if it skates on the round pipe.
+- [Fastenere #4 × 3/8" pan head, 18-8 stainless, self-tapping, qty 100](https://amazon.com/Screws-Phillips-Stainless-Self-Tapping-Quantity/dp/B01CEZSZAA)
+- [#4 × 3/8" type A self-tapping, 316 stainless, pan head, qty 1,000](https://www.amazon.com/Self-Tapping-Screws-Stainless-Phillips/dp/B07F1Z4VJB)
+- [Amazon search: ST2.9 × 9.5](https://www.amazon.com/st2-9x9-5/s?k=st2.9x9.5) (for a true 2.9 mm self-drilling screw, if a listing turns up)
+
+## PVC pipe (21.5 mm OD / 15.5 mm ID)
+
+| Piece | Cut length | Qty | Where |
+|---|---|---|---|
+| Upper-arm pipe | 127.5 mm | 3 | elbow near ring → upper-arm link pipe head |
+| Forearm pipe | 184.8 mm (leans 5.9° toward the wrist) | 3 | elbow near ring → wrist ring |
+| Backbone | 412 mm | 2 | bottom node → top node (ends flush inside it) |
+| Upper beam | 101.6 mm | 2 | top node → mount block (L + R) |
+| Diagonal | 130.6 mm | 2 | mid node → mount block (L + R) |
+
+The total is about 2.23 m; **buy 3 m** (cuts plus saw kerf and spares). A left arm adds 3 × 127.5 + 3 × 184.8 mm.
+
+## Harness (camping-pack style)
+
+| Item | Spec | Qty | Where |
+|---|---|---|---|
+| Webbing | 25 mm nylon | ~2 m | 2 shoulder straps: top tabs → over the shoulders → under the arms → bottom tabs |
+| Ladder-lock buckle | 25 mm | 2 | shoulder-strap adjusters |
+| Webbing | 38 mm nylon | ~1.2 m | waist strap through the two side tabs |
+| Side-release buckle | 38 mm | 1 | waist strap, front |
+| Hook-and-loop strap *(optional)* | 25 mm | ~1 m | arm retention across the open front of the pipe head / rings |
+| Foam padding *(optional)* | 10 mm closed-cell, self-adhesive | ~0.2 m² | shoulder straps, waist strap, skin-side ring faces |
+
+## Filament
+
+| Item | Qty | Notes |
+|---|---|---|
+| PETG | ~3 kg | shoulder + back ~2.1 kg (60 % effective fill), elbow set ~0.6 kg, plus fit coupons and reprints |
+
+## Not included yet
+
+- Actuation and power (motors, winches, cables, battery, controller): the back pack is still a placeholder box.
+  The battery should sit at the left mount block to balance the right arm (see `prints/shoulder-back-v2/README.md`).
+- Shoulder hard stops (abduction 60°, flexion −20 / 120°): not modelled yet; they may add small screws.

@@ -46,7 +46,13 @@ P = dict(
     # measured folded, palm up: upper arm 203 inside / 305 outside, forearm 229 / 254 mm;
     # the elbow axis sits about midway, so ~254 mm to the shoulder and ~241 mm to the wrist
     ua_len=254.0, fa_len=241.0,
-    ua_far=180.0,                   # far ring 180..205: inside the 203 mm fold-side length, clear of the armpit
+    ua_mid=False,                   # no upper-arm mid support: the pipes are held rigidly by the near ring and the
+                                    # pipe head (~100 mm span), and a band there pinched the triceps
+    ua_far=87.5,                    # (if ua_mid) upper-arm mid support 87.5..112.5: the old far ring at 180 pressed toward the
+                                    # ribs / armpit fold (body-scan check); back + outer arc only, a strap closes it
+    ua_far_gap=(112.5, 185.0),      # (centre, width) deg of its opening: anterior + medial side open
+    ua_pipe_top=167.5,              # the pipes run on through the mid support into the pipe head on the shoulder
+                                    # link (head 142.5..167.5, built in shoulder.py); higher reaches the armpit fold
     fa_far=200.0,                   # wrist ring 200..225: ~16 mm short of the wrist so it bends freely
     open_deg=130.0,                 # far rings' arm opening, centred anterior (+Y)
     pipe_angles=(225, 270, 315),    # deg from lateral +X toward anterior +Y: three on the back
@@ -58,10 +64,13 @@ P = dict(
     # heat-sets (4 long, 4.0 hole) in the hub. One screw size (M3) for the whole elbow.
     # shoulder_d stays on the 6806 inner ring (land ~Ø32.8); lip_d clears the seal (outer land ~Ø39.2)
     axle=dict(pilot_d=16.0, pilot_len=3.0, shoulder_d=32.5, screws=3, screw_r=11.0, screw_clear=3.4,
-              head_d=5.8, head_depth=3.2, insert_d=4.0, insert_depth=5.5, lip_d=39.5,
-              screw=dict(d=3.0, len=10.0, head_d=5.5, head_h=3.0), insert_len=4.0),
+              head_d=5.8, head_depth=4.2, insert_d=4.0, insert_depth=5.5, lip_d=39.5,   # M3 x 8: head 1 mm deeper
+              screw=dict(d=3.0, len=8.0, head_d=5.5, head_h=3.0), insert_len=4.0),
     m3=dict(insert_d=4.0, insert_depth=5.5),   # cover screws: M3 x 8 into M3 heat-sets (4 long) in the housing
     cover_pcd=50.0,
+    cover_bore=38.5,                # open centre: bearing seal, inner ring and the turning axle show (still
+                                    # overlaps the outer ring ~1.5 mm, so the cover keeps retaining it)
+    cover_windows=(6, 6.0, 25.0),   # spoked look: n round windows, diameter, radius (on the screw circle, between screws)
     rom=(0, 135),
     # forearm door: the front halves of both forearm rings + a 5th pipe; hinged at the wrist ring,
     # pinned shut at the elbow ring. Each joint is a fork and tongue at the ring's side (y = 0):
@@ -266,12 +275,12 @@ def along(line):
     return ex, fx.cross(ez, ex), ez
 
 
-def ring(p, d, zc, lines, flange=None, open_deg=None):
+def ring(p, d, zc, lines, flange=None, open_deg=None, gap_deg=90):
     """Thin C-band + pipe bosses (+ a posterior flange the elbow shell stands on), holes cut
     along each pipe's line."""
     h = P['ring_h']
     open_deg = open_deg or P['open_deg']
-    body = p.cring('z', [0, 0, zc], d / 2, band_out(d), h, 90, open_deg, name='band')
+    body = p.cring('z', [0, 0, zc], d / 2, band_out(d), h, gap_deg, open_deg, name='band')
     parts = list(body)
     for line in lines:
         c = point_at(line, zc)
@@ -322,7 +331,8 @@ def pipe(p, line, z0, z1, name='PVC pipe 21.5/15.5', copies=1):
     return body
 
 
-def unit(parent, name, d, sign, far, color, flange, far_open=None, d_far=None):
+def unit(parent, name, d, sign, far, color, flange, far_open=None, d_far=None, far_gap=90, pipe_end=None,
+         far_ring=True):
     """flange: (r0, r1) of the near ring's posterior flange, matching the elbow shell.
     d_far: a smaller far-ring bore (the wrist); the pipes then lean inward."""
     p = Part(parent, name, color=color)
@@ -330,12 +340,13 @@ def unit(parent, name, d, sign, far, color, flange, far_open=None, d_far=None):
     zn, zf = sign * (P['ring_off'] + h / 2), sign * (far + h / 2)
     lines, lean = pipe_lines(d, d_far or d, zn, zf, P['pipe_angles'])
     near = ring(p, d, zn, lines, flange, P['near_open'])
-    far_ring = ring(p, d_far or d, zf, lines, open_deg=far_open)
-    near.name, far_ring.name = 'near ring (print flat)', 'far ring (print flat)'
+    near.name = 'near ring (print flat)'
+    if far_ring:
+        ring(p, d_far or d, zf, lines, open_deg=far_open, gap_deg=far_gap).name = 'far ring (print flat)'
     # a leaning pipe's square-cut end dips by r*tan(lean) on one side: start it that much higher
     # so the end rests on the shell edge instead of cutting into it
     dip = P['pipe_od'] / 2 * math.tan(lean) + (0.1 if lean else 0)
-    pipe(p, lines[0], sign * (P['ring_off'] + dip), sign * (far + h), copies=len(lines))
+    pipe(p, lines[0], sign * (P['ring_off'] + dip), sign * (pipe_end or far + h), copies=len(lines))
     p.lean = lean
     p.lines, p.ring_z = lines, (zn, zf)
     return p
@@ -351,7 +362,9 @@ def drill_all(p):
     n, step = pipe_step()
     line = p.lines[0]
     for key, zc in (('near ring', zn), ('far ring', zf)):
-        body = next(b for b in p.comp.bRepBodies if key in b.name)
+        body = next((b for b in p.comp.bRepBodies if key in b.name), None)
+        if body is None:                                  # e.g. the upper arm without a mid support
+            continue
         body = drill(p, body, p.lines, zc)
         # the first pipe's two screw holes, then the same circular pattern as the pipes
         c = point_at(line, zc)
@@ -625,7 +638,8 @@ def variant(parent, key, offset):
     g = fx.group(parent, f'{key} - two-sided 6806, elbow shells', t=offset)
     fa = unit(g, 'Forearm unit', P['fa_d'], -1, P['fa_far'], FA_COLOR, (band_out(P['fa_d']) - 1, fx1),
               P['fa_far_open'] if P['door'] else None, P['wrist_d'])
-    ua = unit(g, 'Upper-arm unit', P['ua_d'], 1, P['ua_far'], UA_COLOR, (band_out(P['ua_d']) - 1, ux1))
+    ua = unit(g, 'Upper-arm unit', P['ua_d'], 1, P['ua_far'], UA_COLOR, (band_out(P['ua_d']) - 1, ux1),
+              P['ua_far_gap'][1], far_gap=P['ua_far_gap'][0], pipe_end=P['ua_pipe_top'], far_ring=P['ua_mid'])
     hw = Part(g, 'Hardware (6806 bearings, covers)', color=HW_COLOR)
 
     # forearm: near ring + shell + hubs + hyperextension ledge, one part
@@ -691,7 +705,7 @@ def variant(parent, key, offset):
     fa.circular(holes, 'x', n_sc, step_sc, name='axle screw holes')
     # the axle's bought fasteners (they turn with the forearm): one screw + insert, patterned x3
     seat_x = x_out - c['head_depth']                       # counterbore floor
-    ax_hw = [fastener(fa, 1, 0, c['screw_r'], seat_x, sc['len'], sc['d'], sc['head_d'], sc['head_h'], 'M3 x 10 socket head (buy)'),
+    ax_hw = [fastener(fa, 1, 0, c['screw_r'], seat_x, sc['len'], sc['d'], sc['head_d'], sc['head_h'], 'M3 x 8 socket head (buy)'),
              insert(fa, 1, 0, c['screw_r'], fx1, c['insert_len'], c['insert_d'], sc['d'], 'M3 heat-set insert, 4 long (buy)')]
     f = fa.circular(ax_hw, 'x', n_sc, step_sc, name='axle screws + inserts')
     ax_hw += name_like(f.bodies, ax_hw)
@@ -706,7 +720,11 @@ def variant(parent, key, offset):
     cover.name = 'cover (print flat)'
     seed = hw.hole('x', [ux1 + 1.5, P['cover_pcd'] / 2, 0], 3.4, 5, cover, name='cover screw hole')
     hw.circular([seed], 'x', 6, 60, name='cover screw holes')
-    hw.hole('x', [ux1 + 1.5, 0, 0], 8.4, 5, cover, name='cover centre hole')
+    hw.hole('x', [ux1 + 1.5, 0, 0], P['cover_bore'], 5, cover, name='cover centre opening')
+    nw, dw, rw = P['cover_windows']
+    a0 = math.radians(180.0 / nw)                          # windows sit between the screws: the webs are spokes
+    wseed = hw.hole('x', [ux1 + 1.5, rw * math.cos(a0), rw * math.sin(a0)], dw, 5, cover, name='cover window')
+    hw.circular([wseed], 'x', nw, 360.0 / nw, name='cover windows (spokes)')
     seed = ua.hole('x', [ux1 - m3['insert_depth'] / 2 + 0.5, P['cover_pcd'] / 2, 0], m3['insert_d'], m3['insert_depth'] + 1,
                    ubody, name='cover insert hole')
     pat = ua.circular([seed], 'x', 6, 60, name='cover insert holes')
@@ -877,8 +895,10 @@ def export_stls(out_dir, include_door=True):
         ('00_fit_coupon_pipe_holes', body(coup_parts['Pipe hole coupon'], 'coupon')),
         ('00_fit_coupon_bearing_pockets', body(coup_parts['Bearing pocket coupon'], 'coupon')),
     ]
-    if include_door:
-        wanted.append(('05_door_elbow_end_optional', body(parts['Forearm door (print flat)'], 'door arc, elbow end')))
+    wanted += [('05_wrist_ring', body(parts['Forearm unit'], 'far ring')),
+               ('06_wrist_cuff', body(parts['Wrist cuff (print flat)'], 'wrist cuff'))]
+    if include_door and 'Forearm door (print flat)' in parts:
+        wanted.append(('07_door_elbow_end_optional', body(parts['Forearm door (print flat)'], 'door arc, elbow end')))
     em = d.exportManager
     out = []
     for name, b in wanted:
