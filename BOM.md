@@ -55,14 +55,15 @@ The total is about 2.23 m; **buy 3 m** (cuts plus saw kerf and spares). A left a
 
 ## Harness (camping-pack style)
 
-| Item | Spec | Qty | Where |
-|---|---|---|---|
-| Webbing | 25 mm nylon | ~2 m | 2 shoulder straps: top tabs → over the shoulders → under the arms → bottom tabs |
-| Ladder-lock buckle | 25 mm | 2 | shoulder-strap adjusters |
-| Webbing | 38 mm nylon | ~1.2 m | waist strap through the two side tabs |
-| Side-release buckle | 38 mm | 1 | waist strap, front |
-| Hook-and-loop strap *(optional)* | 25 mm | ~1 m | arm retention across the open front of the pipe head / rings |
-| Foam padding *(optional)* | 10 mm closed-cell, self-adhesive | ~0.2 m² | shoulder straps, waist strap, skin-side ring faces |
+Two no-sew kits cover it: 1" (25.4 mm) webbing fits the 26 mm shoulder-strap slots, 1.5" (38.1 mm) fits the 40 mm waist slots.
+Tri-glides adjust length like ladder-locks.
+
+| Item | Spec | Qty used | Where | Buy |
+|---|---|---|---|---|
+| 1" strap kit | 25 mm nylon webbing + side-release buckles + tri-glides | ~2.5 m webbing, 1 buckle, 2 tri-glides | 2 shoulder straps (top tabs → over the shoulders → under the arms → bottom tabs) + sternum strap | [BEYOURD 1" set: 6 yd, 6 buckles, 12 tri-glides](https://www.amazon.com/BEYOURD-Buckles-Straps-Set-Adjustable/dp/B08LD8CJ8D) |
+| 1.5" strap kit | 38 mm nylon webbing + side-release buckle + tri-glides | ~1.2 m webbing, 1 buckle | waist strap through the two side tabs, buckled at the front | [HISUNTEC 1.5" set: 6 yd, 5 buckles, 10 tri-glides](https://www.amazon.com/Buckles-Straps-Set-1-5-inch/dp/B09D8MRQQF) |
+| Hook-and-loop strap *(optional)* | 25 mm | ~1 m | arm retention across the open front of the pipe head / rings | |
+| Foam padding *(optional)* | 10 mm closed-cell, self-adhesive | ~0.2 m² | shoulder straps, waist strap, skin-side ring faces | |
 
 ## Filament
 
