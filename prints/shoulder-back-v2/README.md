@@ -27,7 +27,7 @@ Print `prints/elbow-test-v10/00_fit_coupon_bearing_pockets.stl` first if bearing
 ## What changed since v1
 
 - The shoulder flexion hinge uses **6808-2RS** bearings with a Ø88 hub (the same size as the elbow). The link is a two-sided fork on an M8 × 55 through-bolt with a printed Ø40 sleeve, and has spoked windows that show the bearing.
-- The upper-arm link is one piece: the pipe head (3 blind sockets for the upper-arm PVC pipes, 127.5 mm long) and
+- The upper-arm link is one piece: the pipe head (3 blind sockets for the upper-arm PVC pipes, 127 mm long) and
   a curved brace wall up to the link. The link stops the arm swinging back at about −25°.
 - The abduction hinge uses a printed Ø30 sleeve through 2 × 6806 and an M8 × 100 through-bolt (no printed axle).
 - The bottom-node splice is a U-channel held by 8 × M3 × 8 into M3 heat-set inserts.

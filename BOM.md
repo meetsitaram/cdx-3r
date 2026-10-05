@@ -45,13 +45,13 @@ already printed from elbow v9 have 5.5 mm holes: press the insert flush (or run 
 
 | Piece | Cut length | Qty | Where |
 |---|---|---|---|
-| Upper-arm pipe | 127.5 mm | 3 | elbow near ring → upper-arm link pipe head |
-| Forearm pipe | 184.8 mm (leans 5.9° toward the wrist) | 3 | elbow near ring → wrist ring |
+| Upper-arm pipe | 127 mm | 3 | elbow near ring → upper-arm link pipe head |
+| Forearm pipe | 185 mm (leans 5.9° toward the wrist) | 3 | elbow near ring → wrist ring |
 | Backbone | 412 mm | 2 | bottom node → top node (ends flush inside it) |
-| Upper beam | 101.6 mm | 2 | top node → mount block (L + R) |
-| Diagonal | 130.6 mm | 2 | mid node → mount block (L + R) |
+| Upper beam | 102 mm | 2 | top node → mount block (L + R) |
+| Diagonal | 131 mm | 2 | mid node → mount block (L + R) |
 
-The total is about 2.23 m; **buy 3 m** (cuts plus saw kerf and spares). A left arm adds 3 × 127.5 + 3 × 184.8 mm.
+The total is about 2.23 m; **buy 3 m** (cuts plus saw kerf and spares). A left arm adds 3 × 127 + 3 × 185 mm.
 
 ## Harness (camping-pack style)
 

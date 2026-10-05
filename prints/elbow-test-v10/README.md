@@ -6,7 +6,7 @@ is in `BOM.md` at the repo root. It pairs with `prints/shoulder-back-v2/`.
 ## Changes since v9
 
 - **The upper-arm far ring (`07`) is removed.** The upper-arm pipes now run from the elbow's near ring straight into the
-  pipe head on the shoulder's upper-arm link. The upper-arm pipes are **127.5 mm** long (the forearm pipes stay 184.8 mm).
+  pipe head on the shoulder's upper-arm link. The upper-arm pipes are **127 mm** long (the forearm pipes stay 185 mm).
 - **Axles `03`:** the screw heads sit 1 mm deeper, so all small screws are **M3 × 8** (no more M3 × 10).
 - **Covers `04`:** spoked, with an open Ø38.5 centre and 6 windows, so the bearing and axle show. They still hold the bearing's outer ring.
 - **Insert holes are Ø4.0 × 7 mm deep** for ruthex RX-M3 × 5.7 inserts (forearm hubs `02`, housings `01`).

@@ -99,16 +99,18 @@ Links are in [BOM.md](../BOM.md). Put the small parts in separate cups or bags a
 4. Sand off the rough bits (inside and outside the cut) so the pipe slides in smoothly.
 5. Write the name of the piece on it.
 
+Being off by 1 mm is fine. If you're in between, cut a little short rather than long.
+
 You'll cut 12 pieces in total. Each step tells you which pieces to cut, right when you need them. Here's the full list
 in case you'd rather cut them all at once:
 
 | Piece | Length | How many | Used in |
 |---|---|---|---|
-| Forearm pipe | **184.8 mm** (7.28 in) | 3 | step 1 |
-| Upper-arm pipe | **127.5 mm** (5.02 in) | 3 | step 1 |
+| Forearm pipe | **185 mm** (7.28 in) | 3 | step 1 |
+| Upper-arm pipe | **127 mm** (5.00 in) | 3 | step 1 |
 | Backbone | **412 mm** (16.22 in) | 2 | step 2 |
-| Short beam | **101.6 mm** (4.00 in) | 2 | step 2 |
-| Diagonal | **130.6 mm** (5.14 in) | 2 | step 2 |
+| Short beam | **102 mm** (4.02 in) | 2 | step 2 |
+| Diagonal | **131 mm** (5.16 in) | 2 | step 2 |
 
 That's about 2.2 m of pipe, so 2.5–3 m gives you room for a mistake.
 
@@ -158,7 +160,7 @@ If either one is too loose or too tight, stop and fix the printer settings befor
 
 **You need:** parts 01–06, 2 × 6806 bearings, 18 inserts, 18 M3 × 8 screws, 18 pipe screws, the 4 mm pin.
 
-**Cut now:** 3 × **forearm pipe, 184.8 mm**, and 3 × **upper-arm pipe, 127.5 mm**.
+**Cut now:** 3 × **forearm pipe, 185 mm**, and 3 × **upper-arm pipe, 127 mm**.
 
 1. Lay out the **upper-arm elbow piece (01)**.
 2. Melt **6 inserts** into the holes around each round bearing hole, on both sides (12 in total). *(Skill 2)*
@@ -170,12 +172,12 @@ If either one is too loose or too tight, stop and fix the printer settings befor
 7. Screw each axle down with **3 M3 × 8 screws** (2.5 mm hex key). Snug, not super tight.
 8. Put a **round cover (04)** on each side.
 9. Screw each cover down with **6 M3 × 8 screws**.
-10. Push the 3 **forearm pipes (184.8 mm)** into the bottom of the elbow. Drive 2 pipe screws into each. *(Skill 4)*
+10. Push the 3 **forearm pipes (185 mm)** into the bottom of the elbow. Drive 2 pipe screws into each. *(Skill 4)*
     The pipes lean in a little toward the wrist. That's on purpose.
 11. Slide the **wrist ring (05)** onto the other ends of the forearm pipes. Drive 2 pipe screws into each.
 12. Put the **wrist cuff (06)** on the wrist ring, line up the little hinge bumps, and push the **4 mm pin**
     through them. Add a tiny drop of super glue at one end so the pin can't slide out.
-13. Push the 3 **upper-arm pipes (127.5 mm)** into the top of the elbow. Drive 2 pipe screws into each.
+13. Push the 3 **upper-arm pipes (127 mm)** into the top of the elbow. Drive 2 pipe screws into each.
 
 **✔ Check:** Bend the elbow. It should swing smoothly from straight to a deep bend (135°) and stop by itself at
 both ends. Nothing should scrape.
@@ -191,7 +193,7 @@ both ends. Nothing should scrape.
 **You need:** bottom node L + R, splice plate, middle node, top node, both shoulder blocks, 8 inserts, 8 M3 × 8
 screws, 24 pipe screws.
 
-**Cut now:** 2 × **backbone, 412 mm**, 2 × **short beam, 101.6 mm**, 2 × **diagonal, 130.6 mm**.
+**Cut now:** 2 × **backbone, 412 mm**, 2 × **short beam, 102 mm**, 2 × **diagonal, 131 mm**.
 
 1. Take the **right half** of the bottom node.
 2. Put the **left half** next to it.
@@ -201,7 +203,7 @@ screws, 24 pipe screws.
 6. Push the 2 **backbones (412 mm)** into the sockets on top of the bottom node. 2 pipe screws each.
 7. Slide the **middle node** down over both backbones to its spot. 1 pipe screw per pipe.
 8. Push the **top node** onto the top ends of the backbones. 1 pipe screw per pipe.
-9. Push the **short beams (101.6 mm)** into the sides of the top node, and the **diagonals (130.6 mm)** into the
+9. Push the **short beams (102 mm)** into the sides of the top node, and the **diagonals (131 mm)** into the
    sides of the middle node. 2 pipe screws each.
 10. Push the **shoulder blocks** onto the outer ends of the beams and diagonals, left and right. 2 pipe screws per
     pipe end.
