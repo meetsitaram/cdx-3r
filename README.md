@@ -57,6 +57,7 @@ clearance to the body at rest (the arm rests at 20 degrees abduction) and over t
 
 | What | Where |
 |---|---|
+| Step-by-step assembly guide, with animations and PVC cut lengths | [docs/ASSEMBLY.md](docs/ASSEMBLY.md) |
 | Parts to buy (bearings, screws, inserts, webbing), with links | [BOM.md](BOM.md) |
 | Print files (Bambu P1S, PETG), orientation, assembly | [prints/shoulder-back-v2/](prints/shoulder-back-v2/) and [prints/elbow-test-v10/](prints/elbow-test-v10/) |
 | Fusion models | [cad/fusion/models/](cad/fusion/models/) (`cdx-3r-shoulder-back.f3d`, `cdx-3r-elbow-concepts.f3d`) |
@@ -69,6 +70,7 @@ clearance to the body at rest (the arm rests at 20 degrees abduction) and over t
 - Actuation: motors, cable drive, battery, controller.
 - Wrist-cuff latch (a magnet-assisted snap latch is planned).
 - Dedicated shoulder stop pads (abduction 60 degrees, flexion 120 degrees).
+- Shoulder-girdle motion (shoulder blade forward/back and shrug): parked, see [docs/extensions/shoulder-girdle-dof.md](docs/extensions/shoulder-girdle-dof.md).
 
 ## Website
 
