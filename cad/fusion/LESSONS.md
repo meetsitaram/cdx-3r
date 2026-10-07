@@ -63,6 +63,7 @@ Read this before starting a new part.
 | Edge rounding also rounded the hex nut pocket's inside corners, so the nut would not fit | cut fit features (hex pockets, counterbores, bearing pockets) **after** `round_edges`, or skip them |
 | A final `finish(name)` renamed all hardware bodies to "HW ... 1..n" | never rename '(buy)' components' bodies |
 | A 4.4 mm button head on the arm side became the tightest part in the shoulder sweep | sink bolt heads that face the body: low-head DIN 7984 in a counterbore, with the material behind it counted (plate + boss) |
+| The abduction hinge's 30 mm fender washer pulled into the rear 6806 (bore 30): it only sat on the sleeve end and clamped nothing | a washer or boss that clamps a bearing inner ring must be **larger than the bore and no larger than the ring land** (6806: 30 < OD ≤ 33, so a 32 mm washer); check bought washers against both, not only the bolt size |
 | A combined elbow rebuild + shoulder rebuild in one MCP call timed out | split long runs into separate calls (elbow rebuild / shoulder rebuild / place + check / export); after a timeout, query the state before re-running |
 
 ## 4. Design and ergonomics (from the body scan and fitting)

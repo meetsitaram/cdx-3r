@@ -29,7 +29,8 @@ S = dict(
     node_socket_depth=25.0,
     # bought hardware (mm)
     m8=dict(clear=8.5, shcs_head=(13.0, 8.0), low_head=(13.0, 5.0), low_cbore=(14.5, 5.5), nut_af=13.0, nut_h=8.0,
-            fender=(30.0, 8.4, 1.5), cbore=(14.5, 8.5)),                 # fender washer: OD, ID, t
+            fender=(32.0, 8.4, 1.2), cbore=(14.5, 8.5)),                 # fender washer: OD, ID, t. OD must clamp the
+                                                           # 6806 inner ring: > bore 30, <= ring_land 33
     ring_land=33.0,                                        # 6806 inner-ring land: bosses/washers stay <= this
     flex_bearing=(40.0, 52.0, 7.0), flex_ring_land=43.0,   # shoulder flexion: 6808-2RS (40 x 52 x 7), bigger than
                                                            # the elbow's 6806: the shoulder carries the whole arm
@@ -539,7 +540,7 @@ def build_moving(parent, g):
     hw_bearing(hw, [h1 - bwid / 2, GH[1], GH[2]], fx.AX['x'], '6806-2RS front (buy)')
     hw_bearing(hw, [rear + bwid / 2, GH[1], GH[2]], fx.AX['x'], '6806-2RS rear (buy)')
     fo, fi, ftk = S['m8']['fender']
-    hw_washer(hw, [rear, GH[1], GH[2]], fx_neg, fo, fi, ftk, 'M8 fender washer 30 OD (buy)')
+    hw_washer(hw, [rear, GH[1], GH[2]], fx_neg, fo, fi, ftk, 'M8 fender washer %g OD (buy)' % fo)
     nut0 = rear - ftk
     hw_nut(hw, [nut0, GH[1], GH[2]], fx_neg)
     head_seat = x1 - cbh

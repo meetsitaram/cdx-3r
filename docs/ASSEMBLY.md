@@ -75,7 +75,7 @@ Links are in [BOM.md](../BOM.md). Put the small parts in separate cups or bags a
 | ☐ | **M8 × 100** bolt (long) | 1 | 10 cm long bolt |
 | ☐ | **M8 × 55** bolt (medium) | 1 | 5.5 cm long bolt |
 | ☐ | M8 **lock nut** (has a plastic ring inside) | 2 | |
-| ☐ | M8 **big washer** (30 mm wide) | 1 | |
+| ☐ | M8 **big washer**, **32 mm** wide (not 30!) | 1 | thin steel disc with a small hole |
 | ☐ | **Pin**, 4 mm × 25 mm | 1 | small steel rod |
 | ☐ | **PVC pipe**, 21.5 mm outside (½" pipe) | about 2.5 m | |
 | ☐ | 1" strap kit (straps, buckles, sliders) | 1 kit | |
@@ -217,15 +217,18 @@ screws, 24 pipe screws.
 ![Shoulder assembly animation](images/assembly/step3-shoulder.gif)
 
 **You need:** the frame from step 2, yoke, abduction sleeve, flexion sleeve, arm link, 2 × 6806 bearings,
-2 × 6808 bearings, M8 × 100 bolt, M8 × 55 bolt, 2 lock nuts, the big washer.
+2 × 6808 bearings, M8 × 100 bolt, M8 × 55 bolt, 2 lock nuts, the big washer (32 mm).
 
 **Part A: the "lift sideways" hinge** (on the right shoulder block)
 
 1. Press a **6806 bearing** into the front pocket and another into the back pocket of the **right shoulder block**.
-2. Push the **abduction sleeve** (short tube) through both bearings.
+2. Push the **abduction sleeve** (short tube) through both bearings. Its back end should be **flush** (level)
+   with the back bearing. Run a fingernail across: it shouldn't catch.
 3. Hold the round end of the **yoke** against the front bearing.
 4. Push the **long bolt (M8 × 100)** through the yoke, the sleeve, and out the back.
-5. Put the **big washer** on the bolt behind the block.
+5. Put the **big washer (32 mm)** on the bolt behind the block. It must rest on the bearing's **inner ring** and
+   the sleeve end. If it slides into the bearing hole, it's the wrong washer: a 30 mm washer is exactly the size
+   of the hole and falls in. Use the 32 mm one.
 6. Screw on a **lock nut**. Hold the bolt with the 6 mm hex key and tighten the nut with the 13 mm wrench until it's
    firm.
 

@@ -42,7 +42,7 @@ Print `prints/elbow-test-v10/00_fit_coupon_bearing_pockets.stl` first if bearing
 2. Push the backbone pipes into the bottom node, then slide on the mid and top nodes. Fit the beams and diagonals to the
    mount blocks. Drive the pipe screws.
 3. Press 2 × 6806 into the right mount block. Pass the abduction sleeve through, set the yoke root against the front
-   bearing, and fit the M8 × 100 from the yoke side, with the fender washer and nyloc behind the block.
+   bearing, and fit the M8 × 100 from the yoke side, with the **32 mm** fender washer (not 30 mm: that slips into the 6806 bore) and nyloc behind the block.
 4. Press 2 × 6808 into the yoke housing. Fit the flexion sleeve, place the link fork over the housing, drop the nyloc into the
    hex pocket in the outer plate, and fit the M8 × 55 from the arm side.
 5. Push the upper-arm pipes (from the elbow's upper-arm piece) into the pipe head sockets and drive 2 screws per pipe.
