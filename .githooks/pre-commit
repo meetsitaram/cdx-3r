@@ -1,6 +1,19 @@
 #!/bin/sh
-# Every print STL is committed pre-rotated into its print orientation (cad/fusion/orient_stls.py), so the slicer's
-# auto-orient is never needed. Any STL staged under prints/ that was not oriented yet is oriented here and re-staged.
+# 1. Model checks (cad/fusion/checks.py): whenever model code or prints are staged, the fastener and collision reports
+#    in prints/*/ must pass and be stamped with the current model sources. They run in Fusion on the assembly
+#    (checks.run_all, also the first step of every export); this hook only verifies them.
+model=$(git diff --cached --name-only --diff-filter=AMD -- 'cad/fusion/*.py' 'cad/fusion/*.json' 'prints/*')
+if [ -n "$model" ]; then
+  python cad/fusion/checks.py --verify || { echo "pre-commit: model checks missing, failing or stale"; exit 1; }
+fi
+# Bug notes (docs/bugs): named after what went wrong, no numbers; every note listed in the README table.
+for f in docs/bugs/*.md; do
+  b=$(basename "$f"); [ "$b" = README.md ] && continue
+  case "$b" in [0-9]*) echo "pre-commit: $f: no numbers in bug file names (name it after what went wrong)"; exit 1;; esac
+  grep -q "($b)" docs/bugs/README.md || { echo "pre-commit: $f is not listed in docs/bugs/README.md"; exit 1; }
+done
+# 2. Every print STL is committed pre-rotated into its print orientation (cad/fusion/orient_stls.py), so the slicer's
+#    auto-orient is never needed. Any STL staged under prints/ that was not oriented yet is oriented here and re-staged.
 files=$(git diff --cached --name-only --diff-filter=AM -- 'prints/*.stl' 'prints/**/*.stl')
 [ -z "$files" ] && exit 0
 # every staged STL must match the model it was exported from (model_volumes.json, written by export_prints.py)

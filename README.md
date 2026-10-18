@@ -61,9 +61,11 @@ clearance to the body at rest (the arm rests at 20 degrees abduction) and over t
 | What | Where |
 |---|---|
 | Step-by-step assembly guide, with animations and PVC cut lengths | [docs/ASSEMBLY.md](docs/ASSEMBLY.md) |
+| Stress tests (Fusion Simulation heat maps: rest bracket, shoulder girdle) | [docs/stress/README.md](docs/stress/README.md) |
+| Design bugs found and fixed, and what test now catches each | [docs/bugs/README.md](docs/bugs/README.md) |
 | Parts to buy (bearings, screws, inserts, webbing), with links | [BOM.md](BOM.md) |
 | Print files (Bambu P1S, PETG): pre-oriented and checked, import as is | [prints/shoulder-back-v3/](prints/shoulder-back-v3/) and [prints/elbow-test-v10/](prints/elbow-test-v10/) |
-| Fusion models | [cad/fusion/models/](cad/fusion/models/) (`cdx-3r-shoulder-back.f3d`, `cdx-3r-elbow-concepts.f3d`) |
+| Fusion models (one document per module + an assembly; archives) | [cad/fusion/models/](cad/fusion/models/) (`cdx-3r-frame.f3d`, `cdx-3r-shoulder-girdle.f3d`, `cdx-3r-shoulder-rest.f3d`, `cdx-3r-shoulder-hinges-arm.f3d`, `cdx-3r-elbow-concepts.f3d`) |
 | Scripts that build the models | [cad/fusion/](cad/fusion/) (`shoulder.py`, `girdle_b.py`, `shoulder_rest.py`, `concepts.py`, `fxlib.py`) |
 | Print export, orientation and checks | `cad/fusion/export_prints.py`, `orient_stls.py`, `print_validate.py` (run on export and in the git hook) |
 | Strap-force physics test | [cad/sim/](cad/sim/) (MuJoCo) |

@@ -28,7 +28,9 @@ R = dict(
     blades=[48.0, 54.0, 60.0],                          # back -> front after the root arm: hinge-to-hinge
     joints=[(64.0, 90.0), (74.0, 98.0), (90.0, 105.0)],  # hinge width, centre z: root arm/1, 1/2, 2/3 (>= 64: two M5 x 30 from the ends must not meet)
     front_end=(106.0, 110.0),                            # front edge of blade 3 (buckle tab)
-    root=dict(H0=(-176.0, 1442.0, 66.0), width=64.0),  # root hinge in front of the tower plate; >= 64 (see joints)
+    # root hinge in front of the tower plate; >= 64 wide (see joints). x -166: the bracket pivot bolt (head + washer,
+    # 9 mm proud of the bracket) sits on this hinge's axis line and needs the knuckle 16 mm out (docs/bugs/pivot-bolt-hits-rest-hinge.md)
+    root=dict(H0=(-166.0, 1442.0, 66.0), width=64.0),
 )
 
 

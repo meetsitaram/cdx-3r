@@ -9,6 +9,7 @@ orientation in place and writes orientation.json. That second step is not option
 pre-rotated so the slicer's auto-orient is never needed (it sends supports into holes). The git pre-commit hook in
 .githooks/ orients any STL that reaches a commit unoriented, as a backstop.
 """
+import importlib
 import os
 import shutil
 import subprocess
@@ -51,6 +52,7 @@ SETS = {
         ('28_rest_blade_1', 'Rest blade 1', None),
         ('29_rest_blade_2', 'Rest blade 2', None),
         ('30_rest_blade_3', 'Rest blade 3', None),
+        ('31_rest_washer_x2', 'Rest washers (printed)', 'rest washer, front'),
     ],
 }
 
@@ -79,6 +81,11 @@ def export(name, only=None, start=0, count=None, orient_after=True):
     for o in d.rootComponent.allOccurrences:
         if o.isVisible and not o.component.name.startswith('zz') and '/zz' not in o.fullPathName:
             occ.setdefault(o.component.name, o)
+    # every model check (fasteners bite, nothing collides) on the whole assembly first: nothing is exported if one
+    # fails. The reports go with the STLs; the git hook refuses a commit without clean, current ones
+    import checks
+    importlib.reload(checks)
+    checks.run_all(name)
     parts = [p for p in SETS[name] if not only or p[0] in only]
     parts = parts[start:None if count is None else start + count]
     em = d.exportManager

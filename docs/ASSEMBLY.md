@@ -69,7 +69,8 @@ README):
 | M8 **lock nut** | 9 |
 | M8 washer, **32 mm** wide (not 30) | 1 |
 | **Clevis pin** M6 × 70 + **R-clip** | 4 |
-| **M6 × 16** socket head screw + **M6 nut** | 3 + 3 |
+| **M6 × 16** socket head screw + **M6 nut** | 2 + 2 |
+| **M6 × 65** socket head (rest pivot) + **M6 nut** | 1 + 2 |
 | **GT2 belt loop** 200 mm × 6 mm | 2 |
 | **Gas strut** 180 mm, 22 N, eyelet ends | 1 |
 | Pin 4 × 25 mm | 1 |
@@ -92,11 +93,11 @@ super glue · masking tape.
 <summary><b>PVC cut list</b></summary>
 
 | Piece | Length | How many | Step |
-|---|---|---|---|
+|---|---|---|
 | Forearm pipe | **185 mm** | 3 | 1 |
 | Upper-arm pipe | **127 mm** | 3 | 1 |
 | Backbone left | **412 mm** | 1 | 2 |
-| Backbone right (runs up into the tower) | **583 mm** | 1 | 2 |
+| Backbone right (runs up into the tower) | **568 mm** | 1 | 2 |
 | Short beam (left) | **102 mm** | 1 | 2 |
 | Diagonal (left) | **131 mm** | 1 | 2 |
 
@@ -156,14 +157,14 @@ with a strap.
 ![Back frame assembly animation](images/assembly/step2-frame.gif)
 
 **Parts:** bottom node L + R, splice plate, middle node, top node, left shoulder block, 8 inserts, 8 M3 × 8, ~15 pipe
-screws, foam + hook-and-loop · **Cut:** 412, 583, 102, 131 mm
+screws, foam + hook-and-loop · **Cut:** 412, 568, 102, 131 mm
 
 <details markdown="1">
 <summary>Details</summary>
 
-- The **right backbone (583)** is the long one: it runs up through the top node into the shoulder tower.
+- The **right backbone (568)** is the long one: it runs up through the top node into the shoulder tower.
 - The left shoulder block holds the battery later; the right side has no block (the tower takes its place).
-- Back pads: 6 pieces of foam 60 mm wide, as tall as each node, on the **body side**, one each side of the spine.
+- Back pads: 6 pieces of foam 60 mm wide, as tall as each node, on the **body side**, one each side of the spine. The top-right pad sits on the tower's side plate (step 3), over two screw heads: that's fine, the foam takes it.
 
 **Check:** lift it by the top and shake: stiff, no loose pipes.
 
@@ -175,10 +176,15 @@ screws, foam + hook-and-loop · **Cut:** 412, 583, 102, 131 mm
 
 ![Shoulder tower animation](images/assembly/step3-tower.gif)
 
-**Parts:** shoulder tower, 4 inserts, 4 M3 × 8, 2 pipe screws, **2 M6 nuts**
+**Parts:** shoulder tower, 4 inserts, 4 M3 × 8, 2 pipe screws, **1 M6 nut**
 
-> ⚠ **Nuts first.** Before the tower goes on, put both M6 nuts (shoulder-rest lock screw, gas strut) into their
-> pockets from **inside** the tower, and tape them.
+> ⚠ **Nut first.** Before the tower goes on, put the gas-strut M6 nut into its pocket from **inside** the tower,
+> and tape it.
+>
+> ⚠ **Tower printed before 18 Oct 2026** (it has a nut pocket next to the round boss and no hole in the boss): drill
+> a **Ø6.5 mm** hole through the centre of the boss, square to the plate, on through the back plate. Drill a 3 mm
+> pilot first. The hole exits close to the back plate's slanted edge; the printed washer covers it. See
+> [bugs/rest-bracket-attachment](bugs/rest-bracket-attachment.md).
 
 <details markdown="1">
 <summary>Details</summary>
@@ -283,7 +289,8 @@ side.
 
 ![Shoulder rest animation](images/assembly/step7-rest.gif)
 
-**Parts:** bracket, root arm, blades 1–3, 4 clevis pins + R-clips, M6 × 16 screw, buckle, foam, hook-and-loop
+**Parts:** bracket, root arm, blades 1–3, 4 clevis pins + R-clips, M6 × 65 bolt, 2 printed washers, 2 M6 nuts,
+buckle, foam, hook-and-loop
 
 > ⚠ **Pin each piece as soon as it's on**, root arm first, then blade 1, 2, 3: the pin + R-clip holds it, so nothing
 > hangs loose.
@@ -291,13 +298,14 @@ side.
 <details markdown="1">
 <summary>Details</summary>
 
-- Bracket over the round boss on the tower; M6 × 16 through the curved slot into the M6 nut from step 3. Leave it
-  loose.
+- Bracket over the round boss on the tower. M6 × 65 from the **front**: washer, bracket, boss, through the tower;
+  at the back a washer and 2 nuts. Snug the first nut, then lock the second against it (two 10 mm spanners).
+  Leave it loose enough to turn the bracket.
 - Each piece's middle knuckle goes between the two knuckles of the piece before it.
 - Foam pads a little smaller than each blade, on with hook-and-loop (they come off for washing).
 - Shoulder strap through the slot at the front of blade 3, buckle on.
 
-**Check:** the chain folds freely; loose, the bracket turns ~15° each way; tight, it stays.
+**Check:** the chain folds freely; loose, the bracket turns; tight, it stays put when you pull the rest forward hard.
 
 </details>
 
@@ -345,7 +353,8 @@ Upper-arm pipes all the way into the arm link, 2 pipe screws each.
 
 1. With a helper: shoulder strap, then waist, then chest.
 2. Waist strap tightest: the weight sits on your **hips**.
-3. Loosen the M6 lock screw (5 mm key), let the rest lie flat on your shoulder, tighten.
+3. Loosen the rest pivot bolt (5 mm key at the front, spanner on the back nuts), let the rest lie flat on your
+   shoulder, tighten.
 4. Close the cuff and both arm straps; move slowly through every motion. Note any pinch.
 5. After the first wear, re-check every M8 nut, the M6 screws and the pipe screws.
 

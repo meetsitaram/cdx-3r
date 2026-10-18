@@ -575,7 +575,7 @@ def steps_v3():
 
     # 7: chain built piece by piece; each pin goes in as soon as its piece is on
     rhw = lambda pat: S(r'^Rest HW.* / .*(?:' + pat + ')')
-    brk = S(r'^Rest bracket'); thumb = rhw(r'M6 x 16')
+    brk = S(r'^Rest bracket'); thumb = rhw(r'M6 x 65')
     pieces = [S(r'^Rest root arm'), S(r'^Rest blade 1'), S(r'^Rest blade 2'), S(r'^Rest blade 3')]
     pins = sorted(rhw(r'Clevis'), key=lambda p: sum((p['c'][i] - brk[0]['c'][i]) ** 2 for i in range(3)))
     clips = rhw(r'R-clip / split')

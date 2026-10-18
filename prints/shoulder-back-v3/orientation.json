@@ -42,10 +42,14 @@
   "height": 69.0
  },
  "07_shoulder_tower.stl": {
-  "up": "as exported (z up)",
+  "up": [
+   0.0,
+   -1.0,
+   0.0
+  ],
   "base": 1640,
-  "overhang": 1666,
-  "on_part": 662,
+  "overhang": 1664,
+  "on_part": 695,
   "height": 202.9
  },
  "08_lift_link_upper.stl": {
@@ -68,9 +72,9 @@
    1.0,
    0.0
   ],
-  "base": 1443,
-  "overhang": 527,
-  "on_part": 125,
+  "base": 1365,
+  "overhang": 740,
+  "on_part": 154,
   "height": 113.0
  },
  "11_scara_link1_tray.stl": {
@@ -179,18 +183,26 @@
   "height": 97.2
  },
  "26_rest_bracket.stl": {
-  "up": "as exported (z up)",
-  "base": 1944,
-  "overhang": 88,
-  "on_part": 88,
-  "height": 20.8
+  "up": [
+   1.0,
+   0.0,
+   0.0
+  ],
+  "base": 2082,
+  "overhang": 84,
+  "on_part": 84,
+  "height": 30.8
  },
  "27_rest_root_arm.stl": {
-  "up": "as exported (z up)",
-  "base": 4238,
-  "overhang": 316,
-  "on_part": 203,
-  "height": 13.2
+  "up": [
+   0.1,
+   0.902,
+   0.421
+  ],
+  "base": 3624,
+  "overhang": 299,
+  "on_part": 199,
+  "height": 13.0
  },
  "28_rest_blade_1.stl": {
   "up": "as exported (z up)",
@@ -212,5 +224,16 @@
   "overhang": 201,
   "on_part": 120,
   "height": 13.1
+ },
+ "31_rest_washer_x2.stl": {
+  "up": [
+   -1.0,
+   -0.0,
+   -0.0
+  ],
+  "base": 418,
+  "overhang": 0,
+  "on_part": 0,
+  "height": 3.0
  }
 }

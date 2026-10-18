@@ -1,0 +1,12 @@
+collisions 10, failing 0 (overlap >= 1.0 mm3)
+ok     2211.8 mm3  Gas spring cylinder (buy)/Body3  <>  Gas spring rod (buy)/Body3  (the bought strut itself: rod in cylinder, end fittings)
+ok       35.8 mm3   21.5/15.5 (buy)/PVC backbone R (up into the shoulder tower)  <>  wer HW (buy)/#4 x 3/8" pan-head self-tapping screw (buy) (1)  (cuts its own thread)
+ok       35.8 mm3   21.5/15.5 (buy)/PVC backbone R (up into the shoulder tower)  <>  Tower HW (buy)/#4 x 3/8" pan-head self-tapping screw (buy)  (cuts its own thread)
+ok       35.3 mm3  Gas spring rod (buy)/Body2  <>  Gas spring rod (buy)/Body3  (the bought strut itself: rod in cylinder, end fittings)
+ok       11.9 mm3  Back pad hook-and-loop (buy)/hook-and-loop, top R  <>  Tower HW (buy)/M3 x 8 socket head (buy) (3)  (soft pad over M3 heads 0.5 mm proud (ASSEMBLY step 3 note))
+ok        7.1 mm3  Gas spring cylinder (buy)/Body2  <>  Gas spring cylinder (buy)/Body3  (the bought strut itself: rod in cylinder, end fittings)
+ok        6.6 mm3  st HW (buy)/Clevis pin M6 x 70 + R-clip (buy), 70 needed (3)  <>  Rest HW (buy)/R-clip / split pin 1.2 mm (buy) (3)  (the R-clip goes through the pin)
+ok        6.6 mm3  st HW (buy)/Clevis pin M6 x 70 + R-clip (buy), 70 needed (2)  <>  Rest HW (buy)/R-clip / split pin 1.2 mm (buy) (2)  (the R-clip goes through the pin)
+ok        6.6 mm3  st HW (buy)/Clevis pin M6 x 70 + R-clip (buy), 70 needed (1)  <>  Rest HW (buy)/R-clip / split pin 1.2 mm (buy) (1)  (the R-clip goes through the pin)
+ok        6.6 mm3  Rest HW (buy)/Clevis pin M6 x 70 + R-clip (buy), 70 needed  <>  Rest HW (buy)/R-clip / split pin 1.2 mm (buy)  (the R-clip goes through the pin)
+source ca710729e47de74c

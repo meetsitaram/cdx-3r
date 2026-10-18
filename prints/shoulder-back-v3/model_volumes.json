@@ -5,10 +5,10 @@
  "04_mid_node": 228113.5,
  "05_top_node": 228631.6,
  "06_shoulder_block_L": 559168.3,
- "07_shoulder_tower": 322110.3,
+ "07_shoulder_tower": 323405.9,
  "08_lift_link_upper": 97048.8,
  "09_lift_link_lower": 97048.8,
- "10_lift_carriage": 199914.5,
+ "10_lift_carriage": 199405.7,
  "11_scara_link1_tray": 53423.0,
  "12_scara_link1_lid": 30477.0,
  "13_scara_link2_tray": 53423.0,
@@ -24,9 +24,10 @@
  "23_yoke": 202150.6,
  "24_flexion_sleeve": 29997.3,
  "25_upper_arm_link": 326424.4,
- "26_rest_bracket": 16705.0,
- "27_rest_root_arm": 38027.9,
+ "26_rest_bracket": 20613.7,
+ "27_rest_root_arm": 33175.4,
  "28_rest_blade_1": 24902.9,
  "29_rest_blade_2": 31054.7,
- "30_rest_blade_3": 46290.9
+ "30_rest_blade_3": 46290.9,
+ "31_rest_washer_x2": 1254.5
 }

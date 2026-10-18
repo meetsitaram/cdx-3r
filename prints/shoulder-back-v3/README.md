@@ -27,7 +27,7 @@ the back frame (01–05) so you can assemble as you go.
 | `04_mid_node.stl` | 1 | 212 × 70 × 42 | 174 | standing on its bottom face (as exported); no supports needed | **changed**: right beam/diagonal sockets gone |
 | `05_top_node.stl` | 1 | 211 × 70 × 43 | 174 | back face down (as exported); tree supports inside the pipe sockets, they pull out from the open ends | **changed**: right end is the tower tenon |
 | `06_shoulder_block_L.stl` | 1 | 150 × 80 × 69 | 426 | rear face down (pocket axis vertical) | same as v2 (left only: battery mount) |
-| `07_shoulder_tower.stl` | 1 | 203 × 167 × 66 | 245 | upside down, the flat top on the bed (as exported); **brim** | new |
+| `07_shoulder_tower.stl` | 1 | 203 × 167 × 66 | 245 | upside down, the flat top on the bed (as exported); **brim** | new; 18 Oct: Ø6.6 rest pivot hole through boss + back pad (older prints: drill, see ASSEMBLY step 3) |
 | `08_lift_link_upper.stl` | 1 | 131 × 60 × 26 | 74 | flat on a cheek face | new |
 | `09_lift_link_lower.stl` | 1 | 131 × 60 × 26 | 74 | flat on a cheek face | new |
 | `10_lift_carriage.stl` | 1 | 114 × 97 × 63 | 143 | round root disc flat on the bed, box up (as exported). The disc is now truly flat (the 0.6 mm boss is the separate thin spacer), a 45° web carries the front cheek, every horizontal hole has a pointed roof: only small outside supports | new |
@@ -46,11 +46,12 @@ the back frame (01–05) so you can assemble as you go.
 | `23_yoke.stl` | 1 | 165 × 112 × 88 | 154 | flexion housing axis vertical; support the root boss | same as v2 |
 | `24_flexion_sleeve.stl` | 1 | 40 × 40 × 25 | 23 | on end | same as v2 |
 | `25_upper_arm_link.stl` | 1 | 187 × 125 × 97 | 249 | outer (spoked) plate down; support the fork gap and pipe head | **changed** since v2 |
-| `26_rest_bracket.stl` | 1 | 89 × 57 × 21 | 13 | flat, tower side down | new |
-| `27_rest_root_arm.stl` | 1 | 90 × 85 × 51 | 29 | flat, pad side down (as exported); honeycomb opens upward, no supports | new |
+| `26_rest_bracket.stl` | 1 | 89 × 57 × 31 | 15 | flat, tower side down | new; 18 Oct: no arc slot (pivot bolt holds it), arms 10 mm longer |
+| `27_rest_root_arm.stl` | 1 | 95 × 82 × 13 | 26 | flat, pad side down (as exported); honeycomb opens upward, no supports | new; 18 Oct: 10 mm shorter (hinge moved out) |
 | `28_rest_blade_1.stl` | 1 | 79 × 56 × 51 | 19 | flat, pad side down (as exported) | new |
 | `29_rest_blade_2.stl` | 1 | 84 × 67 × 49 | 24 | flat, pad side down (as exported) | new |
 | `30_rest_blade_3.stl` | 1 | 101 × 82 × 66 | 35 | flat, pad side down (as exported) | new |
+| `31_rest_washer_x2.stl` | 2 | 24 × 24 × 3 | 2 | flat | new (18 Oct): rest pivot bolt washers |
 
 Total about **2.8 kg** at 60 % effective fill. Already printed v2? Skip the parts marked "same as v2" and reprint
 04, 05 and 25. The v2 `Abduction_mount_block_R` is no longer used (the tower replaces it).

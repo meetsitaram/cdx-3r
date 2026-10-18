@@ -12,11 +12,12 @@ Buy extra of the small parts (see the fastener notes).
 Everything else comes from packs already on this list.
 
 | ☐ | Item | Pack | Need | Link |
-|---|---|---|---|---|
+|---|---|---|---|
 | ☐ | 608-2RS bearings | 20 pcs | 16 | [SHKI 608-2RS](https://www.amazon.com/dp/B09PKD8QZZ) |
 | ☐ | GT2 6 mm closed belt loop, 200 mm | 10 pcs | 2 | [Zeelo GT2 200 mm](https://www.amazon.com/dp/B0BZNTT5T4) |
 | ☐ | Gas strut 180 / 120 mm, 22 N, eyelet ends | 2 pcs | 1 | [Motoforti 7" 22 N](https://www.amazon.com/dp/B0DHVV6QZW) |
 | ☐ | M6 × 16 socket head cap screw (5 mm hex key) | 40 pcs | 3 | [MewuDecor M6 × 16 socket head, 304](https://www.amazon.com/dp/B07HR6PPX8) |
+| M6 × **65** socket head (head Ø10 × 6, 5 mm key) + 2 M6 hex nuts | 1 + 2 | shoulder rest pivot: through the bracket, the tower's boss, front and back plates; printed Ø24 washers (31) both ends, 2 nuts locked together at the back (docs/bugs/rest-bracket-attachment.md). Nuts from the pack above | **new**: [uxcell M6 × 65 socket head, stainless, 10 pcs](https://www.amazon.com/uxcell-M6x65mm-Stainless-Socket-Screws/dp/B01BBP4VU2) |
 | ☐ | M6 hex nut | 50 pcs | 3 | [M6 hex nuts](https://www.amazon.com/dp/B0CZQRH3L2) |
 | ☐ | Clevis pin M6 × 70 + R-clip | 6 pcs | 4 | [M6 × 70 clevis pins](https://www.amazon.com/dp/B0FJWVWFBY) |
 | ☐ | ½" adhesive neoprene foam | 12" × 54" sheet | 9 pads | [MYFULLY ½" foam](https://www.amazon.com/dp/B0BTRWTXN4) |
@@ -28,7 +29,7 @@ Also check stock of: PETG (~4 kg total, see Filament), ½" PVC (3 m), M8 × 55 (
 ## Bearings
 
 | | Item | Spec | Right arm + back | Where | + Left arm | Buy |
-|---|---|---|---|---|---|---|
+|---|---|---|---|---|---|
 | <img src="https://m.media-amazon.com/images/I/51X2MKd+kkL._SS64_.jpg" width="48"> | Deep-groove ball bearing | **6806-2RS**, 30 × 42 × 7 mm, sealed | **4** | elbow 2 (upper-arm housings); shoulder abduction 2 (right mount block) | 4 | [uxcell 6806-2RS, 2-pack](https://www.amazon.com/uxcell-6806-2RS-Bearing-30x42x7mm-Bearings/dp/B07TV2HVZ3) |
 | <img src="https://m.media-amazon.com/images/I/61ULw0csEoL._SS64_.jpg" width="48"> | Deep-groove ball bearing | **6808-2RS**, 40 × 52 × 7 mm, sealed | **2** | shoulder flexion (yoke housing: the shoulder carries the whole arm) | 2 | [XIKE 6808-2RS 40 × 52 × 7, 10 pcs](https://www.amazon.com/XIKE-6808-2RS-Bearings-40x52x7mm-Pre-Lubricated/dp/B09D2VY3BK) |
 
@@ -39,7 +40,7 @@ self-tapping screws** straight into the PVC pipes. Where a wall is thicker, the 
 screw always reaches. The two hinge bolts are M8 socket heads.
 
 | | Item | Spec | Qty | Where | + Left arm | Buy |
-|---|---|---|---|---|---|---|
+|---|---|---|---|---|---|
 | <img src="https://m.media-amazon.com/images/I/81gWELi+t-L._SS64_.jpg" width="48"> | Socket head cap screw | **M3 × 8** (ISO 4762), 304 stainless | **26** | into M3 inserts: elbow axles 6 (heads 4.2 mm deep in the axle), elbow covers 12, bottom-node splice channel 8 (2 mm counterbores) | 18 | [Fgruh 720 pcs M3 kit, M3 × 6–30 (has 25 × M3 × 8: use one M3 × 10 for the 26th)](https://www.amazon.com/dp/B0FG2BRXL3) |
 | <img src="https://m.media-amazon.com/images/I/717sikDXLoL._SS64_.jpg" width="48"> | Heat-set insert | **ruthex RX-M3 × 5.7**, brass, Ø4.0 hole | **26** | elbow: 6 in the forearm hubs, 12 around the housings; splice: 8 in the bottom-node halves | 18 | [ruthex M3 × 5.7, 100 pcs](https://www.amazon.com/dp/B08BCRZZS3) |
 | <img src="https://m.media-amazon.com/images/I/41nNcy4BttL._SS64_.jpg" width="48"> | Self-tapping pan-head screw | **#4 × 3/8"** (2.9 × 9.5 mm), Phillips, 304 stainless, pointed | **48** | into the PVC pipes: elbow 18, link pipe head 6, frame 24 | 24 | [#4 × 3/8" Phillips pan head self-tapping, 304 stainless black oxide, 100 pcs](https://www.amazon.com/Phillips-Self-Tapping-Stainless-Corrosion-Resistant/dp/B0F9FP5DV4) |
@@ -62,13 +63,13 @@ already printed from elbow v9 have 5.5 mm holes: press the insert flush (or run 
 ## PVC pipe (21.5 mm OD / 15.5 mm ID)
 
 | Piece | Cut length | Qty | Where |
-|---|---|---|---|
+|---|---|---|
 | Upper-arm pipe | 127 mm | 3 | elbow near ring → upper-arm link pipe head |
 | Forearm pipe | 185 mm (leans 5.9° toward the wrist) | 3 | elbow near ring → wrist ring |
 | Backbone | 412 mm | 2 | bottom node → top node (ends flush inside it). **v3b girdle: left only**, see below |
 | Upper beam | 102 mm | 2 | top node → mount block (L + R). **v3b girdle: left only** (101.6 → 102) |
 | Diagonal | 131 mm | 2 | mid node → mount block (L + R). **v3b girdle: left only** |
-| Backbone R, v3b girdle | 583 mm | 1 | bottom node → up through the top node into the shoulder tower (replaces the right 412 mm backbone) |
+| Backbone R, v3b girdle | 568 mm | 1 | bottom node → up through the top node into the shoulder tower (replaces the right 412 mm backbone) |
 
 ## Shoulder girdle v3b + shoulder rest (right): hardware (in design, from the Fusion model)
 
@@ -76,12 +77,12 @@ Counts are for the right side. The girdle replaces the right abduction mount blo
 marked **new** comes from packs already on this list.
 
 | Item | Qty | Where | Order |
-|---|---|---|---|
+|---|---|---|
 | 608-2RS bearing, 8 × 22 × 7 | 16 | lift links 8 (2 per pivot), SCARA links 8 | **new**: [SHKI 608-2RS, 20 pcs](https://www.amazon.com/dp/B09PKD8QZZ) |
 | M8 × 55 socket head + M8 nyloc | 6 | 4 lift pivots; S0 (nyloc locked in the carriage, bolt from below); E (nyloc locked in the end plate, bolt from the top of link 2) | same pack as the flexion bolt (10 pcs: 7 used here + flexion) |
 | M8 × 100 socket head, **cut to 75** + M8 nyloc | 1 | C, the SCARA elbow spool | the M8 × 100 pack (8 pcs, 1 used for abduction) |
 | M3 × 8 socket head + ruthex M3 insert | 4 + 4 | saddle → top node | M3 kit + ruthex pack |
-| M6 × 16 socket head (head Ø10 × 6, 5 mm hex key) + M6 hex nut | 3 + 3 | shoulder rest bracket lock (arc slot, ±15°) + the 2 gas-strut eyelet forks; each nut sits in a hex pocket in the plate | **new**: [MewuDecor M6 × 16 socket head, 304](https://www.amazon.com/dp/B07HR6PPX8) + [M6 hex nuts, 50 pcs](https://www.amazon.com/dp/B0CZQRH3L2) |
+| M6 × 16 socket head (head Ø10 × 6, 5 mm hex key) + M6 hex nut | 2 + 2 | the 2 gas-strut eyelet forks; each nut sits in a hex pocket in the plate | **new**: [MewuDecor M6 × 16 socket head, 304](https://www.amazon.com/dp/B07HR6PPX8) + [M6 hex nuts, 50 pcs](https://www.amazon.com/dp/B0CZQRH3L2) |
 | M3 × 12 socket head + ruthex M3 insert | 8 + 8 | SCARA link lids | M3 kit (6–30 mm) + ruthex pack |
 | #4 × 3/8" pipe screw | 2 | shoulder tower → right backbone (counterbored) | pipe screw pack |
 | Clevis pin **M6 × 70** with R-clip | 4 | shoulder rest hinges: one size for all 4 joints (every hinge is 64 mm wide) | **new**: [M6 × 70 clevis pins + R-clips, 6 pcs](https://www.amazon.com/dp/B0FJWVWFBY) |
@@ -96,14 +97,14 @@ Straps on the arm: **two** on the upper-arm pipes (about 30 % and 75 % of the wa
 
 Printed small parts: 4 GT2 35-tooth pulleys (P0, PA, PB, P2, 8 mm wide), 8 inner-ring spacers Ø11 / 8.4 × 4 mm, 6 spacers Ø11 × 1 mm (one is the carriage's root spacer on link 1).
 
-The total is about 2.23 m; **buy 3 m** (cuts plus saw kerf and spares). A left arm adds 3 × 127 + 3 × 185 mm.
+The total is about 2.15 m; **buy 3 m** (cuts plus saw kerf and spares). A left arm adds 3 × 127 + 3 × 185 mm.
 
 ## Harness (camping-pack style)
 
 **One webbing size: 1" (25.4 mm)** everywhere. All six strap tabs on the frame have 26 mm slots. Tri-glides adjust length like ladder-locks.
 
 | | Item | Spec | Qty used | Where | Buy |
-|---|---|---|---|---|---|
+|---|---|---|---|---|
 | <img src="https://m.media-amazon.com/images/I/81QQGzCsKJL._SS64_.jpg" width="48"> | 1" strap kit | 25 mm (1") nylon webbing + side-release buckles + tri-glides | ~3.7 m webbing (6 yd in the kit), 2 buckles, 3 tri-glides | 2 shoulder straps (top tabs → over the shoulders → under the arms → bottom tabs), sternum strap, waist strap (through the two side tabs, buckled at the front) | [BEYOURD 1" set: 6 yd, 6 buckles, 12 tri-glides](https://www.amazon.com/BEYOURD-Buckles-Straps-Set-Adjustable/dp/B08LD8CJ8D) |
 |  | Strap pads *(optional)* | slip-on / hook-and-loop strap covers for 1" webbing (e.g. car-seat or backpack shoulder-strap pads) | 2–3 | shoulder straps, waist strap | |
 |  | Hook-and-loop strap *(optional)* | 25 mm | ~1 m | arm retention across the open front of the pipe head / rings | |

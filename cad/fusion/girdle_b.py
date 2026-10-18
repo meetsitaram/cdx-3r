@@ -285,8 +285,10 @@ def carriage_teardrops(p, body, fu0, fu1):
     se = G['spring_end']
     sy, sz = G['spring_hi']
     reach = g1.G['half'] + g1.G['gap'] + g1.G['cheek'] + 1
+    boss = g1.G['half'] + g1.G['gap'] + 0.2                  # the inner-ring bosses stay round (a point there left a 0.24 mm lip)
     for y in G['carr_y']:
-        _teardrop(p, body, [XL, y, ZC], -reach, reach, g1.G['clear'] / 2)
+        for z0, z1 in ((boss, reach), (-reach, -boss)):
+            _teardrop(p, body, [XL, y, ZC], z0, z1, g1.G['clear'] / 2)
     _teardrop(p, body, [0, sy, sz], -(_ear_out() + 1), -(fu0 - 1), 3.2)
     _teardrop(p, body, [0, sy, sz], -(_ear_face() + se['gap']), -_ear_face(), se['clear'])
 
@@ -431,9 +433,11 @@ def build_carriage(grp):
     # 45-degree web under the front cheek, down to the bed beside the hanger: the cheek's lower end no longer hangs in
     # the air when printing. Only on the cheek-extension side (z >= ZC): the lower lift link lives at z < ZC and above
     # yb - 17 (its round end), so the web never touches it at any lift.
-    yw = yb - 17
-    bodies.append(p.prism([0, 0, 0], fx.AX['z'], ZC, ZC + 32, poly([(hx1 - 0.5, yw), (fu1, yw), (fu1 - (yw - y_root), y_root),
-                                                                    (hx1 - 0.5, y_root)]), name='front cheek web').bodies.item(0))
+    # Its bottom stops 3.5 mm above the root plate: link 1's lid screw heads (3 mm proud) sweep under it as link 1
+    # swings; it bridges 7.5 mm from the hanger there.
+    yw, yw0 = yb - 17, y_root + 3.5
+    bodies.append(p.prism([0, 0, 0], fx.AX['z'], ZC, ZC + 32, poly([(hx1 - 0.5, yw), (fu1, yw), (fu1 - (yw - yw0), yw0),
+                                                                    (hx1 - 0.5, yw0)]), name='front cheek web').bodies.item(0))
     body = _join(p, bodies)
     sh.round_edges(p, body, r=2.0)
     body = p.comp.bRepBodies.item(0)

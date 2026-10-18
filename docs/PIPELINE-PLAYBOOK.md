@@ -110,6 +110,29 @@ date), `#fulfillerInfoFeature_feature_div` ("Ships from Amazon"). Thumbnail for 
 
 ### 5.2 Fusion model by script (`cad/fusion/*.py`)
 
+**Documents (since 2026-10-18): one per module, all in the Fusion project folder `my-projects / CDX-3R v3`:**
+
+| Document | Built by | Contains |
+|---|---|---|
+| CDX-3R frame | `split.build('frame')` → `shoulder.build_frame` + back pads | nodes, PVC, left block, pads |
+| CDX-3R shoulder girdle | `girdle_b.build_step(...)` | tower, lift, carriage, SCARA links, end plate, strut |
+| CDX-3R shoulder rest | `shoulder_rest.build_step(...)` | bracket, root arm, blades, pads, pins |
+| CDX-3R shoulder hinges + arm | `shoulder.build_moving` + `place_elbow` | yoke, sleeves, upper-arm link, elbow copy |
+| CDX-3R elbow concepts | `concepts.py` | the elbow (copied into the arm document by `place_elbow`) |
+| CDX-3R assembly | `split.assembly()` | the four modules as **linked** components + scan reference |
+
+Each module document has the same top component (`shoulder.TOP`, rotated x 90), so the build functions run
+unchanged and the modules land in place in the assembly. To change a part: activate its module document, rebuild
+the step (seconds to a minute), save it, then in the assembly `doc.updateAllReferences()` and export from there
+(`export_prints.export(...)`). The old single document "CDX-3R shoulder + back" (v54) is an archive only (still used,
+read-only, to record motion poses: `checks.record_poses()` after changing girdle/arm kinematics).
+
+**Every change ends with the model checks** (`checks.run_all('<set>')` on the assembly; export runs it first): fastener
+grip, static collisions, and a motion sweep. They take ~30 s. The pre-commit hook refuses commits of model code or prints
+unless all reports in `prints/<set>/` pass and carry the current code stamp. See `docs/bugs/README.md`.
+Posing scripts that move occurrences (`girdle_b.pose`, `render/motion.record`) must run in the module document that
+owns the occurrences: linked components can't be moved from the assembly.
+
 - `fxlib.py`: pure-Python vector math (no numpy inside Fusion), `matrix`, `rot`, `appearance`, and the `Part` builder
   (one component per part; `prism`, `box`, `ann`, lofts, pipes; NEW/JOIN/CUT). Reuse it.
 - One **parameter dict** at the top of each model script (`S` for specs, `D` for derived values); every bought part
@@ -240,3 +263,48 @@ date), `#fulfillerInfoFeature_feature_div` ("Ships from Amazon"). Thumbnail for 
 4. Scan → frame + landmarks → layout before any CAD.
 5. Fit coupons → first printed part → freeze its interfaces → build outward.
 6. After each design change: verification routine (section 5.3), then update BOM/prints/docs together.
+
+## Stress tests (Fusion Simulation)
+
+The Fusion API has no simulation objects, so the study itself is set up by hand, in Fusion in the browser
+(fusion.online.autodesk.com, Simulation is included in the subscription: "Extension Active"). Everything else is
+scripted (`cad/fusion/fea.py`):
+
+1. **Study document** (script, MCP): `fea.build('rest bracket')` copies just the parts a study needs out of the
+   assembly, at their positions, one component each, into "CDX-3R FEA <study>" in `CDX-3R v3`. Then
+   `fea.set_materials(design)` adds "PETG, printed (6 walls, 25% grid)" (E 1.9 GPa, yield 30 MPa: the slicer's
+   Strength profile, layer-limited) to the printed parts and saves. Steel for bought hardware.
+2. **Study** (browser): open the document → workspace Simulation → Study → Static Stress. Study Materials: every
+   row "(Same as Model)". Constraints → Fixed on the face that bolts to the frame. Loads → Force on the faces the
+   strap/pin pulls, Direction = X/Y/Z components. Solve → pre-check → if "unconstrained groups": Contacts →
+   Automatic (0.1 mm) → Solve (cloud).
+3. **Rest bracket case:** fixed = the tower's lower block face (bolts to the top node); load = 150 N in +X (straight
+   away from the tower: the strap trying to rip the rest off; 95 N peak strap force x 1.5) on the bracket's two hinge
+   knuckles.
+
+Heat map: Results view → the coloured-bars icon under STUDY (top left) lists every plot → Stress → Von Mises; cap the
+scale by typing in the red max box (double-click, End, Backspace, value, Enter) or a steel screw sets the top colour.
+Only-the-weak-spots view: click "Above Target"/"In Range" on the safety-factor legend to make them see-through;
+Inspect → Min/Max Probes labels the worst point with its coordinates.
+
+Desktop Fusion works too (and is steadier for big studies; the browser session froze on the 93-part girdle and then
+would not reconnect): same document, same Simulation workspace; the MCP screenshot captures its results view.
+**Never have a study document open in the browser and on the desktop at once:** a save in one makes the other
+"out-of-date"; it then can't save, and Solve silently does nothing (a cloud solve saves first). Fix: File -> Save As
+under a new name, then solve. If the pre-check says "fully unconstrained groups", re-run Automatic Contacts with
+0.5 mm (clearance fits at bearings and the strut eyelets are 0.1-0.3 mm).
+
+Browser-Fusion quirks: a click often needs a hover first; typed text doesn't arrive, single key presses do (and
+Ctrl+A types "a": clear fields with End + Backspace); the search box in Study Materials filters rows, not materials.
+After a scripted save, close and reopen the document in the browser to get the new version.
+
+First run (2026-10-18, rest bracket, 150 N straight out): solved in the cloud in ~2 min. Min safety factor 1.54
+(Fusion's target 2), but only on a thin line along the edge of the fixed face: the usual artefact of a perfectly
+rigid face. Bracket, bolt, washers and the tower around them: safety factor > 4. Next: fix the faces that really bolt
+to the frame (M3 holes / PVC bore) instead of one block face, and add a sideways load case.
+
+Second run (same day): top node + 4 M3 screws/inserts added (`fea.add_missing`), node held at its PVC socket, so
+the tower hangs from the node by its flanges. 150 N straight out: min safety factor 1.44, on the top node's face at
+the edge where the tower's front plate bears on it (x -197, y -16, z 1425): the tower pries on the node as the rest
+pulls. Tower flanges, screws, bracket, bolt: no spot below 2. Edge contacts between bonded parts also inflate peaks:
+next, a sliding (separation) contact between tower and node, and a pull test of a printed node + tower joint.
