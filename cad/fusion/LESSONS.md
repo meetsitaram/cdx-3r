@@ -177,11 +177,11 @@ Read this before starting a new part.
 | Part | Print orientation | Supports |
 |---|---|---|
 | Shoulder tower | upright (node end on the bed) | none expected; check the spring ear |
-| Lift carriage | upright (root plate on the bed) | under the front cheek's lower end, under the spring ear |
+| Lift carriage | root disc down, box up (brim: it stands on the 0.6 mm inner-ring boss); NOT on its side (Bambu auto-orient's pick: supports in the tunnels) | tree, build plate only |
 | SCARA link trays and lids | outer face down | none |
 | End plate + housing | on the housing's front face (the E nut slot then opens upward) | none |
 | Lift links | flat on a cheek face | none |
-| Shoulder rest root arm, blades | on edge, hinge-pin axis vertical (clean pin holes); the honeycomb pockets then have a corner pointing up: 60° roofs, no supports | none (brim) |
+| Shoulder rest root arm, blades | flat, pad side down (honeycomb holes vertical, open upward; Ø6.3 pin holes horizontal bridge fine). On edge they have no flat face on the bed | none |
 | Shoulder rest bracket | flat, tower side down | none |
 | Pulleys, spacers | flat | none |
 
@@ -202,6 +202,10 @@ What went wrong in the first v3 guide (user review, Oct 2026), and the rule each
 | Old pictures left in the docs (README, guide hero) after a redesign | After any design change, re-render every image that shows it (`render('all')` for the hero) and grep the docs for image names. |
 | Guide was a wall of text | Animation first; one parts line; ⚠ lines only for order-dependent actions; everything else inside `<details markdown="1">`. Captions in the GIF carry the step-by-step. |
 | Modelled the gas strut with ball-socket ends; the listing we picked has flat **eyelet** ends | Before modelling a bought part's interface, open the listing photos (dimension drawing) and model *that* end fitting; note hole size / thickness in the BOM. If the listing doesn't give a dimension, design the mount to tolerate the likely range (e.g. a fork + bush for a 6 or 8 mm eyelet). |
+| Carriage printed on its side: tree supports grew into the pivot tunnels and the S0 bore; the README orientation was a guess | Choose each part's print orientation with `orient_stls.py` on the exported STLs (their frame is the design frame, y up; never assume) and ship the STLs pre-rotated so the slicer's auto-orient isn't needed. Horizontal round tunnels get 45° teardrop points (both ways if the part might print either way up); frame nodes stand on their bottom face so pipe sockets are vertical. |
+| Carriage: a clearance cut started 0.05 mm off the cheek face (left a 0.05 mm film that can't print), and in the build code it started at the cheek's *inner* face (cut away the nut's seat). A round well into the strut ear left a crescent wall thinning to zero | Cuts start **exactly** on the face they clear, never at a small offset; check which face (inner/outer) a range variable means. Never leave a crescent where a cut cylinder overlaps another round boss: cut flat (tangent chord) instead. `print_validate.py` (rays inward from 12,000 surface points; FAIL on a thin *film*: points under 0.8 mm sideways / 0.6 mm vertically spread over > 1 mm in two directions; thin points along a line are knife edges or acute tips and only warn; plus one shell per part) runs after every export and in the pre-commit hook. Proven on the old carriage: its 0.05 mm film fails, real edges spread ≤ 0.53 mm. |
+| Rebuilds in the one big document take ~10 min each (2,900 timeline steps; deleted parts can't be deleted, only retired, and still recompute) | Fix design-for-print issues in the code and test on a **copy of the part** (or direct cuts) before a rebuild; split the model into per-module documents so a rebuild recomputes one module. |
+| Carriage disc sat on a 0.6 mm boss: the whole disc underside needed support | A part's print base must be truly flat: functional bosses on the base face become separate printed spacers. Overhanging lugs get a 45° web down to the base. |
 | `bracket_bolts()` put the rest's thumb screw at 90° while the slot was cut at `phi` = 50°: screw, tower hole and nut trap sat on top of the strut ear, unnoticed | Any position derived from a parameter (slot angle, radius) comes from **one** function used by the cut, the hardware and the mating part. Interference sweeps include **all** hardware (thumb screws, pins), pair by pair with names printed. |
 | Questions the guide didn't answer ("how is the strut attached?") | Every bought part gets its attachment shown and named, even if it's "snaps on, no screw". |
 | Sim animation didn't show forces | Draw the strap pull as arrows from the skin outward (2 cm per N), from a view where they aren't foreshortened; label forces and units in the frame. |

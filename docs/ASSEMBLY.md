@@ -47,7 +47,7 @@ README):
 | SCARA link 1 tray + lid, link 2 tray + lid | 1 each |
 | End plate + shoulder housing | 1 |
 | Pulleys (35 teeth) | 4 |
-| Spacers: thick Ø11 × 4, thin Ø11 × 1 | 8 thick, 5 thin |
+| Spacers: thick Ø11 × 4, thin Ø11 × 1 | 8 thick, 6 thin |
 | Abduction sleeve, yoke, flexion sleeve, arm link | 1 each |
 | Shoulder rest: bracket, root arm, blades 1–3 | 1 each |
 
@@ -69,7 +69,7 @@ README):
 | M8 **lock nut** | 9 |
 | M8 washer, **32 mm** wide (not 30) | 1 |
 | **Clevis pin** M6 × 70 + **R-clip** | 4 |
-| **Thumb screw** M6 × 16 + **M6 nut** | 3 + 3 |
+| **M6 × 16** socket head screw + **M6 nut** | 3 + 3 |
 | **GT2 belt loop** 200 mm × 6 mm | 2 |
 | **Gas strut** 180 mm, 22 N, eyelet ends | 1 |
 | Pin 4 × 25 mm | 1 |
@@ -82,7 +82,7 @@ README):
 <details markdown="1">
 <summary><b>Tools</b></summary>
 
-Soldering iron (cone tip) · hex keys **2.5 mm** + **6 mm** · **13 mm** wrench · hacksaw + file · small pliers ·
+Soldering iron (cone tip) · hex keys **2.5**, **5** and **6 mm** · **13 mm** wrench · hacksaw + file · small pliers ·
 long thin screwdriver or 8 mm rod · Phillips #1 screwdriver · PVC cutter · sandpaper · ruler in **mm** + marker ·
 super glue · masking tape.
 
@@ -177,7 +177,7 @@ screws, foam + hook-and-loop · **Cut:** 412, 583, 102, 131 mm
 
 **Parts:** shoulder tower, 4 inserts, 4 M3 × 8, 2 pipe screws, **2 M6 nuts**
 
-> ⚠ **Nuts first.** Before the tower goes on, put both M6 nuts (shoulder-rest thumb screw, gas strut) into their
+> ⚠ **Nuts first.** Before the tower goes on, put both M6 nuts (shoulder-rest lock screw, gas strut) into their
 > pockets from **inside** the tower, and tape them.
 
 <details markdown="1">
@@ -197,12 +197,12 @@ screws, foam + hook-and-loop · **Cut:** 412, 583, 102, 131 mm
 
 ![Lift animation](images/assembly/step4-lift.gif)
 
-![Gas strut close-up: eyelets into the forks, thumb screws in](images/assembly/step4b-strut.gif)
+![Gas strut close-up: eyelets into the forks, M6 screws in](images/assembly/step4b-strut.gif)
 
-**Parts:** 2 lift links, carriage, 8 × 608, 4 × M8 × 55, 5 lock nuts, gas strut, 2 M6 thumb screws, 1 M6 nut
+**Parts:** 2 lift links, carriage, 8 × 608, 4 × M8 × 55, 5 lock nuts, gas strut, 2 M6 × 16 screws, 1 M6 nut
 
-> ⚠ **Nuts first** in the carriage before it goes on: one lock nut **down the round hole in its top** (for the
-> SCARA in step 5) and an **M6 nut** in the pocket behind the round ear (for the strut).
+> ⚠ **Nuts first** in the carriage before it goes on: one lock nut **down the slot in its top** (it narrows to a
+> round guide at the bottom; steer the nut straight with a screwdriver into its six-sided pocket) (for the SCARA in step 5) and an **M6 nut** in the pocket behind the round ear (for the strut).
 
 <details markdown="1">
 <summary>Details</summary>
@@ -215,8 +215,8 @@ screws, foam + hook-and-loop · **Cut:** 412, 583, 102, 131 mm
   round tunnels (the tunnels are wider than the head); the 6 mm key reaches the head down the tunnel. Lock nuts at the
   front.
 - **Gas strut:** squeeze it a little, drop each flat eyelet into the open side of its ear's slot (a fork) and let go:
-  the strut pushes the eyelets home into the round end of the slots. Then an M6 thumb screw through each fork and
-  eyelet into the hidden nut, hand tight. The screw clamps the fork, not the eyelet, so the strut still swings. Body
+  the strut pushes the eyelets home into the round end of the slots. Then an M6 × 16 through each fork and
+  eyelet into the hidden nut, snug with the 5 mm key. The screw clamps the fork, not the eyelet, so the strut still swings. Body
   end on the tower.
 
 **Check:** the carriage moves smoothly ~6 cm up and ~2 cm down; the strut holds it near the middle.
@@ -229,7 +229,7 @@ screws, foam + hook-and-loop · **Cut:** 412, 583, 102, 131 mm
 
 ![SCARA animation](images/assembly/step5-scara.gif)
 
-**Parts:** link 1 + link 2 (tray + lid each), end plate, 4 pulleys, 8 thick + 5 thin spacers, 2 belts, 8 × 608,
+**Parts:** link 1 + link 2 (tray + lid each), end plate, 4 pulleys, 8 thick + 6 thin spacers, 2 belts, 8 × 608,
 8 inserts, 8 M3 × 12, 2 × M8 × 55, **M8 × 100 cut to 75 mm**, 3 lock nuts
 
 > ⚠ **Nut first** in the end plate: a lock nut in the pocket on its **top**, before it goes under link 2.
@@ -283,7 +283,7 @@ side.
 
 ![Shoulder rest animation](images/assembly/step7-rest.gif)
 
-**Parts:** bracket, root arm, blades 1–3, 4 clevis pins + R-clips, thumb screw, buckle, foam, hook-and-loop
+**Parts:** bracket, root arm, blades 1–3, 4 clevis pins + R-clips, M6 × 16 screw, buckle, foam, hook-and-loop
 
 > ⚠ **Pin each piece as soon as it's on**, root arm first, then blade 1, 2, 3: the pin + R-clip holds it, so nothing
 > hangs loose.
@@ -291,7 +291,7 @@ side.
 <details markdown="1">
 <summary>Details</summary>
 
-- Bracket over the round boss on the tower; thumb screw through the curved slot into the M6 nut from step 3. Leave it
+- Bracket over the round boss on the tower; M6 × 16 through the curved slot into the M6 nut from step 3. Leave it
   loose.
 - Each piece's middle knuckle goes between the two knuckles of the piece before it.
 - Foam pads a little smaller than each blade, on with hook-and-loop (they come off for washing).
@@ -345,9 +345,9 @@ Upper-arm pipes all the way into the arm link, 2 pipe screws each.
 
 1. With a helper: shoulder strap, then waist, then chest.
 2. Waist strap tightest: the weight sits on your **hips**.
-3. Loosen the thumb screw, let the rest lie flat on your shoulder, tighten.
+3. Loosen the M6 lock screw (5 mm key), let the rest lie flat on your shoulder, tighten.
 4. Close the cuff and both arm straps; move slowly through every motion. Note any pinch.
-5. After the first wear, re-check every M8 nut, the thumb screw and the pipe screws.
+5. After the first wear, re-check every M8 nut, the M6 screws and the pipe screws.
 
 </details>
 

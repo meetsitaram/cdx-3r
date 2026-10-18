@@ -1,0 +1,19 @@
+#!/bin/sh
+# Every print STL is committed pre-rotated into its print orientation (cad/fusion/orient_stls.py), so the slicer's
+# auto-orient is never needed. Any STL staged under prints/ that was not oriented yet is oriented here and re-staged.
+files=$(git diff --cached --name-only --diff-filter=AM -- 'prints/*.stl' 'prints/**/*.stl')
+[ -z "$files" ] && exit 0
+# every staged STL must match the model it was exported from (model_volumes.json, written by export_prints.py)
+for d in $(for f in $files; do dirname "$f"; done | sort -u); do
+  out=$(python -c "import sys; sys.path.insert(0, 'cad/fusion'); import orient_stls as o; o.check_current('$d')")
+  echo "pre-commit: $d: $out"
+  case "$out" in STALE*) echo "pre-commit: re-export the stale parts first"; exit 1;; esac
+  python cad/fusion/print_validate.py "$d" || { echo "pre-commit: printability check failed in $d (thin wall or extra shell)"; exit 1; }
+done
+dirs=$(for f in $files; do head -c 21 "$f" | grep -q "oriented for printing" || dirname "$f"; done | sort -u)
+[ -z "$dirs" ] && exit 0
+for d in $dirs; do
+  echo "pre-commit: orienting STLs in $d"
+  python cad/fusion/orient_stls.py "$d" || { echo "pre-commit: orient_stls failed in $d"; exit 1; }
+  git add "$d"
+done

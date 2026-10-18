@@ -478,7 +478,7 @@ def steps_v3():
     c_nuts = chw(r'nyloc'); c_strut_nut = chw(r'M6 hex nut')
     s0_nut = [p for p in c_nuts if p not in c_strut_nut and abs(mate_bolt(p)['ax'][2]) > 0.8]
     c_piv_nut = [p for p in c_nuts if p not in s0_nut + c_strut_nut]
-    studs = thw(r'thumb') + chw(r'thumb')
+    studs = thw(r'M6 x 16') + chw(r'M6 x 16')
     strut = S(r'^Gas spring')
     U, L, C = [0, 0, 6], [0, 0, -6], [0, 0, -9]
     st['4-lift'] = (frame_l + tower + thw(r'(insert|M3 x 8|#4)') + m6 + t_strut_nut, [
@@ -575,7 +575,7 @@ def steps_v3():
 
     # 7: chain built piece by piece; each pin goes in as soon as its piece is on
     rhw = lambda pat: S(r'^Rest HW.* / .*(?:' + pat + ')')
-    brk = S(r'^Rest bracket'); thumb = rhw(r'thumb')
+    brk = S(r'^Rest bracket'); thumb = rhw(r'M6 x 16')
     pieces = [S(r'^Rest root arm'), S(r'^Rest blade 1'), S(r'^Rest blade 2'), S(r'^Rest blade 3')]
     pins = sorted(rhw(r'Clevis'), key=lambda p: sum((p['c'][i] - brk[0]['c'][i]) ** 2 for i in range(3)))
     clips = rhw(r'R-clip / split')

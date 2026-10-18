@@ -135,6 +135,15 @@ date), `#fulfillerInfoFeature_feature_div` ("Ships from Amazon"). Thumbnail for 
 
 - `export_print(out_dir)` → `prints/<assembly>-vN/` with one STL per printed part, in print orientation, plus a
   README (orientation, supports, infill, which hardware goes where).
+- **Export with `cad/fusion/export_prints.py`** (`ep.export('<set>')` inside Fusion; the part list per print set is
+  its `SETS` table). It exports, then runs `orient_stls.py` with the system Python. Backstop: the versioned git hook
+  `.githooks/pre-commit` orients any STL under `prints/` that reaches a commit unoriented (one-time per clone:
+  `git config core.hooksPath .githooks`).
+- **Orientation:** `orient_stls.py` rotates every STL into its print orientation in place (flat base on the bed, least support landing inside holes or pockets) and writes
+  `orientation.json`. Fixed choices go in `<folder>/orientation_up.json`. Read the table: no part on a corner, nothing
+  needlessly tall. The README says "import as is, do not auto-orient; tree supports on build plate only".
+- **Validate:** `print_validate.py` runs after orienting (and in the hook): one shell per part, no thin films. A failure
+  stops the commit; fix the model (cuts start exactly on faces, no crescents) and re-export.
 - Always include **fit coupons** (`00_fit_coupon_*`: bearing pocket, pipe hole) and print them first.
 - Version folders (`-v2`, `-v10`); never overwrite a version the user may have printed. Once a part is printed, its
   interfaces are **frozen**: record them.
@@ -213,6 +222,8 @@ date), `#fulfillerInfoFeature_feature_div` ("Ships from Amazon"). Thumbnail for 
   with `C:\Users\PC\.local\bin\claude.exe mcp list`. No homemade clients or bridges.
 
 ## 8. Kick-off checklist for a new project
+
+- `git config core.hooksPath .githooks` (print STLs get oriented on commit).
 
 1. New repo with `cad/fusion/` (copy `fxlib.py`, `render/`, and the helper functions you need from `shoulder.py`:
    `round_edges`, `merge_all`, `hw_*`, `pipe_screws`, `strap_tab`, `show_reference_smooth`), `cad/scan/tools/`,

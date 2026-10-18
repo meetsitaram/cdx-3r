@@ -1,0 +1,216 @@
+{
+ "01_bottom_node_R.stl": {
+  "up": "as exported (z up)",
+  "base": 9520,
+  "overhang": 2078,
+  "on_part": 312,
+  "height": 36.0
+ },
+ "02_bottom_node_L.stl": {
+  "up": "as exported (z up)",
+  "base": 9520,
+  "overhang": 2078,
+  "on_part": 291,
+  "height": 36.0
+ },
+ "03_bottom_node_splice_plate.stl": {
+  "up": "as exported (z up)",
+  "base": 6843,
+  "overhang": 144,
+  "on_part": 39,
+  "height": 42.0
+ },
+ "04_mid_node.stl": {
+  "up": "as exported (z up)",
+  "base": 5025,
+  "overhang": 62,
+  "on_part": 62,
+  "height": 69.9
+ },
+ "05_top_node.stl": {
+  "up": "as exported (z up)",
+  "base": 3015,
+  "overhang": 6892,
+  "on_part": 2085,
+  "height": 43.3
+ },
+ "06_shoulder_block_L.stl": {
+  "up": "as exported (z up)",
+  "base": 9719,
+  "overhang": 1228,
+  "on_part": 457,
+  "height": 69.0
+ },
+ "07_shoulder_tower.stl": {
+  "up": "as exported (z up)",
+  "base": 1640,
+  "overhang": 1666,
+  "on_part": 662,
+  "height": 202.9
+ },
+ "08_lift_link_upper.stl": {
+  "up": "as exported (z up)",
+  "base": 3033,
+  "overhang": 459,
+  "on_part": 0,
+  "height": 26.0
+ },
+ "09_lift_link_lower.stl": {
+  "up": "as exported (z up)",
+  "base": 3033,
+  "overhang": 459,
+  "on_part": 0,
+  "height": 26.0
+ },
+ "10_lift_carriage.stl": {
+  "up": [
+   0.0,
+   1.0,
+   0.0
+  ],
+  "base": 1443,
+  "overhang": 527,
+  "on_part": 125,
+  "height": 113.0
+ },
+ "11_scara_link1_tray.stl": {
+  "up": "as exported (z up)",
+  "base": 3170,
+  "overhang": 200,
+  "on_part": 0,
+  "height": 21.5
+ },
+ "12_scara_link1_lid.stl": {
+  "up": "as exported (z up)",
+  "base": 3777,
+  "overhang": 0,
+  "on_part": 0,
+  "height": 8.5
+ },
+ "13_scara_link2_tray.stl": {
+  "up": "as exported (z up)",
+  "base": 3163,
+  "overhang": 200,
+  "on_part": 0,
+  "height": 21.5
+ },
+ "14_scara_link2_lid.stl": {
+  "up": "as exported (z up)",
+  "base": 3777,
+  "overhang": 0,
+  "on_part": 0,
+  "height": 8.5
+ },
+ "15_end_plate_housing.stl": {
+  "up": "as exported (z up)",
+  "base": 772,
+  "overhang": 1086,
+  "on_part": 92,
+  "height": 69.0
+ },
+ "16_pulley_P0.stl": {
+  "up": "as exported (z up)",
+  "base": 333,
+  "overhang": 0,
+  "on_part": 0,
+  "height": 8.0
+ },
+ "17_pulley_PA.stl": {
+  "up": "as exported (z up)",
+  "base": 333,
+  "overhang": 0,
+  "on_part": 0,
+  "height": 8.0
+ },
+ "18_pulley_PB.stl": {
+  "up": "as exported (z up)",
+  "base": 333,
+  "overhang": 0,
+  "on_part": 0,
+  "height": 8.0
+ },
+ "19_pulley_P2.stl": {
+  "up": "as exported (z up)",
+  "base": 333,
+  "overhang": 0,
+  "on_part": 0,
+  "height": 8.0
+ },
+ "20_spacer_thick_x8.stl": {
+  "up": "as exported (z up)",
+  "base": 40,
+  "overhang": 0,
+  "on_part": 0,
+  "height": 4.0
+ },
+ "21_spacer_thin_x6.stl": {
+  "up": "as exported (z up)",
+  "base": 40,
+  "overhang": 0,
+  "on_part": 0,
+  "height": 1.0
+ },
+ "22_abduction_sleeve.stl": {
+  "up": "as exported (z up)",
+  "base": 650,
+  "overhang": 0,
+  "on_part": 0,
+  "height": 69.0
+ },
+ "23_yoke.stl": {
+  "up": "as exported (z up)",
+  "base": 3493,
+  "overhang": 2141,
+  "on_part": 268,
+  "height": 111.5
+ },
+ "24_flexion_sleeve.stl": {
+  "up": "as exported (z up)",
+  "base": 1200,
+  "overhang": 0,
+  "on_part": 0,
+  "height": 25.0
+ },
+ "25_upper_arm_link.stl": {
+  "up": "as exported (z up)",
+  "base": 8864,
+  "overhang": 5646,
+  "on_part": 3232,
+  "height": 97.2
+ },
+ "26_rest_bracket.stl": {
+  "up": "as exported (z up)",
+  "base": 1944,
+  "overhang": 88,
+  "on_part": 88,
+  "height": 20.8
+ },
+ "27_rest_root_arm.stl": {
+  "up": "as exported (z up)",
+  "base": 4238,
+  "overhang": 316,
+  "on_part": 203,
+  "height": 13.2
+ },
+ "28_rest_blade_1.stl": {
+  "up": "as exported (z up)",
+  "base": 2602,
+  "overhang": 314,
+  "on_part": 208,
+  "height": 13.2
+ },
+ "29_rest_blade_2.stl": {
+  "up": "as exported (z up)",
+  "base": 3524,
+  "overhang": 318,
+  "on_part": 216,
+  "height": 13.2
+ },
+ "30_rest_blade_3.stl": {
+  "up": "as exported (z up)",
+  "base": 5889,
+  "overhang": 201,
+  "on_part": 120,
+  "height": 13.1
+ }
+}

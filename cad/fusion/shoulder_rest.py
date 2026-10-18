@@ -33,10 +33,10 @@ P = dict(t=8.0, k=12.0, g=0.5, r_k=6.5, end_gap=8.0, hole=6.3, velcro=1.5, pad=1
          tab=(34.0, 24.0), slot=(26.0, 5.0), buckle=(34.0, 44.0, 12.0),
          x_face=-190.34,                                  # shoulder tower front plate (front fork cheek)
          bracket=dict(s=6.0, t=(-14.0, 10.0), lobe=(8.0, 36.0), plate=6.0,   # band for the arms + a lobe for the slot     # turns on a Ø16 boss on the tower (centred under the hinge);
-                      boss=(16.0, 5.5, 0.4), slot=dict(r=30.0, sweep=15.0, w=6.6, phi=50.0),   # 1 arc slot + an M6 thumb screw lock it
+                      boss=(16.0, 5.5, 0.4), slot=dict(r=30.0, sweep=15.0, w=6.6, phi=50.0),   # 1 arc slot + an M6 x 16 socket head lock it
                       backing=3.0),  # top clears the gas spring; bolts inside the tower's slanted edge
          nut_trap=(8.1, 4.2),                             # M5 nut (8 AF): hex pocket in the tower plate's inside face
-         m6_nut=(10.0, 5.0), thumb=dict(len=16.0, head=(16.0, 6.0)),   # M6 x 16 knurled thumb screw + M6 nut
+         m6_nut=(10.0, 5.0), thumb=dict(len=16.0, head=(10.0, 6.0)),   # M6 x 16 socket head (5 mm key) + M6 nut
          back_pad=dict(dz=45.0, w=60.0, edge=3.0))
 # Print: blades, root arm and bracket print flat side down (pad side / tower side). The plate's underside is flush
 # with the knuckles' underside (hinge axis r_k above it); each knuckle sits on a gusset: no supports, no overhangs.
@@ -218,7 +218,7 @@ def _arc_slot(R, phi, sweep, w):
 def build_bracket(grp):
     """Bracket on the tower's front plate. It turns on a Ø16 boss on the tower, centred under the root hinge, and is
     locked by 2 x M3 x 8 through arc slots (+- 20 deg) into inserts in the tower: loosen, turn the whole chain to
-    the wearer's shoulder slope, tighten. (Locked by one M6 thumb screw in an arc slot, r 30, +- 20 deg.) Two arms carry the root hinge's end knuckles."""
+    the wearer's shoulder slope, tighten. (Locked by one M6 x 16 socket head in an arc slot, r 30, +- 20 deg.) Two arms carry the root hinge's end knuckles."""
     p = Part(grp, 'Rest bracket (on the tower)', color=PRINT)
     pc = LAY['pieces'][0]
     H = xyz(*pc['R'])
@@ -287,7 +287,7 @@ def cut_tower_holes():
 
 
 def tower_holes(p, body):
-    """On the tower's front plate: the Ø16 pivot boss for the bracket, and for the M6 thumb screw a clearance hole
+    """On the tower's front plate: the Ø16 pivot boss for the bracket, and for the M6 lock screw a clearance hole
     + an M6 nut trapped in a hex pocket in the plate's inside face (drop the nut in before the lift links)."""
     bd, bh, fit = P['bracket']['boss']
     p.prism(bracket_pivot(), sh.frame_of(X), -0.5, bh, sh.circle(bd / 2), name='shoulder rest pivot boss', op=JOIN,
@@ -384,7 +384,7 @@ def build_hw(grp):
     th = P['thumb']
     for c in bracket_bolts():
         ch = add(c, [P['bracket']['plate'], 0, 0])
-        sh.hw_bolt(hw, ch, sh.frame_of([-1, 0, 0]), th['len'], th['head'], 'M6 x 16 knurled thumb screw (buy)', dia=6.0)
+        sh.hw_bolt(hw, ch, sh.frame_of([-1, 0, 0]), th['len'], th['head'], 'M6 x 16 socket head (buy)', dia=6.0)
         nc = add(c, [-7.0 + P['m6_nut'][1], 0, 0])
         n = hw.prism(nc, sh.frame_of([-1, 0, 0]), 0, P['m6_nut'][1], sh.hexagon(P['m6_nut'][0]), name='M6 nut').bodies.item(0)
         hw.prism(nc, sh.frame_of([-1, 0, 0]), -1, P['m6_nut'][1] + 1, sh.circle(3.0), name='thread', op=CUT, targets=[n])

@@ -16,7 +16,7 @@ Everything else comes from packs already on this list.
 | ☐ | 608-2RS bearings | 20 pcs | 16 | [SHKI 608-2RS](https://www.amazon.com/dp/B09PKD8QZZ) |
 | ☐ | GT2 6 mm closed belt loop, 200 mm | 10 pcs | 2 | [Zeelo GT2 200 mm](https://www.amazon.com/dp/B0BZNTT5T4) |
 | ☐ | Gas strut 180 / 120 mm, 22 N, eyelet ends | 2 pcs | 1 | [Motoforti 7" 22 N](https://www.amazon.com/dp/B0DHVV6QZW) |
-| ☐ | M6 × 16 knurled thumb screw | 5 pcs | 3 | [M6 × 16 thumb screws](https://www.amazon.com/dp/B0GZ4DPXPS) |
+| ☐ | M6 × 16 socket head cap screw (5 mm hex key) | 40 pcs | 3 | [MewuDecor M6 × 16 socket head, 304](https://www.amazon.com/dp/B07HR6PPX8) |
 | ☐ | M6 hex nut | 50 pcs | 3 | [M6 hex nuts](https://www.amazon.com/dp/B0CZQRH3L2) |
 | ☐ | Clevis pin M6 × 70 + R-clip | 6 pcs | 4 | [M6 × 70 clevis pins](https://www.amazon.com/dp/B0FJWVWFBY) |
 | ☐ | ½" adhesive neoprene foam | 12" × 54" sheet | 9 pads | [MYFULLY ½" foam](https://www.amazon.com/dp/B0BTRWTXN4) |
@@ -81,7 +81,7 @@ marked **new** comes from packs already on this list.
 | M8 × 55 socket head + M8 nyloc | 6 | 4 lift pivots; S0 (nyloc locked in the carriage, bolt from below); E (nyloc locked in the end plate, bolt from the top of link 2) | same pack as the flexion bolt (10 pcs: 7 used here + flexion) |
 | M8 × 100 socket head, **cut to 75** + M8 nyloc | 1 | C, the SCARA elbow spool | the M8 × 100 pack (8 pcs, 1 used for abduction) |
 | M3 × 8 socket head + ruthex M3 insert | 4 + 4 | saddle → top node | M3 kit + ruthex pack |
-| M6 × 16 knurled thumb screw + M6 hex nut | 3 + 3 | shoulder rest bracket lock (arc slot, ±15°) + the 2 gas-strut eyelet forks (strut comes off by hand); each nut sits in a hex pocket in the plate | **new**: [M6 × 16 knurled thumb screws, 5 pcs](https://www.amazon.com/dp/B0GZ4DPXPS) + [M6 hex nuts, 50 pcs](https://www.amazon.com/dp/B0CZQRH3L2) |
+| M6 × 16 socket head (head Ø10 × 6, 5 mm hex key) + M6 hex nut | 3 + 3 | shoulder rest bracket lock (arc slot, ±15°) + the 2 gas-strut eyelet forks; each nut sits in a hex pocket in the plate | **new**: [MewuDecor M6 × 16 socket head, 304](https://www.amazon.com/dp/B07HR6PPX8) + [M6 hex nuts, 50 pcs](https://www.amazon.com/dp/B0CZQRH3L2) |
 | M3 × 12 socket head + ruthex M3 insert | 8 + 8 | SCARA link lids | M3 kit (6–30 mm) + ruthex pack |
 | #4 × 3/8" pipe screw | 2 | shoulder tower → right backbone (counterbored) | pipe screw pack |
 | Clevis pin **M6 × 70** with R-clip | 4 | shoulder rest hinges: one size for all 4 joints (every hinge is 64 mm wide) | **new**: [M6 × 70 clevis pins + R-clips, 6 pcs](https://www.amazon.com/dp/B0FJWVWFBY) |
@@ -94,7 +94,7 @@ No M5 parts, no washers, no hex-head bolts: every M8 nyloc that would be hard to
 
 Straps on the arm: **two** on the upper-arm pipes (about 30 % and 75 % of the way from shoulder to elbow) + the wrist cuff. With one upper-arm strap the exo can pivot around it and its shoulder drifts ~5 cm off yours (MuJoCo test).
 
-Printed small parts: 4 GT2 35-tooth pulleys (P0, PA, PB, P2, 8 mm wide), 8 inner-ring spacers Ø11 / 8.4 × 4 mm, 5 spacers Ø11 × 1 mm.
+Printed small parts: 4 GT2 35-tooth pulleys (P0, PA, PB, P2, 8 mm wide), 8 inner-ring spacers Ø11 / 8.4 × 4 mm, 6 spacers Ø11 × 1 mm (one is the carriage's root spacer on link 1).
 
 The total is about 2.23 m; **buy 3 m** (cuts plus saw kerf and spares). A left arm adds 3 × 127 + 3 × 185 mm.
 

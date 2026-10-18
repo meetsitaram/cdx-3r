@@ -39,10 +39,10 @@ CAP = {
   '2 bolts (M8 x 55) in from the back, down the tunnels',
   'Lock nuts on the front',
   'Squeeze the strut a little, drop its eyelets into the 2 fork slots, let go',
-  'Thumb screw through each fork + eyelet, hand tight']),
+  'M6 x 16 through each fork + eyelet (5 mm key)']),
  '4b-strut': (10, [
   'Squeeze the strut, drop each eyelet into its fork slot, let go',
-  'Thumb screw through fork + eyelet into the hidden M6 nut, hand tight']),
+  'M6 x 16 through fork + eyelet into the hidden M6 nut (5 mm key)']),
  '5-scara': (10, [
   'Link 1 tray',
   'Press in 2 bearings (608)',
@@ -87,7 +87,7 @@ CAP = {
   'Bolt (M8 x 55) in and tighten']),
  '7-rest': (10, [
   'Bracket over the round boss on the tower',
-  'Thumb screw through the slot (leave loose)',
+  'M6 x 16 through the slot (leave loose)',
   'Root arm onto the bracket',
   'Pin it (clevis pin)',
   'R-clip',

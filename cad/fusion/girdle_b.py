@@ -36,8 +36,8 @@ G = dict(
     lip_d=19.0, lid_screws=((0.45, 0.8), (0.2, 0.55)), brg=(8.0, 22.0, 7.0), land=11.0,   # link boxes: tray + lid, 608 lips
     root_loft=24.0,                                                      # carriage: round foot -> square hanger
     hexhead=(13.0, 5.3),                                                   # M8 hex head (DIN 933)
-    # strut ends are flat eyelets (Motoforti 180 mm): each sits in a fork in its ear, on an M6 x 16 thumb screw (the
-    # rest-lock part: no new part, and the strut comes off by hand) into a hidden
+    # strut ends are flat eyelets (Motoforti 180 mm): each sits in a fork in its ear, on an M6 x 16 socket head (the
+    # rest-lock part: no new part) into a hidden
     # M6 nut. eye: OD, hole, thickness (assumed; the listing gives none: the slot clears up to 19 OD x 4.5)
     spring_end=dict(eye=(14.0, 6.2, 3.0), gap=4.5, cheek=3.5, wall=3.0, r_ear=14.0, clear=9.5, open=70.0,
                     neck=20.0, bolt=16.0, nut=(10.0, 5.0)),   # 3.5 + 4.5 + 3 + 5 = 16: full nut
@@ -238,7 +238,7 @@ def _strut_dir(end):
 def _spring_ear(p, body, c, fu0, end):
     """Strut fork: the ear runs out past the strut plane; a 4.5 mm slot takes the eyelet (round, r 9.5, so the eye
     turns freely) and a wide-open sector toward the strut lets the eyelet's neck swing through the outer cheek. The
-    outer cheek hangs on the ring behind the bolt. An M6 x 16 thumb screw goes in from the outside through both cheeks and the
+    outer cheek hangs on the ring behind the bolt. An M6 x 16 socket head goes in from the outside through both cheeks and the
     eyelet into an M6 nut locked in a hex pocket that opens on the plate's inside face (drop it in first). The bolt
     clamps the fork, not the eyelet."""
     se = G['spring_end']
@@ -255,11 +255,47 @@ def _spring_ear(p, body, c, fu0, end):
     side_prism(p, poly(pts), _ear_face() - 1.5, _ear_out() + 1, 'eyelet neck opening', op=CUT, targets=[body])
 
 
-def _strut_bolt(hw, c):
-    """M6 x 16 knurled thumb screw from outside the fork + the M6 nut in its pocket."""
+def _teardrop(p, body, c, z0, z1, r):
+    """45-degree point on top of a horizontal round hole along -x (the carriage prints standing on its root disc,
+    design +y up): the hole's roof needs no support. The bottom stays round."""
+    k = r / math.sqrt(2)
+    p.prism(c, sh.frame_of([-1, 0, 0]), z0, z1, poly([(-k, k - 0.5), (k, k - 0.5), (0, r * math.sqrt(2))]),
+            name='hole teardrop point', op=CUT, targets=[body])
+
+
+def pivot_nut_flat(p, body, fu1, yt):
+    """Flat cut through the strut ear on the upper pivot's side: everything forward of the front cheek's outer face
+    (x > fu1; the cheek itself is the nut's seat and stays whole) and
+    beyond a chord 10.5 mm from the pivot axis, toward the pivot, is removed."""
+    ey, ez = G['spring_hi']
+    u = unit([yt - ey, ZC - ez, 0])[:2]
+    n = (-u[1], u[0])
     se = G['spring_end']
-    sh.hw_bolt(hw, [_ear_out(), c[1], c[2]], sh.frame_of([-1, 0, 0]), se['bolt'], (16.0, 6.0),
-               'M6 x 16 knurled thumb screw (buy)', dia=6.0)
+    d = math.hypot(yt - ey, ZC - ez) - (se['clear'] + 1.2)    # 1.2 mm of wall left round the eyelet slot
+    cy, cz = yt - u[0] * d, ZC - u[1] * d
+    pts = [(cy - n[0] * 40, cz - n[1] * 40), (cy + n[0] * 40, cz + n[1] * 40),
+           (cy + n[0] * 40 + u[0] * 40, cz + n[1] * 40 + u[1] * 40), (cy - n[0] * 40 + u[0] * 40, cz - n[1] * 40 + u[1] * 40)]
+    side_prism(p, poly(pts), fu1, _ear_out() + 1, 'pivot nut flat', op=CUT, targets=[body])   # exactly at the cheek face: an offset left a 0.05 mm film
+
+
+def carriage_teardrops(p, body, fu0, fu1):
+    """The carriage prints standing on its root disc (design +y up): every horizontal round hole gets 45-degree
+    points (up and down) so its roof needs no support: the M8 pivot holes through both cheeks, the wrench clearance
+    by the upper pivot nut, the strut bolt hole and the eyelet slot."""
+    se = G['spring_end']
+    sy, sz = G['spring_hi']
+    reach = g1.G['half'] + g1.G['gap'] + g1.G['cheek'] + 1
+    for y in G['carr_y']:
+        _teardrop(p, body, [XL, y, ZC], -reach, reach, g1.G['clear'] / 2)
+    _teardrop(p, body, [0, sy, sz], -(_ear_out() + 1), -(fu0 - 1), 3.2)
+    _teardrop(p, body, [0, sy, sz], -(_ear_face() + se['gap']), -_ear_face(), se['clear'])
+
+
+def _strut_bolt(hw, c):
+    """M6 x 16 socket head from outside the fork + the M6 nut in its pocket."""
+    se = G['spring_end']
+    sh.hw_bolt(hw, [_ear_out(), c[1], c[2]], sh.frame_of([-1, 0, 0]), se['bolt'], (10.0, 6.0),
+               'M6 x 16 socket head (buy)', dia=6.0)
     xn = _ear_face() - se['wall'] - se['nut'][1]
     b = hw.prism([xn, c[1], c[2]], fx.AX['x'], 0, se['nut'][1], sh.hexagon(se['nut'][0]), name='M6 hex nut (buy)').bodies.item(0)
     hw.prism([xn, c[1], c[2]], fx.AX['x'], -1, se['nut'][1] + 1, sh.circle(3.0), name='thread', op=CUT, targets=[b])
@@ -375,7 +411,7 @@ def build_carriage(grp):
     (fu0, fu1), (fl0, fl1) = cheek_ranges(XL)
     S0 = rest()['S0']
     yU, h = G['yU'], G['box_h']
-    y_root = yU + h + 0.5                                  # root plate sits on top of link 1
+    y_root = yU + h + 1.0                                  # root plate on a printed Ø11 x 1 spacer on link 1's inner ring
     bodies = []
     for x0, x1 in ((fu0, fu1), (fl0, fl1)):
         bodies.append(side_prism(p, stadium((yb, ZC), (yt, ZC), 17.0), x0, x1, 'lift cheek'))
@@ -388,21 +424,29 @@ def build_carriage(grp):
     bodies.append(_loft(p, [_plan_profile(p, y_root, stadium(S0, S0, G['r_plate']), 'root circle'),
                             _plan_profile(p, yl, poly([(hx0, hz0), (hx1, hz0), (hx1, hz1), (hx0, hz1)]), 'hanger square')],
                         'root loft'))
-    bodies.append(p.box(hx0, hx1, yl - 0.5, yt + 17, hz0, hz1)[0])                                # hanger behind
+    bodies.append(p.box(hx0, hx1, yl, yt + 17, hz0, hz1)[0])          # hanger behind: starts exactly on the loft top (an overlap left 0.5 mm steps)
     sx = G['spring_x']
     sy, sz = G['spring_hi']
     bodies.append(side_prism(p, stadium((sy, sz), (sy, sz), G['spring_end']['r_ear']), fu0, _ear_out(), 'spring ear'))
+    # 45-degree web under the front cheek, down to the bed beside the hanger: the cheek's lower end no longer hangs in
+    # the air when printing. Only on the cheek-extension side (z >= ZC): the lower lift link lives at z < ZC and above
+    # yb - 17 (its round end), so the web never touches it at any lift.
+    yw = yb - 17
+    bodies.append(p.prism([0, 0, 0], fx.AX['z'], ZC, ZC + 32, poly([(hx1 - 0.5, yw), (fu1, yw), (fu1 - (yw - y_root), y_root),
+                                                                    (hx1 - 0.5, y_root)]), name='front cheek web').bodies.item(0))
     body = _join(p, bodies)
     sh.round_edges(p, body, r=2.0)
     body = p.comp.bRepBodies.item(0)
-    # inner-ring boss under the root plate: clamps link 1's top bearing inner ring, clears its outer ring
-    p.prism(P3(S0, yU + h), fx.AX['y'], 0, 0.6, sh.circle(G['land'] / 2), name='inner-ring boss', op=JOIN, targets=[body])
+    # no boss under the root plate (it would lift the disc off the bed): a printed Ø11 x 1 spacer clamps link 1's
+    # top bearing inner ring instead, so the carriage prints flat on its root disc
     for y in (yt, yb):
         fork_fits(p, body, [XL, y, ZC], 'x')
         # the back cheek is buried in the hanger: the bolt goes in from the back down a round tunnel (head on the
         # back cheek, a hex key reaches it), the nyloc goes on the open front face
         p.prism([XL, y, ZC], sh.frame_of([-1, 0, 0]), g1.G['half'] + g1.G['gap'] + g1.G['cheek'] - 0.1, XL - hx0 + 1,
                 sh.circle(sh.S['m8']['shcs_head'][0] / 2 + 0.75), name='pivot bolt tunnel', op=CUT, targets=[body])
+        _teardrop(p, body, [XL, y, ZC], g1.G['half'] + g1.G['gap'] + g1.G['cheek'] - 0.1, XL - hx0 + 1,
+                  sh.S['m8']['shcs_head'][0] / 2 + 0.75)
     yp = y_root + G['root_t'] - 6                           # hex pocket floor: the S0 nyloc sits here, locked
     nh = sh.S['m8']['nut_h'] + 0.4
     p.prism(P3(S0, yU + h), fx.AX['y'], -1, yp - yU - h + 0.1, sh.circle(4.25), name='S0 bolt hole', op=CUT, targets=[body])
@@ -410,16 +454,23 @@ def build_carriage(grp):
             op=CUT, targets=[body])
     # access bore from the hanger's top: the nut drops down it into the hex pocket; the bolt comes up from below
     p.prism(P3(S0, yp + nh - 0.1), fx.AX['y'], 0, yt + 17 - yp + 1, sh.circle(7.75), name='S0 access bore',
-            op=CUT, targets=[body])
+            op=CUT, targets=[body])                         # round at the bottom: it guides the nut into its pocket
+    # above that, widened toward the pivot axis (z = ZC) into a slot: the two bolt-head tunnels cross it, and the
+    # round bore beside them left walls of 0.03-0.2 mm where the round shapes grazed; through the slot they cross cleanly
+    tr = sh.S['m8']['shcs_head'][0] / 2 + 0.75
+    plan_prism(p, stadium((S0[0], S0[1]), (S0[0], ZC), 7.75), yb - tr - 4, yt + 18, 'S0 access slot', op=CUT,
+               targets=[body])
     _spring_ear(p, body, [0, sy, sz], fu0, 'hi')
-    # the upper pivot's nyloc sits 19 mm from the strut ear: clear it (and a 13 mm socket) through the ear
-    p.prism([0, yt, ZC], fx.AX['x'], fu0 + 0.05, _ear_out() + 1, sh.circle(10.5), name='pivot nut clearance',
-            op=CUT, targets=[body])
+    # the upper pivot's nyloc sits 19 mm from the strut ear: cut the ear off flat on that side, tangent to a 10.5 mm
+    # wrench circle round the pivot (a round well here left a crescent of wall thinning to nothing)
+    pivot_nut_flat(p, body, fu1, yt)
+    carriage_teardrops(p, body, fu0, fu1)
     # S0 hardware + fixed pulley P0 (inside link 1's cavity) move with the carriage
     hw = Part(grp, 'Carriage HW + pulley P0 (buy)', color=HWC)
     _pulley(hw, S0, yU, 'pulley P0 (fixed, printed)')
     _stack(hw, S0, yU)
     _spacer(hw, S0, yU - h - 1.0, yU - h, 'nut spacer Ø11 x 1 (printed)')
+    _spacer(hw, S0, yU + h, yU + h + 1.0, 'root spacer Ø11 x 1 (printed)')   # carriage root on link 1's inner ring
     sh.hw_bolt(hw, [S0[0], yU - h - 1.0, S0[1]], sh.frame_of([0, 1, 0]), 55.0, sh.S['m8']['shcs_head'],
                'M8 x 55 socket head (buy)')                 # head under link 1, nyloc locked in the carriage
     sh.hw_nut(hw, [S0[0], yp, S0[1]], sh.frame_of([0, 1, 0]))
