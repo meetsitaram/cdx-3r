@@ -161,6 +161,11 @@ date), `#fulfillerInfoFeature_feature_div` ("Ships from Amazon"). Thumbnail for 
 
 ### 5.6 Renders and animations (`cad/fusion/render/`)
 
+- **README motion and stills:** `render/motion.py`: `record()` poses the real model per frame (girdle, arm module,
+  flexion) in the shoulder document, `stage()` moves everything into custom graphics in a temp document with the
+  torso and the scanned arm split at the elbow, `frames()` and `stills()` render; `render/mkmotion.py` builds
+  `docs/images/cdx3r-motion.gif` and trims the stills. Joint axes come from the bearings. Re-run after design changes.
+
 - **Motion animation** (`anim.py`): split moving assemblies into temporary components, pose them with
   `occurrence.transform2` about the joint axes, move the camera, save frames, build GIF/MP4 with Pillow/ffmpeg.
 - **Exploded assembly GIFs** (`asm.py` + `mkgif.py`):
