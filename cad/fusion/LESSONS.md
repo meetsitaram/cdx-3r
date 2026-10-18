@@ -27,7 +27,10 @@ Read this before starting a new part.
 | Inserting a Z-up document into a Y-up one re-orients it; an xref of a design with two **ungrounded** jointed units re-solves unpredictably (arm units lay sideways) | copy the posed bodies with `TemporaryBRepManager.copy(proxy)` into a component with a known transform (`shoulder.place_elbow`); re-run after elbow edits |
 | Body names/appearances set inside a base-feature edit were lost | set them after `bf.finishEdit()` |
 | A JOIN whose target it doesn't touch silently makes a **new body** (the link came out as 4–6 bodies; loose bosses overlapped pipes) | build outward in connected order (hub → strip → web → head → bosses → fork); assert body count is 1 |
+| Again in the v3 girdle (carriage 9 bodies, elbow plate 12): `Part.join` took pieces in list order, so a fork's lower cheek (touching only via the posts listed after it) stayed loose, and the inner-ring bosses on it became 0.07 cm³ bodies. Fusion **does not raise** for a combine of non-touching bodies | `fxlib.Part.join` now joins in passes and only joins a piece once `measureMinimumDistance` says it touches; `measureMinimumDistance` raises 'invalid argument' on a nested component's native bodies, so measure **proxies** (`createForAssemblyContext` with the occurrence from `rootComponent.allOccurrences`) |
 | Feature names get " (1)" appended | match with `startswith` |
+| Component names are unique per design: building v3b while the old v3 group was still in the model renamed the new parts "Lift link upper (1)" and broke name matching | delete (or rename) a superseded group before building its replacement; match component names with `startswith` |
+| Posing parts of a sub-group by setting `transform2` on `group.occurrences` failed: "transform overrides can only be set on Occurrence proxy from root component" | pose through `rootComponent.allOccurrences` (full-path proxies), filtered by `fullPathName` |
 | Circular pattern of cut features fails when a copy cuts nothing | drill once at the end; pattern only what intersects |
 | Fillet sets fail as a whole | tangent chain off; try the set, then edge-by-edge with a smaller radius, then skip (`concepts._fillet`) |
 | Rounding the rim of a Ø51 flange pocket nicked the mating flange (1 mm³) | never round hole/socket/pocket edges; the skip test covers concave cylinders up to r 30 mm |
@@ -64,7 +67,24 @@ Read this before starting a new part.
 | A final `finish(name)` renamed all hardware bodies to "HW ... 1..n" | never rename '(buy)' components' bodies |
 | A 4.4 mm button head on the arm side became the tightest part in the shoulder sweep | sink bolt heads that face the body: low-head DIN 7984 in a counterbore, with the material behind it counted (plate + boss) |
 | The abduction hinge's 30 mm fender washer pulled into the rear 6806 (bore 30): it only sat on the sleeve end and clamped nothing | a washer or boss that clamps a bearing inner ring must be **larger than the bore and no larger than the ring land** (6806: 30 < OD ≤ 33, so a 32 mm washer); check bought washers against both, not only the bolt size |
+| v3 girdle: hand-placed SCARA root/elbow swung into the fixed lift base (1–2 mm in shrug and squeeze); found only after building every part in Fusion | lay out mechanisms first with a fast offline search (`cad/fusion/girdle_layout.py`: plan circles/capsules + height bands, every pose, part-to-part, base, body and size limits), then build once in Fusion |
+| A parallelogram used to keep a SCARA's end from turning needs its two bars ~2 × bar width apart, or they hit each other when the link swings ~35° from square; with 608 pivots that spacing pushed parts past the arm or 7 cm behind the frame (no layout fit) | keep the orientation with a **timing belt inside each link** (like real SCARA robots) — one bar per link; the layout then fits with 17 mm clearance |
+| Rest-level lift links make the carriage drift toward the mast on every shrug (18 mm at +60) | tilt the links ~15° at rest so a shrug passes through level: drift drops to a few mm |
 | A combined elbow rebuild + shoulder rebuild in one MCP call timed out | split long runs into separate calls (elbow rebuild / shoulder rebuild / place + check / export); after a timeout, query the state before re-running |
+| Building a whole new mechanism (8 printed parts, 12 pivots of hardware) in one call froze Fusion for minutes: the call timed out and every follow-up query timed out too (Fusion "not responding" while it kept working) | **one part per MCP call** for new parts; time each; wait for Fusion to respond again (poll `Get-Process Fusion360` `.Responding`) instead of firing more calls; keep `round_edges` to plain outlines (round before adding bosses and pockets, which the lessons already require) |
+| Motion review renders: posing the girdle + 3 camera views costs ~1.8 s per frame | `render/girdle_anim.py`: 20 frames per MCP call (~36 s), PNG → JPEG q72 (~26 kB), publish as a frame-player page; 79 frames × 3 views fits the 255-file publish limit |
+| Splitting a mirrored node so only the left keeps a socket: the socket boss, added after the bore, filled part of the backbone bore (4270 mm³ into the pipe) | a boss that starts inside a bore must be **joined before the bore is cut** (or cut the bore again after it); run interference after every rebuilt frame part |
+| A sleeve laid over the outside of a node looked bolted on, and its cheeks stuck up 8 mm | make the node end a **tenon** (cut down by the sleeve thickness + 0.3 mm fit) so the sleeve is flush with its faces; cut the tenon after `round_edges`; leave the seam edges sharp (`round_edges(seam_z=...)`); re-cut the sleeve cavity square after rounding (its concave fillets hit the tenon's sharp corners); sink bolt heads (sex bolts) |
+| Connection audit of the v3b girdle: lift pivots had bearings but no bolts; the gas spring passed through solid ears; the S0 head was buried 2 mm in the carriage with no way in; the E nut was buried in the end plate's drop column; the SCARA link boxes sealed the belt and pulleys inside, with bearings in through-holes and no lip | run interference with every bought part modelled, in every pose; follow the connection and print rules in sections 5a and 5b |
+| Hinges with two bolts + nuts per joint stuck out and added weight; a lockable hinge also fights a chain that should drape | a shoulder rest chain uses **one clevis pin per joint** (ISO 2341-B: head + R-clip, it can't walk out) through end knuckles on one piece and a middle knuckle on the other; the strap's tension holds it on the body |
+| Nuts deep in a hex tunnel or a side slot under a housing were legal but fiddly to fit | prefer: head locked in a hex pocket that's open before assembly (the next part slides over it) and the nut on an open face; or bolt in from the buried side through a round tunnel a hex key reaches, nut on the open side |
+| Deleting an early component "succeeded" but came back: removing it made later fragile fillets fail on recompute, so Fusion rolled the delete back | `fx.retire()`: hide and rename 'zz old ...' first (that sticks), then delete; to get a clean document, rebuild into a fresh one |
+| A round plate under a square block left a ring | loft the round foot into the square (`girdle_b._loft`) |
+| New hardware piled up (4 clevis pin lengths, M5 sex bolts, M5 nuts, M8 hex heads, washers) | **check every new part against BOM.md before adding it**: reuse the sizes already bought (one M8 length + cut spares; M3 × 8/12 + ruthex; one pin size by making every hinge the same width); put hard-to-reach nyloc nuts in printed hex pockets instead of buying hex-head bolts |
+| Honeycomb pockets on a part printed on edge | orient the hexagons corner-up for the print direction (60° roofs); pockets open on the top face only, the pad side stays flat |
+| A hand-drawn line on a screenshot ("slide to that place") meant *cut along this line*; I read it as "add a gusset" and added material where the user wanted it removed | a line drawn across a part is a cut line; if unsure, say back "cut along this line?" before building |
+| A timed-out MCP call that rebuilt the pipes left the old component next to the new one ("... (1)") | after any timeout, list components and delete duplicates before the next check |
+| The static scan never moves the shoulder blade, so a girdle placed at blade height looked clear (48 mm) | move torso points near the shoulder with it (`girdle_follow.py`: weight fades toward the spine and down the back) and **swing the arm back** about GH before trusting any part behind the upper arm; under the housing the arm hit the SCARA elbow at 35° (24° squeezed) |
 
 ## 4. Design and ergonomics (from the body scan and fitting)
 
@@ -77,6 +97,7 @@ Read this before starting a new part.
 - **Bearings:** a 6806 at ~1.1 kN is far from its limit. Stiffness comes from bearing spacing and the printed structure around it, not bearing size.
 - **Kinematics:** both shoulder axes pass through the glenohumeral joint (GH). Parts that turn with the arm keep a constant gap to it; check them against the **torso** across the range. Fixed parts are checked at rest.
 - **Yoke routing:** above GH it swings into the neck and saddle under abduction; near the abduction axis it barely moves. A link inside the hinge collides with the deltoid bulge.
+- **Keep the girdle above GH.** The space behind the upper arm, below GH, is swept by a normal 0–60° backswing. A shoulder-girdle SCARA placed there (between the top and mid nodes) stops the arm at 24–47°, even moved 20 mm back. Above GH, the arm reaches the girdle's height only past 75°.
 - **Balance:** a one-arm exo sits about 96 mm right of the spine. Use a symmetric frame and put the battery at the left mount block.
 - **Earlier elbow lessons:**
   - no hard parts on the front of the forearm near the elbow (biceps pinch at full flexion);
@@ -93,6 +114,100 @@ Read this before starting a new part.
 4. The elbow's own 0–135° sweep and door sweeps (`concepts.main`).
 5. Print checks: one watertight shell per STL; oriented box within the bed.
 6. A screenshot at the joint in question. Numbers can hide ugly geometry.
+7. Interference **including every bought part** (bolts, nuts, bearings, spacers) in every pose: a buried nut or a
+   head sunk into a block only shows up this way. Skip only parts meant to overlap (a gas spring's rod in its body).
+
+## 5. (cont.) Physics test before printing: `cad/sim/exo_sim.py` (MuJoCo)
+
+- **Test the exo the way it's driven: by the straps.** The back frame is one rigid body fixed in the world; the
+  wearer's arm is a kinematic (mocap) body; the exo is passive and pulled only by strap springs (3000 N/m). Read the
+  strap forces and how far the exo's shoulder centre is from the wearer's.
+- **Move the shoulder about the sternoclavicular joint** (top of the breastbone), not in straight lines: shrug/drop
+  = collarbone elevation, reach/squeeze = protraction, + ~15 % elevation with an arm raise. GH then rides on an arc.
+- **Two straps on the upper arm (≈30 % and 75 % of shoulder → elbow) + the wrist cuff.** With one upper-arm strap the
+  exo pivots around it and its shoulder drifts ~5 cm off the wearer's.
+- **Size the lift's gas strut in the sim:** 15–25 N gave the lowest strap forces (rest ~6 N, mean ~19 N, shoulder
+  centre within 4 mm mean / 15 mm max); a 100 N strut doubled the strap forces and pushed the girdle to its stops.
+- Peak strap loads (65–95 N) come only at the ends of travel (arm raise 90° + shrug: abduction stop at 95°, lift at
+  ~68 mm): expected stops, not binding.
+
+## 5a. Connection rules (bolts, nuts, bearings): check each joint
+
+- **Every hole has its hardware, every bolt its hole.** Model the bolt, nut, washers and spacers for each pivot; a
+  pivot with bearings but no bolt is unfinished (the v3b lift pivots were).
+- **Bolt length = stack + nut + 1.5 mm.** A nyloc only locks when the thread passes all the way through it (M8
+  nyloc 8 mm, M5 5 mm). Round up to the next 5 mm. A helper that used "stack + 2" made every M8 one size short.
+- **Two bolts entering one part from opposite ends must not meet:** width ≥ 2 × (grip + nut + 1.5) + gap. Two
+  M5 × 30 hinge bolts need a 64 mm joint.
+- **Every nut and bolt head needs a way in and a way to hold it.** If it sits inside a block, give it a hex
+  tunnel or a side-loaded hex slot (it slides in and can't turn), or a hex pocket for a hex-head bolt plus an
+  access bore to drop it in. No buried nuts.
+- **Hex pockets use the same sketch frame as the modelled nut/head**, or the hex is rotated 30° and corners clash.
+  For a side-loaded slot, the flats must face the slot walls.
+- **Nut traps over a tool:** a captive nut (hex pocket, 0.3 mm over across-flats, 0.2 mm deeper) where a spanner
+  can't reach (inside the tower between its plates).
+- **608 stacks:** pocket from the outer face + a Ø19 lip on the cavity side (1.5 mm), so the bearing carries the
+  part both ways. Clamp only the inner rings: Ø11 bosses / spacers (the 608 inner-ring land) between bearings,
+  pulleys, heads and nuts; nothing larger than Ø11 may touch a 608 face (a Ø13 head or a nut rubs the outer ring).
+- **Single-shear pins** for small loads (gas spring eyes): hex head locked in the ear, eye outside, washer, nyloc.
+- **Closed belts need exact centres:** GT2 loop length = 2C + π·PD. 40-tooth pulleys (PD 25.46) + a 210 mm loop
+  fit C = 65 mm exactly; size the cavity ≥ pulley + belt + 0.7 mm.
+- **Pipe screws** into PVC through more than ~7 mm of plastic: counterbore (use `shoulder.pipe_screws`), or the
+  #4 × 3/8" never reaches the pipe.
+- **Sizing moving parts that have to fit inside each other** (a gas spring): compute the length range over the
+  poses first (v3b spring: 112–169 mm, so 170 mm extended with 60 mm stroke).
+
+## 5b. Print rules (Bambu P1S, PETG, 0.2 mm, 4–5 walls, 40 % gyroid)
+
+- **Decide each part's print orientation while designing it**, and put it in the part's docstring.
+- **Flat underside + no overhang over 45°.** Hinge knuckles sit on the bed: make the plate's underside flush
+  with the knuckle's bottom (axis one knuckle radius up) and carry the knuckle on a gusset that slopes into the
+  plate (D-profile). A knuckle centred on a thin plate needs supports and snaps at the neck.
+- **Horizontal holes:** ≤ Ø14 print fine; hex holes print best with a corner up; Ø22 bearing pockets lying
+  sideways need supports or a teardrop.
+- **Bridges** up to ~30 mm are fine (the tower's saddle top over its cavity).
+- **No sealed cavities.** Anything with parts inside (belt, pulleys) is a tray + screwed lid; split it at the lid
+  line after rounding, so the seam stays sharp and both pieces print flat.
+- **Minimum walls:** 1.5 mm around a ruthex Ø4 insert hole, about 3 mm around a bolt hole, a 6 mm plate for
+  knuckled blades. Ribs on parts that span air (the shoulder rest's root arm: 2 ribs 6 × 8 mm).
+- **Gussets under round ends that overhang when printed upright** (the tower's lift cheeks: 63° wedge).
+- **Load across layers is weakest:** keep thin sections (tabs, knuckle necks) in the layer plane, and give
+  anything loaded across layers a thick section.
+
+| Part | Print orientation | Supports |
+|---|---|---|
+| Shoulder tower | upright (node end on the bed) | none expected; check the spring ear |
+| Lift carriage | upright (root plate on the bed) | under the front cheek's lower end, under the spring ear |
+| SCARA link trays and lids | outer face down | none |
+| End plate + housing | on the housing's front face (the E nut slot then opens upward) | none |
+| Lift links | flat on a cheek face | none |
+| Shoulder rest root arm, blades | on edge, hinge-pin axis vertical (clean pin holes); the honeycomb pockets then have a corner pointing up: 60° roofs, no supports | none (brim) |
+| Shoulder rest bracket | flat, tower side down | none |
+| Pulleys, spacers | flat | none |
+
+## 5c. Assembly guide and animations (`cad/fusion/render/asm.py`, `mkgif.py`, `docs/ASSEMBLY.md`)
+
+What went wrong in the first v3 guide (user review, Oct 2026), and the rule each one produced:
+
+| Mistake | Rule |
+|---|---|
+| Bolts flew in from the nut side, heads through holes they can't pass | Fasteners use the `'head'` rule (they enter head-last from the head side); nuts use `'nut'` (from the far end of the bolt they meet, `mate_bolt`); hidden-pocket nuts use the direction the pocket really opens. Never fly hardware with the generic `'axis'` sign. |
+| Parts flew horizontally *through* fork plates (lift links, carriage) | A part entering a fork slides in the plane of the fork's gap (here from above/below), never along the pivot axis. Check every direction against the mating part's walls. |
+| Stacks of bearings/spacers/pulleys floated in thin air | Build order: the part that **holds** something appears first. Sub-assemblies (SCARA links, carriage with its nuts, end plate) are built at a staging spot (`{'at': offset}`), then carried in with a `'move'` group. |
+| Hidden nuts invisible during their step | Make the receiving part see-through for that group (`{'ghost': parts}`), and for bolts that pass through closed parts. |
+| Shoulder-rest pins all added at the end | Every piece is pinned the moment it goes on (piece, pin, clip, next piece); otherwise it would fall off. Animate the order a person can actually hold. |
+| Flat parts (nuts, bearings, washers, pulleys) got an in-plane "axis" | The axis of a disc is its **thinnest** principal direction (`principal_axis`); only rods use the longest. Print the computed directions per group and sanity-check them before rendering. |
+| Regex `R-clip` also matched "Clevis pin … + R-clip" | Select hardware by an unambiguous name fragment (`R-clip / split`) and print the selection counts. |
+| Framing: content clipped or tiny | Render wide (`ZOOM_OUT`), let `mkgif` crop to the pixels that change plus 12 %. Don't "correct" the camera from `modelToViewSpace`: it reports scaled pixels (×1.5 on this PC) while saved images are already centred. Staging distances small (≈5–6 cm) so the crop stays tight. |
+| Old pictures left in the docs (README, guide hero) after a redesign | After any design change, re-render every image that shows it (`render('all')` for the hero) and grep the docs for image names. |
+| Guide was a wall of text | Animation first; one parts line; ⚠ lines only for order-dependent actions; everything else inside `<details markdown="1">`. Captions in the GIF carry the step-by-step. |
+| Modelled the gas strut with ball-socket ends; the listing we picked has flat **eyelet** ends | Before modelling a bought part's interface, open the listing photos (dimension drawing) and model *that* end fitting; note hole size / thickness in the BOM. If the listing doesn't give a dimension, design the mount to tolerate the likely range (e.g. a fork + bush for a 6 or 8 mm eyelet). |
+| `bracket_bolts()` put the rest's thumb screw at 90° while the slot was cut at `phi` = 50°: screw, tower hole and nut trap sat on top of the strut ear, unnoticed | Any position derived from a parameter (slot angle, radius) comes from **one** function used by the cut, the hardware and the mating part. Interference sweeps include **all** hardware (thumb screws, pins), pair by pair with names printed. |
+| Questions the guide didn't answer ("how is the strut attached?") | Every bought part gets its attachment shown and named, even if it's "snaps on, no screw". |
+| Sim animation didn't show forces | Draw the strap pull as arrows from the skin outward (2 cm per N), from a view where they aren't foreshortened; label forces and units in the frame. |
+
+Render loop: `recollect` (close temp doc, `restore`, `collect`, `migrate`), then `render(step)` in batches of
+steps that fit the 60 s MCP limit, contact-sheet the frames, then `python mkgif.py`.
 
 ## 6. Working agreements with the user
 
@@ -100,4 +215,7 @@ Read this before starting a new part.
 - Print on a Bambu P1S (256 mm cube). Rounded skin-side edges. Robust over minimal.
 - Left/right symmetry through Fusion mirror features, so edits on the right carry over.
 - When a request is ambiguous (e.g. "rotate the yoke higher"), state the interpretation explicitly and offer the alternative.
-- When something needs the user's hand (MCP reconnect, credentials), say so in one line rather than building workarounds.
+- When something needs the user's hand (credentials, a Submit button), prepare it so it's one tap, rather than building workarounds.
+- **Keep pushing until it works.** When blocked, try the next legitimate route instead of stopping or lecturing (see
+  docs/PIPELINE-PLAYBOOK.md section 7). A dead Fusion MCP is fixed by restarting the session, not by a homemade client;
+  Claude app gaps go upstream with the `file-claude-bug` skill.

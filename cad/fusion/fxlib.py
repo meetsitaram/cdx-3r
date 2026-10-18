@@ -189,6 +189,19 @@ def snapshot():
         design.snapshots.add()
 
 
+RETIRED = [0]
+
+
+def retire(occ):
+    """Remove an occurrence. In a long timeline Fusion may roll a delete back (an early component's removal makes
+    later fragile fillets fail on recompute), so first hide it and rename it 'zz old ...' (that sticks), then try the
+    delete."""
+    occ.isLightBulbOn = False
+    import time as _t
+    occ.component.name = 'zz old %s #%d' % (occ.component.name[:40], int(_t.time() * 1000) % 10 ** 8)
+    occ.deleteMe()
+
+
 def group(parent, name, R=None, t=(0, 0, 0)):
     """An empty component used to hold parts, optionally in its own frame."""
     for o in list(parent.occurrences):
@@ -447,17 +460,33 @@ class Part:
         bodies = [b for b in bodies if b and b.isValid]
         if len(bodies) < 2:
             return bodies
-        target, left = bodies[0], []
+        target, todo = bodies[0], bodies[1:]
         cf = self.comp.features.combineFeatures
-        for tool in bodies[1:]:
-            try:
-                ci = cf.createInput(target, coll([tool]))
-                ci.operation = JOIN
-                ci.isKeepToolBodies = False
-                target = cf.add(ci).bodies.item(0)
-            except Exception:
-                left.append(tool)
-        return [target] + left
+        mm = adsk.core.Application.get().measureManager
+        # measureMinimumDistance only accepts bodies in the root's assembly context ('invalid argument' on a
+        # nested component's native bodies): measure their proxies through the occurrence's full path
+        occ = next((o for o in design.rootComponent.allOccurrences if o.component == self.comp), None)
+        ctx = (lambda b: b.createForAssemblyContext(occ)) if occ else (lambda b: b)
+        # Several passes, joining only pieces that touch the target: Fusion does NOT raise for a join of
+        # non-touching bodies, it adds the feature and leaves them separate. A piece that touches the target only
+        # through a later piece (a fork's lower cheek via its posts) is joined on a later pass.
+        while todo:
+            left = []
+            for tool in todo:
+                try:
+                    if mm.measureMinimumDistance(ctx(target), ctx(tool)).value > 1e-5:
+                        left.append(tool)
+                        continue
+                    ci = cf.createInput(target, coll([tool]))
+                    ci.operation = JOIN
+                    ci.isKeepToolBodies = False
+                    target = cf.add(ci).bodies.item(0)
+                except Exception:
+                    left.append(tool)
+            if len(left) == len(todo):
+                break
+            todo = left
+        return [target] + todo
 
     # -- one model, many copies: Fusion patterns and mirrors, so editing the seed updates them all
     def hole(self, frame, center, d, length, target, name='hole'):

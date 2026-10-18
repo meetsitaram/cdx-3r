@@ -1,11 +1,29 @@
 # CDX-3R bill of materials: parts to buy
 
-This is for one right arm (elbow concept B) plus the shoulder and back system, as of 2026-09-29. Quantities come
-from the current CAD: `cad/fusion/concepts.py` (elbow) and `cad/fusion/shoulder.py` (shoulder + back). Print
-details are in `prints/elbow-test-v10/` and `prints/shoulder-back-v2/`.
+This is for one right arm (elbow concept B) plus the shoulder and back system, as of 2026-10-17. Quantities come
+from the current CAD: `cad/fusion/concepts.py` (elbow), `cad/fusion/shoulder.py`, `girdle_b.py` and
+`shoulder_rest.py` (shoulder + back). Print details are in `prints/elbow-test-v10/` and `prints/shoulder-back-v3/`.
 The last column is what a future **left arm** would add; the frame and harness are shared.
 
 Buy extra of the small parts (see the fastener notes).
+
+## Shopping list: new for the v3 shoulder girdle + rest
+
+Everything else comes from packs already on this list.
+
+| ☐ | Item | Pack | Need | Link |
+|---|---|---|---|---|
+| ☐ | 608-2RS bearings | 20 pcs | 16 | [SHKI 608-2RS](https://www.amazon.com/dp/B09PKD8QZZ) |
+| ☐ | GT2 6 mm closed belt loop, 200 mm | 10 pcs | 2 | [Zeelo GT2 200 mm](https://www.amazon.com/dp/B0BZNTT5T4) |
+| ☐ | Gas strut 180 / 120 mm, 22 N, eyelet ends | 2 pcs | 1 | [Motoforti 7" 22 N](https://www.amazon.com/dp/B0DHVV6QZW) |
+| ☐ | M6 × 16 knurled thumb screw | 5 pcs | 3 | [M6 × 16 thumb screws](https://www.amazon.com/dp/B0GZ4DPXPS) |
+| ☐ | M6 hex nut | 50 pcs | 3 | [M6 hex nuts](https://www.amazon.com/dp/B0CZQRH3L2) |
+| ☐ | Clevis pin M6 × 70 + R-clip | 6 pcs | 4 | [M6 × 70 clevis pins](https://www.amazon.com/dp/B0FJWVWFBY) |
+| ☐ | ½" adhesive neoprene foam | 12" × 54" sheet | 9 pads | [MYFULLY ½" foam](https://www.amazon.com/dp/B0BTRWTXN4) |
+| ☐ | Adhesive hook-and-loop, 2" | 27 ft | 9 pads | [Navona 2" hook-and-loop](https://www.amazon.com/dp/B0CNQ2MP8V) |
+
+Also check stock of: PETG (~4 kg total, see Filament), ½" PVC (3 m), M8 × 55 (7 used), M8 nylocs (9), ruthex inserts
+(38) and M3 × 8 / M3 × 12 screws.
 
 ## Bearings
 
@@ -47,9 +65,36 @@ already printed from elbow v9 have 5.5 mm holes: press the insert flush (or run 
 |---|---|---|---|
 | Upper-arm pipe | 127 mm | 3 | elbow near ring → upper-arm link pipe head |
 | Forearm pipe | 185 mm (leans 5.9° toward the wrist) | 3 | elbow near ring → wrist ring |
-| Backbone | 412 mm | 2 | bottom node → top node (ends flush inside it) |
-| Upper beam | 102 mm | 2 | top node → mount block (L + R) |
-| Diagonal | 131 mm | 2 | mid node → mount block (L + R) |
+| Backbone | 412 mm | 2 | bottom node → top node (ends flush inside it). **v3b girdle: left only**, see below |
+| Upper beam | 102 mm | 2 | top node → mount block (L + R). **v3b girdle: left only** (101.6 → 102) |
+| Diagonal | 131 mm | 2 | mid node → mount block (L + R). **v3b girdle: left only** |
+| Backbone R, v3b girdle | 583 mm | 1 | bottom node → up through the top node into the shoulder tower (replaces the right 412 mm backbone) |
+
+## Shoulder girdle v3b + shoulder rest (right): hardware (in design, from the Fusion model)
+
+Counts are for the right side. The girdle replaces the right abduction mount block, beam and diagonal. Everything not
+marked **new** comes from packs already on this list.
+
+| Item | Qty | Where | Order |
+|---|---|---|---|
+| 608-2RS bearing, 8 × 22 × 7 | 16 | lift links 8 (2 per pivot), SCARA links 8 | **new**: [SHKI 608-2RS, 20 pcs](https://www.amazon.com/dp/B09PKD8QZZ) |
+| M8 × 55 socket head + M8 nyloc | 6 | 4 lift pivots; S0 (nyloc locked in the carriage, bolt from below); E (nyloc locked in the end plate, bolt from the top of link 2) | same pack as the flexion bolt (10 pcs: 7 used here + flexion) |
+| M8 × 100 socket head, **cut to 75** + M8 nyloc | 1 | C, the SCARA elbow spool | the M8 × 100 pack (8 pcs, 1 used for abduction) |
+| M3 × 8 socket head + ruthex M3 insert | 4 + 4 | saddle → top node | M3 kit + ruthex pack |
+| M6 × 16 knurled thumb screw + M6 hex nut | 3 + 3 | shoulder rest bracket lock (arc slot, ±15°) + the 2 gas-strut eyelet forks (strut comes off by hand); each nut sits in a hex pocket in the plate | **new**: [M6 × 16 knurled thumb screws, 5 pcs](https://www.amazon.com/dp/B0GZ4DPXPS) + [M6 hex nuts, 50 pcs](https://www.amazon.com/dp/B0CZQRH3L2) |
+| M3 × 12 socket head + ruthex M3 insert | 8 + 8 | SCARA link lids | M3 kit (6–30 mm) + ruthex pack |
+| #4 × 3/8" pipe screw | 2 | shoulder tower → right backbone (counterbored) | pipe screw pack |
+| Clevis pin **M6 × 70** with R-clip | 4 | shoulder rest hinges: one size for all 4 joints (every hinge is 64 mm wide) | **new**: [M6 × 70 clevis pins + R-clips, 6 pcs](https://www.amazon.com/dp/B0FJWVWFBY) |
+| GT2 6 mm closed belt loop, **200 mm** | 2 | one in each SCARA link (printed 35-tooth pulleys at 65 mm centres) | **new**: [Zeelo GT2 200 mm closed loop, 10 pcs](https://www.amazon.com/dp/B0BZNTT5T4) |
+| Gas strut, **180 mm** extended / **120 mm** compressed, **22 N**, flat **eyelet** ends (hole ~6 mm, assumed; check on arrival) | 1 (2-pack) | eyelet in a printed fork on the tower ear → carriage ear (120–177 mm over drop 20 → shrug 60). 22 N from the MuJoCo strap test (`cad/sim/exo_sim.py`): 15–25 N gives the lowest strap forces; 100 N doubled them | **new**: [Motoforti 7" 22 N, 2 pcs](https://www.amazon.com/dp/B0DHVV6QZW) |
+| Side-release buckle 25 mm | 1 | front end of the shoulder rest | strap kit (6 buckles) |
+| Foam ½" (12.7 mm) + adhesive hook-and-loop | 3 + 6 pads | under the 3 blades; 2 per frame node on the body side | **new**: [MYFULLY ½" × 12" × 54" adhesive neoprene](https://www.amazon.com/dp/B0BTRWTXN4) + [Navona 2" × 27 ft adhesive hook-and-loop](https://www.amazon.com/dp/B0CNQ2MP8V) |
+
+No M5 parts, no washers, no hex-head bolts: every M8 nyloc that would be hard to reach sits in a printed hex pocket.
+
+Straps on the arm: **two** on the upper-arm pipes (about 30 % and 75 % of the way from shoulder to elbow) + the wrist cuff. With one upper-arm strap the exo can pivot around it and its shoulder drifts ~5 cm off yours (MuJoCo test).
+
+Printed small parts: 4 GT2 35-tooth pulleys (P0, PA, PB, P2, 8 mm wide), 8 inner-ring spacers Ø11 / 8.4 × 4 mm, 5 spacers Ø11 × 1 mm.
 
 The total is about 2.23 m; **buy 3 m** (cuts plus saw kerf and spares). A left arm adds 3 × 127 + 3 × 185 mm.
 
@@ -68,7 +113,7 @@ The total is about 2.23 m; **buy 3 m** (cuts plus saw kerf and spares). A left a
 
 | Item | Qty | Notes |
 |---|---|---|
-| PETG | ~3 kg | shoulder + back ~2.1 kg (60 % effective fill), elbow set ~0.6 kg, plus fit coupons and reprints |
+| PETG | ~4 kg | shoulder + back v3 ~2.8 kg (60 % effective fill), elbow set ~0.6 kg, plus fit coupons and reprints |
 
 ## Not included yet
 

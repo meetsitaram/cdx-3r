@@ -1,156 +1,129 @@
 # How to build the CDX-3R arm exo
 
-This guide walks you through building the exo one small step at a time. Every step has an animation that shows
-exactly which part goes where. Watch it first, then do it.
+Watch each animation, then do the same. Open **Details** under a step only if the animation isn't enough.
 
 ![The finished exo](images/exo-only.png)
 
-**What you're building:** a backpack-style frame (the *back frame*) with a robot-arm shoulder on the right side. An
-arm hangs from the shoulder with an elbow in the middle, and the whole thing is held on with straps. It has 3 joints
-that move with your arm: the shoulder lifts your arm sideways, the shoulder swings your arm forward, and the elbow
-bends.
+**About 6–8 hours** after printing; each step is a good place to stop. **Grown-up needed** for the soldering iron,
+cutting PVC, and shortening one bolt.
 
-**Time:** about 4–6 hours of building (after printing). Do it over a few days if you like. Each big step is a good
-place to stop.
+> ⚠ = do it **in this order**, or it can't be done later.
 
-> **Grown-up needed** for two jobs: using the **soldering iron** (it gets hot enough to burn) and **cutting the
-> PVC pipe** (saw). Everything else you can do yourself.
-
-## Contents
-
-0. [Get ready](#0-get-ready): parts, tools, and 4 skills to practice
-1. [Build the elbow](#1-build-the-elbow)
-2. [Build the back frame](#2-build-the-back-frame)
-3. [Build the shoulder](#3-build-the-shoulder)
-4. [Join the arm to the shoulder](#4-join-the-arm-to-the-shoulder)
-5. [Add the straps](#5-add-the-straps)
-6. [Try it on](#6-try-it-on)
+| Step | | ⚠ |
+|---|---|---|
+| 0 | [Get ready](#0-get-ready) | |
+| 1 | [Elbow](#1-build-the-elbow) | |
+| 2 | [Back frame](#2-build-the-back-frame) | |
+| 3 | [Shoulder tower](#3-put-on-the-shoulder-tower) | 2 hidden nuts |
+| 4 | [Lift](#4-build-the-lift) | 2 hidden nuts |
+| 5 | [SCARA arms](#5-build-the-scara-arms) | 1 hidden nut, 1 bolt cut short |
+| 6 | [Shoulder hinge](#6-build-the-shoulder-hinge) | 1 hidden nut |
+| 7 | [Shoulder rest](#7-build-the-shoulder-rest) | pin each piece as it goes on |
+| 8 | [Join the arm](#8-join-the-arm-to-the-shoulder) | |
+| 9 | [Straps](#9-add-the-straps) | |
+| 10 | [Try it on](#10-try-it-on) | |
 
 ---
 
 ## 0. Get ready
 
-### Printed parts
+<details markdown="1">
+<summary><b>Printed parts</b></summary>
 
-Print everything in PETG. The files are in two folders. Write the **number or name** on each part with a marker as
-soon as it comes off the printer, so you don't mix them up.
+Print everything in PETG. Write the part's name on it as it comes off the printer.
 
-**Elbow** ([prints/elbow-test-v10](../prints/elbow-test-v10/)):
+**Elbow** ([prints/elbow-test-v10](../prints/elbow-test-v10/)): fit-test pieces (print first), 01 upper-arm elbow
+piece, 02 forearm elbow piece, 03 bearing axle × 2, 04 round cover × 2, 05 wrist ring, 06 wrist cuff.
 
-| ☐ | Part | File |
-|---|---|---|
-| ☐ | Fit test pieces (print these first!) | `00_fit_coupon_bearing_pockets`, `00_fit_coupon_pipe_holes` |
-| ☐ | **01** upper-arm elbow piece | `01_upper_arm_elbow_piece` |
-| ☐ | **02** forearm elbow piece | `02_forearm_elbow_piece` |
-| ☐ | **03** bearing axle × 2 | `03_bearing_axle_print2` |
-| ☐ | **04** round cover × 2 | `04_bearing_cover_print2` |
-| ☐ | **05** wrist ring | `05_wrist_ring` |
-| ☐ | **06** wrist cuff | `06_wrist_cuff` |
+**Frame, shoulder and rest** (folder named when the print files are exported; each part's print orientation is in its
+README):
 
-**Shoulder and back** ([prints/shoulder-back-v2](../prints/shoulder-back-v2/)):
+| Part | How many |
+|---|---|
+| Bottom node L + R, splice plate | 1 each |
+| Middle node, top node, left shoulder block | 1 each |
+| Shoulder tower | 1 |
+| Lift link upper + lower, lift carriage | 1 each |
+| SCARA link 1 tray + lid, link 2 tray + lid | 1 each |
+| End plate + shoulder housing | 1 |
+| Pulleys (35 teeth) | 4 |
+| Spacers: thick Ø11 × 4, thin Ø11 × 1 | 8 thick, 5 thin |
+| Abduction sleeve, yoke, flexion sleeve, arm link | 1 each |
+| Shoulder rest: bracket, root arm, blades 1–3 | 1 each |
 
-| ☐ | Part | File |
-|---|---|---|
-| ☐ | Bottom node, left half and right half | `Bottom_node_L`, `Bottom_node_R` |
-| ☐ | Splice plate | `Bottom_node_splice_plate` |
-| ☐ | Middle node | `Mid_node` |
-| ☐ | Top node | `Top_node` |
-| ☐ | Shoulder blocks, left and right | `Abduction_mount_block_L`, `Abduction_mount_block_R` |
-| ☐ | Abduction sleeve (short tube) | `Abduction_sleeve` |
-| ☐ | Yoke (the curved arm that goes around your shoulder) | `Yoke` |
-| ☐ | Flexion sleeve (wide ring) | `Flexion_axle_sleeve` |
-| ☐ | Arm link (the big part with the spoked wheel) | `Upper-arm_link` |
+</details>
 
-### Bought parts
+<details markdown="1">
+<summary><b>Bought parts</b> (links in <a href="../BOM.md">BOM.md</a>)</summary>
 
-Links are in [BOM.md](../BOM.md). Put the small parts in separate cups or bags and label them.
+| Part | How many |
+|---|---|
+| **6806** bearing (30 mm hole) | 4 |
+| **6808** bearing (40 mm hole) | 2 |
+| **608** bearing (8 mm hole) | 16 |
+| M3 brass heat-set **insert** | 38 |
+| **M3 × 8** screw / **M3 × 12** screw | 30 / 8 |
+| **Pipe screw** #4 × 3/8" | 41 |
+| **M8 × 100** bolt (one gets cut to 75 mm) | 2 |
+| **M8 × 55** bolt | 7 |
+| M8 **lock nut** | 9 |
+| M8 washer, **32 mm** wide (not 30) | 1 |
+| **Clevis pin** M6 × 70 + **R-clip** | 4 |
+| **Thumb screw** M6 × 16 + **M6 nut** | 3 + 3 |
+| **GT2 belt loop** 200 mm × 6 mm | 2 |
+| **Gas strut** 180 mm, 22 N, eyelet ends | 1 |
+| Pin 4 × 25 mm | 1 |
+| ½" foam + hook-and-loop (sticky-backed) | 1 roll each |
+| PVC pipe ½" (21.5 mm outside) | ~2.5 m |
+| 1" strap kit | 1 |
 
-| ☐ | Part | How many | What it looks like |
+</details>
+
+<details markdown="1">
+<summary><b>Tools</b></summary>
+
+Soldering iron (cone tip) · hex keys **2.5 mm** + **6 mm** · **13 mm** wrench · hacksaw + file · small pliers ·
+long thin screwdriver or 8 mm rod · Phillips #1 screwdriver · PVC cutter · sandpaper · ruler in **mm** + marker ·
+super glue · masking tape.
+
+</details>
+
+<details markdown="1">
+<summary><b>PVC cut list</b></summary>
+
+| Piece | Length | How many | Step |
 |---|---|---|---|
-| ☐ | **6806** bearing (30 mm hole) | 4 | thin steel ring that spins |
-| ☐ | **6808** bearing (40 mm hole) | 2 | a slightly bigger ring |
-| ☐ | Brass heat-set **insert**, M3 | 26 | tiny brass barrel with ridges |
-| ☐ | **M3 × 8** screw (small, hex head) | 26 | small screw, 8 mm long |
-| ☐ | **Pipe screw**, #4 × 3/8" (pointed, cross head) | 48 | short pointy screw |
-| ☐ | **M8 × 100** bolt (long) | 1 | 10 cm long bolt |
-| ☐ | **M8 × 55** bolt (medium) | 1 | 5.5 cm long bolt |
-| ☐ | M8 **lock nut** (has a plastic ring inside) | 2 | |
-| ☐ | M8 **big washer**, **32 mm** wide (not 30!) | 1 | thin steel disc with a small hole |
-| ☐ | **Pin**, 4 mm × 25 mm | 1 | small steel rod |
-| ☐ | **PVC pipe**, 21.5 mm outside (½" pipe) | about 2.5 m | |
-| ☐ | 1" strap kit (straps, buckles, sliders) | 1 kit | |
+| Forearm pipe | **185 mm** | 3 | 1 |
+| Upper-arm pipe | **127 mm** | 3 | 1 |
+| Backbone left | **412 mm** | 1 | 2 |
+| Backbone right (runs up into the tower) | **583 mm** | 1 | 2 |
+| Short beam (left) | **102 mm** | 1 | 2 |
+| Diagonal (left) | **131 mm** | 1 | 2 |
 
-### Tools
+Mark, wrap tape at the mark, cut square, sand the burr, write the name on it. 1 mm short is fine; long is not.
 
-- soldering iron (any cheap one works; a cone-shaped tip is best)
-- hex keys (Allen keys): **2.5 mm** and **6 mm**
-- wrench or socket, **13 mm**
-- small cross-head screwdriver (Phillips #1)
-- saw for the pipe (a hacksaw, or a PVC pipe cutter, which is easier)
-- sandpaper
-- tape measure or ruler **with millimetres**, and a marker
-- super glue (a tiny drop)
+</details>
 
-### Skill 1: Cutting PVC pipe
+<details markdown="1">
+<summary><b>Skills</b>: inserts, bearings, pipe screws, hidden nuts, cutting a bolt</summary>
 
-1. Measure from the end of the pipe with the **millimetre** side of the ruler and make a mark.
-2. Wrap a piece of tape around the pipe right at the mark so you have a straight line to follow.
-3. Cut along the tape. Try to keep the cut square, not slanted.
-4. Sand off the rough bits (inside and outside the cut) so the pipe slides in smoothly.
-5. Write the name of the piece on it.
+- **Insert:** iron at ~225 °C, insert on its hole, let it sink in by itself until **flush**. Practise on a fit-test
+  piece.
+- **Bearing:** square over its pocket, press on the **outer ring** (thumbs, or a flat block of wood). Never hammer.
+- **Pipe screw:** pipe all the way in, screw until **snug**, then stop (more strips the pipe). 2 per pipe end.
+- **Hidden nut** ⚠: drop it into its six-sided pocket **before** the next part covers it; tape over it. The pocket
+  stops it turning, so you only turn the bolt.
+- **Cutting a bolt:** run a nut past the mark, saw, file the end, unscrew the nut (it cleans the thread).
 
-Being off by 1 mm is fine. If you're in between, cut a little short rather than long.
+</details>
 
-You'll cut 12 pieces in total. Each step tells you which pieces to cut, right when you need them. Here's the full list
-in case you'd rather cut them all at once:
+<details markdown="1">
+<summary><b>Fit test first</b></summary>
 
-| Piece | Length | How many | Used in |
-|---|---|---|---|
-| Forearm pipe | **185 mm** (7.28 in) | 3 | step 1 |
-| Upper-arm pipe | **127 mm** (5.00 in) | 3 | step 1 |
-| Backbone | **412 mm** (16.22 in) | 2 | step 2 |
-| Short beam | **102 mm** (4.02 in) | 2 | step 2 |
-| Diagonal | **131 mm** (5.16 in) | 2 | step 2 |
+A 6806 should press into the test pocket with firm thumb pressure and stay; a 608 the same in a SCARA tray. PVC should
+slide into the test hole snug, no wobble. If not, fix the printer settings before printing big parts.
 
-That's about 2.2 m of pipe, so 2.5–3 m gives you room for a mistake.
-
-### Skill 2: Melting in a brass insert *(grown-up helps)*
-
-The printed plastic is too soft to hold a screw thread, so you melt a brass insert into it first.
-
-1. Heat the soldering iron to about **225 °C**.
-2. Set the insert on top of its hole, narrow end down.
-3. Touch the hot tip into the insert and let it sink in **slowly** by itself. Don't push hard.
-4. Stop when the top of the insert is **flush** (level) with the plastic. Not deeper.
-5. Pull the iron straight up. Let it cool for a minute before you touch it.
-
-Practice on a fit-test piece first!
-
-### Skill 3: Pressing in a bearing
-
-1. Line the bearing up **square** over its pocket.
-2. Press it in with your thumbs, pushing on the **outer ring**. If it's tight, put a flat piece of wood on top and
-   push with the palm of your hand.
-3. It's in when it's flat and doesn't stick up anywhere.
-
-Never hit a bearing with a hammer. Never push on the inner ring when you're pressing the outer ring in.
-
-### Skill 4: Driving a pipe screw
-
-1. Push the pipe all the way into its socket.
-2. Put a pipe screw in the small hole and turn it with the screwdriver, so it cuts its own path into the pipe.
-3. **Stop as soon as it's snug.** If you keep going, it strips the pipe and won't hold.
-
-Every pipe end that goes into a socket gets **2 pipe screws**.
-
-### First: the fit test
-
-Before printing the big parts, check the two fit-test pieces:
-
-- A **6806 bearing** should press into the test pocket with firm thumb pressure, and stay in.
-- A piece of **PVC pipe** should slide into the test hole snugly, with no wobble.
-
-If either one is too loose or too tight, stop and fix the printer settings before you print the big parts.
+</details>
 
 ---
 
@@ -158,31 +131,23 @@ If either one is too loose or too tight, stop and fix the printer settings befor
 
 ![Elbow assembly animation](images/assembly/step1-elbow.gif)
 
-**You need:** parts 01–06, 2 × 6806 bearings, 18 inserts, 18 M3 × 8 screws, 18 pipe screws, the 4 mm pin.
+**Parts:** 01–06, 2 × 6806, 18 inserts, 18 M3 × 8, 18 pipe screws, 4 mm pin · **Cut:** 3 × 185 mm, 3 × 127 mm
 
-**Cut now:** 3 × **forearm pipe, 185 mm**, and 3 × **upper-arm pipe, 127 mm**.
+<details markdown="1">
+<summary>Details</summary>
 
-1. Lay out the **upper-arm elbow piece (01)**.
-2. Melt **6 inserts** into the holes around each round bearing hole, on both sides (12 in total). *(Skill 2)*
-3. Press a **6806 bearing** into each round hole, from the inside. *(Skill 3)*
-4. Slide the **forearm elbow piece (02)** in between the two sides of 01, so its round hubs line up with the
-   bearings.
-5. Melt **3 inserts** into each forearm hub (6 in total).
-6. From the outside, push an **axle (03)** through each bearing until it sits in the hub.
-7. Screw each axle down with **3 M3 × 8 screws** (2.5 mm hex key). Snug, not super tight.
-8. Put a **round cover (04)** on each side.
-9. Screw each cover down with **6 M3 × 8 screws**.
-10. Push the 3 **forearm pipes (185 mm)** into the bottom of the elbow. Drive 2 pipe screws into each. *(Skill 4)*
-    The pipes lean in a little toward the wrist. That's on purpose.
-11. Slide the **wrist ring (05)** onto the other ends of the forearm pipes. Drive 2 pipe screws into each.
-12. Put the **wrist cuff (06)** on the wrist ring, line up the little hinge bumps, and push the **4 mm pin**
-    through them. Add a tiny drop of super glue at one end so the pin can't slide out.
-13. Push the 3 **upper-arm pipes (127 mm)** into the top of the elbow. Drive 2 pipe screws into each.
+1. 12 inserts into 01 (6 around each bearing hole, both sides); a 6806 into each round hole from the inside.
+2. Slide 02 between the sides of 01; 3 inserts into each hub.
+3. An axle (03) through each bearing into the hub; 3 × M3 × 8 each, snug.
+4. A cover (04) each side, 6 × M3 × 8 each.
+5. Forearm pipes into the bottom (they lean in toward the wrist on purpose), wrist ring on their ends, cuff on with the
+   4 mm pin (drop of glue at one end).
+6. Upper-arm pipes into the top. 2 pipe screws per pipe end.
 
-**✔ Check:** Bend the elbow. It should swing smoothly from straight to a deep bend (135°) and stop by itself at
-both ends. Nothing should scrape.
+**Check:** bends smoothly from straight to 135° and stops at both ends. The cuff's latch isn't designed yet: hold it
+with a strap.
 
-**Note:** The wrist cuff's latch isn't finished yet. For now, hold the cuff closed with a strap.
+</details>
 
 ---
 
@@ -190,112 +155,200 @@ both ends. Nothing should scrape.
 
 ![Back frame assembly animation](images/assembly/step2-frame.gif)
 
-**You need:** bottom node L + R, splice plate, middle node, top node, both shoulder blocks, 8 inserts, 8 M3 × 8
-screws, 24 pipe screws.
+**Parts:** bottom node L + R, splice plate, middle node, top node, left shoulder block, 8 inserts, 8 M3 × 8, ~15 pipe
+screws, foam + hook-and-loop · **Cut:** 412, 583, 102, 131 mm
 
-**Cut now:** 2 × **backbone, 412 mm**, 2 × **short beam, 102 mm**, 2 × **diagonal, 131 mm**.
+<details markdown="1">
+<summary>Details</summary>
 
-1. Take the **right half** of the bottom node.
-2. Put the **left half** next to it.
-3. Melt **4 inserts** into each half (8 in total).
-4. Lay the **splice plate** over the joint, so it wraps the back, top and bottom.
-5. Screw it together with **8 M3 × 8 screws**.
-6. Push the 2 **backbones (412 mm)** into the sockets on top of the bottom node. 2 pipe screws each.
-7. Slide the **middle node** down over both backbones to its spot. 1 pipe screw per pipe.
-8. Push the **top node** onto the top ends of the backbones. 1 pipe screw per pipe.
-9. Push the **short beams (102 mm)** into the sides of the top node, and the **diagonals (131 mm)** into the
-   sides of the middle node. 2 pipe screws each.
-10. Push the **shoulder blocks** onto the outer ends of the beams and diagonals, left and right. 2 pipe screws per
-    pipe end.
+- The **right backbone (583)** is the long one: it runs up through the top node into the shoulder tower.
+- The left shoulder block holds the battery later; the right side has no block (the tower takes its place).
+- Back pads: 6 pieces of foam 60 mm wide, as tall as each node, on the **body side**, one each side of the spine.
 
-**✔ Check:** Lift the frame by the top and give it a shake. It should feel stiff, with no loose pipes.
+**Check:** lift it by the top and shake: stiff, no loose pipes.
+
+</details>
 
 ---
 
-## 3. Build the shoulder
+## 3. Put on the shoulder tower
 
-![Shoulder assembly animation](images/assembly/step3-shoulder.gif)
+![Shoulder tower animation](images/assembly/step3-tower.gif)
 
-**You need:** the frame from step 2, yoke, abduction sleeve, flexion sleeve, arm link, 2 × 6806 bearings,
-2 × 6808 bearings, M8 × 100 bolt, M8 × 55 bolt, 2 lock nuts, the big washer (32 mm).
+**Parts:** shoulder tower, 4 inserts, 4 M3 × 8, 2 pipe screws, **2 M6 nuts**
 
-**Part A: the "lift sideways" hinge** (on the right shoulder block)
+> ⚠ **Nuts first.** Before the tower goes on, put both M6 nuts (shoulder-rest thumb screw, gas strut) into their
+> pockets from **inside** the tower, and tape them.
 
-1. Press a **6806 bearing** into the front pocket and another into the back pocket of the **right shoulder block**.
-2. Push the **abduction sleeve** (short tube) through both bearings. Its back end should be **flush** (level)
-   with the back bearing. Run a fingernail across: it shouldn't catch.
-3. Hold the round end of the **yoke** against the front bearing.
-4. Push the **long bolt (M8 × 100)** through the yoke, the sleeve, and out the back.
-5. Put the **big washer (32 mm)** on the bolt behind the block. It must rest on the bearing's **inner ring** and
-   the sleeve end. If it slides into the bearing hole, it's the wrong washer: a 30 mm washer is exactly the size
-   of the hole and falls in. Use the 32 mm one.
-6. Screw on a **lock nut**. Hold the bolt with the 6 mm hex key and tighten the nut with the 13 mm wrench until it's
-   firm.
+<details markdown="1">
+<summary>Details</summary>
 
-**✔ Check:** The yoke swings up and down smoothly, and doesn't wiggle front-to-back.
+- Inserts go into the **thin right end** of the top node, 2 front, 2 back.
+- The tower slides **straight down** over the right backbone until its sides cover the node end down to its bottom
+  edge. The outsides should be flush.
 
-**Part B: the "swing forward" hinge** (at the end of the yoke)
+**Check:** the tower doesn't rock; the seam to the node is a thin line.
 
-7. Press a **6808 bearing** (the bigger one) into each side of the round end of the yoke.
-8. Push the **flexion sleeve** (wide ring) through both bearings.
-9. Drop the second **lock nut** into the 6-sided pocket in the spoked side of the **arm link**. It fits only one
-   way and can't turn.
-10. Slide the arm link's two sides over the round end of the yoke.
-11. Push the **medium bolt (M8 × 55)** in from the other side and tighten it into the nut with the 6 mm hex key.
-
-**✔ Check:** The arm link swings forward and back smoothly. There's a small gap (about 2 mm, the thickness of 2
-coins) between the link and the yoke on both sides.
-
-> **Heads up:** a stronger version of the yoke and shoulder blocks is coming (see
-> [the extension notes](extensions/shoulder-girdle-dof.md)). If you printed the new version, the steps are the same.
+</details>
 
 ---
 
-## 4. Join the arm to the shoulder
+## 4. Build the lift
 
-![Joining the arm animation](images/assembly/step4-join.gif)
+![Lift animation](images/assembly/step4-lift.gif)
 
-**You need:** the elbow from step 1, the frame + shoulder from step 3, 6 pipe screws. No cutting.
+![Gas strut close-up: eyelets into the forks, thumb screws in](images/assembly/step4b-strut.gif)
 
-1. Push the top ends of the 3 **upper-arm pipes** into the 3 holes in the bottom of the **arm link**, all the way
-   in.
-2. Drive **2 pipe screws** into each pipe.
+**Parts:** 2 lift links, carriage, 8 × 608, 4 × M8 × 55, 5 lock nuts, gas strut, 2 M6 thumb screws, 1 M6 nut
 
-**✔ Check:** Move the arm around slowly:
+> ⚠ **Nuts first** in the carriage before it goes on: one lock nut **down the round hole in its top** (for the
+> SCARA in step 5) and an **M6 nut** in the pocket behind the round ear (for the strut).
 
-- lift it out to the side: it should go from about 20° to 60°;
-- swing it forward and up: almost straight up (120°), and a little backward;
-- bend the elbow: straight to 135°.
+<details markdown="1">
+<summary>Details</summary>
 
-Nothing should rub or get stuck.
+- Press 2 bearings into each end of both links **before** they go in.
+- The links drop into the tower's fork **from above (upper link) and below (lower link)**, never sideways through the
+  plates.
+- Tower pivots: bolt heads at the **front**, lock nuts at the back.
+- The carriage comes **up from below** onto the link ends. Its pivot bolts go in from the **back**, head first down the
+  round tunnels (the tunnels are wider than the head); the 6 mm key reaches the head down the tunnel. Lock nuts at the
+  front.
+- **Gas strut:** squeeze it a little, drop each flat eyelet into the open side of its ear's slot (a fork) and let go:
+  the strut pushes the eyelets home into the round end of the slots. Then an M6 thumb screw through each fork and
+  eyelet into the hidden nut, hand tight. The screw clamps the fork, not the eyelet, so the strut still swings. Body
+  end on the tower.
 
----
+**Check:** the carriage moves smoothly ~6 cm up and ~2 cm down; the strut holds it near the middle.
 
-## 5. Add the straps
-
-![Straps animation](images/assembly/step5-harness.gif)
-
-**You need:** the 1" strap kit (straps, 2 buckles, sliders).
-
-1. **Shoulder straps (2):** tie each strap to a tab on the top node. Bring it over your shoulder, down your chest,
-   under your arm, and back to the tab on the bottom node on the same side. Put a slider on it so you can adjust the
-   length.
-2. **Chest strap:** connect the two shoulder straps across your chest, with a buckle in the middle.
-3. **Waist strap:** thread it through the two side tabs on the bottom node, and buckle it in front.
-4. *Optional:* slide soft pads (from a backpack or car seat) onto the shoulder straps and waist strap.
+</details>
 
 ---
 
-## 6. Try it on
+## 5. Build the SCARA arms
 
-Get a helper for the first time.
+![SCARA animation](images/assembly/step5-scara.gif)
 
-1. Put it on like a backpack: shoulder straps first, then the waist strap, then the chest strap.
-2. Tighten the **waist strap** most. The weight should sit on your **hips**, not hang from your shoulders.
-3. Put your forearm through the **wrist ring** and close the **wrist cuff**. The arm link should sit at the back and
-   outside of your upper arm.
-4. Move **slowly**: lift your arm, swing it forward, bend your elbow. If something presses or pinches, stop and note
-   where. Small changes in strap length usually fix it.
-5. After the first time you wear it, check that the two M8 nuts and all the pipe screws are still tight.
+**Parts:** link 1 + link 2 (tray + lid each), end plate, 4 pulleys, 8 thick + 5 thin spacers, 2 belts, 8 × 608,
+8 inserts, 8 M3 × 12, 2 × M8 × 55, **M8 × 100 cut to 75 mm**, 3 lock nuts
+
+> ⚠ **Nut first** in the end plate: a lock nut in the pocket on its **top**, before it goes under link 2.
+> ⚠ **Cut** one M8 × 100 to 75 mm (Skills).
+
+<details markdown="1">
+<summary>Details</summary>
+
+Build each link on the table, then hang it.
+
+1. Tray: 2 bearings, 4 inserts; on each bearing a thick spacer, a pulley, a thick spacer; belt around both pulleys.
+2. Lid (with its 2 bearings pressed in) on: link 1's lid goes on **top**, link 2's **underneath**. 4 × M3 × 12.
+3. **S0:** link 1 under the carriage, thin spacer between; M8 × 55 **up from below** into the waiting nut.
+4. **Elbow:** link 2 under link 1, thin spacer between; thin spacer + **75 mm bolt down from the top**, thin spacer +
+   lock nut underneath. Tighten until the pulleys turn **with** the bolt.
+5. **E:** end plate under link 2, thin spacer between; thin spacer + M8 × 55 **down from the top** into the nut.
+
+Line-up trick: before each bolt, push a long thin screwdriver through bearings, spacers and pulley; push the bolt in
+as you pull the screwdriver out.
+
+**Check:** the end plate slides smoothly forward/back/in/out and its round housing always **points the same way**.
+
+</details>
+
+---
+
+## 6. Build the shoulder hinge
+
+![Shoulder hinge animation](images/assembly/step6-hinge.gif)
+
+**Parts:** yoke, abduction sleeve, flexion sleeve, arm link, 2 × 6806, 2 × 6808, M8 × 100, M8 × 55, 2 lock nuts,
+32 mm washer
+
+> ⚠ **Nut first:** lock nut into the hex pocket on the spoked side of the arm link, before it goes over the yoke.
+
+<details markdown="1">
+<summary>Details</summary>
+
+- Sleeve end must be **flush** with the back bearing (fingernail doesn't catch).
+- The **32 mm** washer rests on the bearing's inner ring. A 30 mm washer falls into the bearing hole: wrong washer.
+- Hold the bolt with the 6 mm key, tighten the nut with the 13 mm wrench until firm.
+
+**Check:** the yoke swings up/down with no front-back wiggle; the arm link swings forward/back with a ~2 mm gap each
+side.
+
+</details>
+
+---
+
+## 7. Build the shoulder rest
+
+![Shoulder rest animation](images/assembly/step7-rest.gif)
+
+**Parts:** bracket, root arm, blades 1–3, 4 clevis pins + R-clips, thumb screw, buckle, foam, hook-and-loop
+
+> ⚠ **Pin each piece as soon as it's on**, root arm first, then blade 1, 2, 3: the pin + R-clip holds it, so nothing
+> hangs loose.
+
+<details markdown="1">
+<summary>Details</summary>
+
+- Bracket over the round boss on the tower; thumb screw through the curved slot into the M6 nut from step 3. Leave it
+  loose.
+- Each piece's middle knuckle goes between the two knuckles of the piece before it.
+- Foam pads a little smaller than each blade, on with hook-and-loop (they come off for washing).
+- Shoulder strap through the slot at the front of blade 3, buckle on.
+
+**Check:** the chain folds freely; loose, the bracket turns ~15° each way; tight, it stays.
+
+</details>
+
+---
+
+## 8. Join the arm to the shoulder
+
+![Joining the arm animation](images/assembly/step8-join.gif)
+
+**Parts:** the elbow from step 1, 6 pipe screws
+
+<details markdown="1">
+<summary>Details</summary>
+
+Upper-arm pipes all the way into the arm link, 2 pipe screws each.
+
+**Check** (slowly): shrug (carriage rides up ~6 cm); reach and squeeze (housing keeps pointing forward); arm out to
+60–90°; swing forward and a little back; elbow straight to 135°. Nothing rubs.
+
+</details>
+
+---
+
+## 9. Add the straps
+
+**Parts:** 1" strap kit
+
+<details markdown="1">
+<summary>Details</summary>
+
+- **Shoulder:** from the buckle on the shoulder rest, down the chest, under the arm, back to the bottom-node tab
+  (with a slider). Left side: tie to the top-node tab.
+- **Chest:** across, buckle in the middle. **Waist:** through the bottom node's side tabs, buckle in front.
+- **Arm:** **two** upper-arm straps (one a third of the way down, one just above the elbow) + the wrist cuff. With only
+  one, the exo twists around your arm.
+
+</details>
+
+---
+
+## 10. Try it on
+
+<details markdown="1">
+<summary>Details</summary>
+
+1. With a helper: shoulder strap, then waist, then chest.
+2. Waist strap tightest: the weight sits on your **hips**.
+3. Loosen the thumb screw, let the rest lie flat on your shoulder, tighten.
+4. Close the cuff and both arm straps; move slowly through every motion. Note any pinch.
+5. After the first wear, re-check every M8 nut, the thumb screw and the pipe screws.
+
+</details>
 
 You built an exo!

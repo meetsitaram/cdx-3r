@@ -56,7 +56,14 @@ P = dict(
                                     # link (head 142.5..167.5, built in shoulder.py); higher reaches the armpit fold
     fa_far=200.0,                   # wrist ring 200..225: ~16 mm short of the wrist so it bends freely
     open_deg=130.0,                 # far rings' arm opening, centred anterior (+Y)
-    pipe_angles=(225, 270, 315),    # deg from lateral +X toward anterior +Y: three on the back
+    pipe_angles=(225, 270, 315),    # deg from lateral +X toward anterior +Y: three on the back (forearm)
+    # upper arm: two pipes, back + back-lateral only. The back-medial one (225) and the ring around it went
+    # into the ribs with the arm hanging (8..15 mm overlap at 0..5 deg abduction, body-scan check)
+    ua_pipe_angles=(270, 315),
+    ua_near_gap=(118.0, 236.0),     # (centre, width) of the UA near ring's opening: covers 236..360 (back + lateral)
+    ua_ring_taper=25.0,             # the ring's medial end sweeps down onto the shell top in a quarter-circle of this
+                                    # radius (= ring height): tangent to the shell top at 236 deg, full height just
+                                    # before the back pipe's boss (~259 deg). No step, no square end
     lug_w=26.0, lug_t=8.0, hub_r=30.0,
     elbow_half=50.0,                # elbow_width/2 + padding + air: nothing inside this
     edge_fillet=2.0,
@@ -291,18 +298,18 @@ def ring(p, d, zc, lines, flange=None, open_deg=None, gap_deg=90):
         tilt = math.hypot(ez[0], ez[1]) / abs(ez[2])
         parts += p.cyl('z', c, P['pipe_od'] / 2 + P['wall'] + h / 2 * tilt, h, name='pipe boss')
     if flange:
-        parts += p.cring('z', [0, 0, zc], flange[0], flange[1], h, 90, open_deg, name='shell flange')
+        parts += p.cring('z', [0, 0, zc], flange[0], flange[1], h, gap_deg, open_deg, name='shell flange')
     body = p.join(parts)[0]
     # rounded now; the pipe holes are drilled last of all (drill_all), after every join and
     # fillet, so nothing added later can put a fin into a leaning hole
     return fillet_vertical(p, body, P['edge_fillet'])
 
 
-def pipe_step():
+def pipe_step(angles=None):
     """The pipes are evenly spaced about the arm axis, so one pipe's features are modelled and
     circular-patterned about Z for the rest (the lean of the forearm pipes is radial, so it
     patterns too)."""
-    a = P['pipe_angles']
+    a = angles or P['pipe_angles']
     step = a[1] - a[0] if len(a) > 1 else 0
     if any(abs((a[i + 1] - a[i]) - step) > 1e-6 for i in range(len(a) - 1)):
         raise ValueError('pipe_angles must be evenly spaced to be patterned')
@@ -313,7 +320,7 @@ def drill(p, body, lines, zc):
     """Pipe holes along each pipe's own line through the ring at height zc: one hole cut for the
     first pipe, circular-patterned to the others. The cutter overshoots each face by 3 mm: with
     only 1 mm a leaning hole left a 0.04 mm skin at the face."""
-    n, step = pipe_step()
+    n, step = pipe_step(getattr(p, 'angles', None))
     ez = along(lines[0])[2]
     seed = p.hole(along(lines[0]), point_at(lines[0], zc), P['pipe_od'] + P['pipe_clear'],
                   P['ring_h'] / abs(ez[2]) + 6, body, name='pipe hole')
@@ -322,34 +329,37 @@ def drill(p, body, lines, zc):
     return body
 
 
-def pipe(p, line, z0, z1, name='PVC pipe 21.5/15.5', copies=1):
+def pipe(p, line, z0, z1, name='PVC pipe 21.5/15.5', copies=1, angles=None):
     """One pipe along line from z0 to z1, circular-patterned to `copies` pipes."""
     a, b = point_at(line, z0), point_at(line, z1)
     body = p.ann(along(line), fx.mul(fx.add(a, b), 0.5), P['pipe_od'] / 2, P['pipe_id'] / 2, fx.norm(fx.sub(b, a)))[0]
     body.name = name
     if copies > 1:
-        f = p.circular([body], 'z', copies, pipe_step()[1], name='pipes')
+        f = p.circular([body], 'z', copies, pipe_step(angles)[1], name='pipes')
         for i in range(f.bodies.count):
             f.bodies.item(i).name = f'{name} ({i + 1})'
     return body
 
 
 def unit(parent, name, d, sign, far, color, flange, far_open=None, d_far=None, far_gap=90, pipe_end=None,
-         far_ring=True):
+         far_ring=True, angles=None, near_gap=None):
     """flange: (r0, r1) of the near ring's posterior flange, matching the elbow shell.
     d_far: a smaller far-ring bore (the wrist); the pipes then lean inward."""
     p = Part(parent, name, color=color)
     h = P['ring_h']
     zn, zf = sign * (P['ring_off'] + h / 2), sign * (far + h / 2)
-    lines, lean = pipe_lines(d, d_far or d, zn, zf, P['pipe_angles'])
-    near = ring(p, d, zn, lines, flange, P['near_open'])
+    angles = angles or P['pipe_angles']
+    p.angles = angles
+    ng = near_gap or (90, P['near_open'])
+    lines, lean = pipe_lines(d, d_far or d, zn, zf, angles)
+    near = ring(p, d, zn, lines, flange, ng[1], ng[0])
     near.name = 'near ring (print flat)'
     if far_ring:
         ring(p, d_far or d, zf, lines, open_deg=far_open, gap_deg=far_gap).name = 'far ring (print flat)'
     # a leaning pipe's square-cut end dips by r*tan(lean) on one side: start it that much higher
     # so the end rests on the shell edge instead of cutting into it
     dip = P['pipe_od'] / 2 * math.tan(lean) + (0.1 if lean else 0)
-    pipe(p, lines[0], sign * (P['ring_off'] + dip), sign * (pipe_end or far + h), copies=len(lines))
+    pipe(p, lines[0], sign * (P['ring_off'] + dip), sign * (pipe_end or far + h), copies=len(lines), angles=angles)
     p.lean = lean
     p.lines, p.ring_z = lines, (zn, zf)
     return p
@@ -362,7 +372,7 @@ def drill_all(p):
     self-tapping screws through the boss bite straight into the PVC (no insert), so the pipe
     can't slide, turn or rock in its ring. Each is one seed + a circular pattern."""
     zn, zf = p.ring_z
-    n, step = pipe_step()
+    n, step = pipe_step(p.angles)
     line = p.lines[0]
     for key, zc in (('near ring', zn), ('far ring', zf)):
         body = next((b for b in p.comp.bRepBodies if key in b.name), None)
@@ -646,7 +656,8 @@ def variant(parent, key, offset):
     fa = unit(g, 'Forearm unit', P['fa_d'], -1, P['fa_far'], FA_COLOR, (band_out(P['fa_d']) - 1, fx1),
               P['fa_far_open'] if P['door'] else None, P['wrist_d'])
     ua = unit(g, 'Upper-arm unit', P['ua_d'], 1, P['ua_far'], UA_COLOR, (band_out(P['ua_d']) - 1, ux1),
-              P['ua_far_gap'][1], far_gap=P['ua_far_gap'][0], pipe_end=P['ua_pipe_top'], far_ring=P['ua_mid'])
+              P['ua_far_gap'][1], far_gap=P['ua_far_gap'][0], pipe_end=P['ua_pipe_top'], far_ring=P['ua_mid'],
+              angles=P['ua_pipe_angles'], near_gap=P['ua_near_gap'])
     hw = Part(g, 'Hardware (6806 bearings, covers)', color=HW_COLOR)
 
     # forearm: near ring + shell + hubs + hyperextension ledge, one part
@@ -691,6 +702,16 @@ def variant(parent, key, offset):
         # retaining lip: touches only the outer ring's face (6806 outer-ring land ~Ø39.2 up), not the seal
         ubody = cut_axis(ua, ubody, P['axle']['lip_d'], s * (ux0 + w + 0.1), s * (ux1 + 1))
     ubody = fillet_vertical(ua, ubody, P['edge_fillet'])
+    # medial end of the near ring: a circular sweep from the shell top (tangent) up to the ring top at the back
+    # pipe's boss. A cylinder cutter with a radial axis at the band's start angle, centred at the ring top: its
+    # bottom touches the shell top (tangent) and its side is vertical at full height, R along the band.
+    R = P['ua_ring_taper']
+    a0 = math.radians(P['ua_near_gap'][0] + P['ua_near_gap'][1] / 2)       # band start angle (241 deg)
+    rad = [math.cos(a0), math.sin(a0), 0.0]
+    rm = (P['ua_d'] / 2 + ux1) / 2
+    cutter = ua.cyl(([0.0, 0.0, 1.0], fx.cross(rad, [0.0, 0.0, 1.0]), rad), [rm * rad[0], rm * rad[1], off + P['ring_h']], R,
+                    ux1 - P['ua_d'] / 2 + 8, name='ring end sweep')
+    ubody = ua.cut([ubody], cutter)[0]
     ubody.name = 'upper arm: near ring + elbow shell + bearing housings (print ring down)'
 
     # --- lateral bearing set, modelled once; the medial set is a mirror of all of it -------------

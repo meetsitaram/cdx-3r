@@ -51,6 +51,12 @@ S = dict(
     block=(44.0, 150.0, 80.0),                             # X, Y, Z
     yoke_t=24.0,                                           # yoke band radial thickness
     yoke_gap=1.0,                                          # yoke root face to housing face
+    # shoulder girdle (girdle_b.py): the right backbone runs on up through the top node into the shoulder tower,
+    # whose saddle slides down over the top node's right end (front + back cheeks to the node's bottom, end wall)
+    mast_top=1588.0,                                       # tower top (= the lift fork tops); the right backbone ends 8 mm below (6 mm cap)
+    saddle=dict(bolts_z=(-30.0, 0.0), z0=-45.0, top_z0=22.0,      # node zone the saddle covers; top plate right of the tab
+                cheek=4.0, top=6.0, end=10.0, fit=0.3,               # the node is cut down by these (+ fit): flush outside
+                cbore=2.5),                                          # 4 x M3 x 8 into ruthex inserts in the tenon (2 per face)
 )
 HWLOG = []
 FRAME, HW, PRINT, REF = '#5b6770', '#c9d2d9', '#647684', '#e8c9a8'
@@ -192,6 +198,23 @@ def pipe_screws(p, body, start, d, ts, out_dir, wall):
                     op=CUT, targets=[body])
 
 
+def hw_pipe_screws(hw, start, d, ts, out_dir, wall):
+    """The #4 x 3/8" pan-head screws that pipe_screws() makes holes for: head on the counterbore floor (thick wall)
+    or on the outer face (thin wall), shank into the pipe."""
+    d = unit(d)
+    o = unit(sub(out_dir, mul(d, dot(out_dir, d))))
+    seat = S['pipe_od'] / 2 + S['m3']['under_head']
+    r_head = seat if wall > seat - (S['pipe_od'] / 2 - 1) else S['pipe_od'] / 2 - 1 + wall
+    out = []
+    for t in ts:
+        c = add(add(start, mul(d, t)), mul(o, r_head))
+        b = hw.prism(c, frame_of(o), 0, 2.0, circle(2.8), name='pan head').bodies.item(0)
+        hw.prism(c, frame_of(o), -S['pipe_screw']['len'] + 2.5, 0.1, circle(1.45), name='shank', op=JOIN, targets=[b])
+        b.name = '#4 x 3/8" pan-head self-tapping screw (buy)'
+        out.append(b)
+    return out
+
+
 def hw_bearing(p, c, frame, name='6806-2RS (buy)', brg=None):
     bi, bo, bw = brg or S['bearing']
     b = p.ann(frame, c, bo / 2, bi / 2, bw, name=name)[0]
@@ -277,14 +300,176 @@ def round_edges(p, body, r=2.0, r_hole=30.0, seam_z=None, min_len=3.0):
             continue
         if seam_z is not None:
             a, b = e.startVertex.geometry, e.endVertex.geometry
-            if abs(a.z * 10 - seam_z) < 0.05 and abs(b.z * 10 - seam_z) < 0.05:
+            if any(abs(a.z * 10 - s) < 0.05 and abs(b.z * 10 - s) < 0.05
+                   for s in (seam_z if isinstance(seam_z, (list, tuple)) else (seam_z,))):
                 continue
         edges.append(e)
     return cb._fillet(p, edges, r)
 
 
+def frame_points():
+    """Right-side beam and diagonal axes (backbone -> mount block medial face). Only the LEFT copies are built now:
+    the shoulder girdle replaced the right mount block, so the right beam and diagonal are gone."""
+    g = derived()
+    xf, zr = D['xf'], D['zb'][1]
+    blk = g['block']
+    zin = blk[2] - S['block'][2] / 2                         # block medial face
+    diag = ([xf, D['y_mid'], zr], [blk[0], GH[1] - 50, zin])
+    beam = ([xf, D['y_top'], zr], [blk[0], GH[1] + 50, zin])
+    return g, diag, beam
+
+
+def mz(p):
+    """Mirror a point across the body midline (right -> left)."""
+    return [p[0], p[1], 2 * MID_Z - p[2]]
+
+
+def socket_bottom(a, b):
+    """Where a beam/diagonal pipe ends inside its node socket (socket_boss with depth = node_socket_depth)."""
+    d = sub(b, a)
+    return add(a, mul(unit(d), clear_start(d)))
+
+
+def left_socket(p, axis, h):
+    """Node socket boss for the LEFT copy of a right-side pipe axis, on the node's combined body. The boss starts
+    inside the left backbone bore, so the bore (and its pipe screw) is cut again afterwards."""
+    a, b = mz(axis[0]), mz(axis[1])
+    d = sub(b, a)
+    socket_boss(p, a, d, 8, clear_start(d) + S['node_socket_depth'], p.comp.bRepBodies.item(0),
+                depth=S['node_socket_depth'])
+    body = p.comp.bRepBodies.item(0)
+    p.prism(a, fx.AX['y'], -h, h, circle(S['pipe_bore'] / 2), name='backbone bore (left)', op=CUT, targets=[body])
+    pipe_screws(p, body, a, [0, 1, 0], (0,), [-1, 0, 0], S['node_depth'] / 2)
+
+
+def build_mid_node(frame):
+    """Mid node: backbones through, LEFT diagonal socket only."""
+    _, diag, _ = frame_points()
+    xf, zr, y_mid, hm = D['xf'], D['zb'][1], D['y_mid'], S['node_h'][1]
+    p, body = node(frame, 'Mid node', y_mid, hm, MID_Z, MID_Z + 90)
+    p.prism([xf, y_mid, zr], fx.AX['y'], -hm, hm, circle(S['pipe_bore'] / 2), name='backbone bore', op=CUT,
+            targets=[body])
+    pipe_screws(p, body, [xf, y_mid, zr], [0, 1, 0], (0,), [-1, 0, 0], S['node_depth'] / 2)
+    round_edges(p, p.comp.bRepBodies.item(0), seam_z=MID_Z)
+    mirror_bodies(p, [p.comp.bRepBodies.item(0)], True, 'mirror to left')
+    left_socket(p, diag, hm)
+    round_edges(p, p.comp.bRepBodies.item(0))
+    p.comp.bRepBodies.item(0).name = 'Mid node'
+    return p
+
+
+def build_top_node(frame):
+    """Top node: backbones through (the right one runs on up into the shoulder tower), LEFT beam socket only,
+    shoulder-strap (top) anchors. Its right end is a tenon: front, back and top cut down by the shoulder tower's
+    saddle (+ fit), so the saddle slides on flush with the node's faces; 2 bolt holes for the saddle."""
+    _, _, beam = frame_points()
+    xf, zr, y_top, ht = D['xf'], D['zb'][1], D['y_top'], S['node_h'][2]
+    dx = S['node_depth'] / 2
+    sd = S['saddle']
+    p, body = node(frame, 'Top node', y_top, ht, MID_Z, MID_Z + 90)
+    p.prism([xf, y_top, zr], fx.AX['y'], -ht, ht, circle(S['pipe_bore'] / 2), name='backbone bore', op=CUT,
+            targets=[body])
+    strap_tab(p, body, (y_top + ht / 2 - 2, MID_Z + 24), (1, 0), S['shoulder_tab'], 'shoulder strap anchor (top)')
+    round_edges(p, p.comp.bRepBodies.item(0), seam_z=MID_Z)
+    mirror_bodies(p, [p.comp.bRepBodies.item(0)], True, 'mirror to left')
+    left_socket(p, beam, ht)
+    round_edges(p, p.comp.bRepBodies.item(0))
+    body = p.comp.bRepBodies.item(0)
+    y0, y1, z1 = y_top - ht / 2, y_top + ht / 2, MID_Z + 90
+    xi = dx - sd['cheek'] - sd['fit']
+    for xa, xb in ((xf - dx - 1, xf - xi), (xf + xi, xf + dx + 1)):
+        p.prism([0, 0, 0], fx.AX['z'], sd['z0'] - sd['fit'], z1 + 1, rect(xa, xb, y0 - 1, y1 + 1), name='saddle tenon (face)',
+                op=CUT, targets=[body])
+    p.prism([0, 0, 0], fx.AX['z'], sd['top_z0'], z1 + 1, rect(xf - dx - 1, xf + dx + 1, y1 - sd['top'] - sd['fit'], y1 + 1),
+            name='saddle tenon (top)', op=CUT, targets=[body])
+    ins_d, ins_l = S['m3']['insert']
+    for z in sd['bolts_z']:                                  # ruthex M3 inserts from both tenon faces
+        for x0, x1 in ((xf - xi - 0.1, xf - xi + ins_l), (xf + xi - ins_l, xf + xi + 0.1)):
+            p.prism([0, y_top, z], fx.AX['x'], x0, x1, circle(ins_d / 2), name='saddle insert hole', op=CUT,
+                    targets=[p.comp.bRepBodies.item(0)])
+    p.comp.bRepBodies.item(0).name = 'Top node'
+    return p
+
+
+def build_mount_block(frame):
+    """LEFT abduction mount block only (it carries the battery). The right block held the old shoulder hinge;
+    built and mirrored as before, then the right body is removed."""
+    g, diag, beam = frame_points()
+    p = Part(frame, 'Abduction mount blocks', color=PRINT)
+    blk = g['block']; bx0 = blk[0]
+    bx, by, bz = S['block']
+    body = p.box(bx0 - bx / 2, bx0 + bx / 2, blk[1] - by / 2, blk[1] + by / 2, blk[2] - bz / 2, blk[2] + bz / 2,
+                 name='block')[0]
+    ax_c = [0, GH[1], GH[2]]
+    bi, bo, bwid = S['bearing']
+    p.prism(ax_c, fx.AX['x'], g['h0'], g['h1'], circle(S['housing_r']), name='housing', op=JOIN, targets=[body])
+    p.prism(ax_c, fx.AX['x'], bx0 - bx / 2 - 1, g['h1'] + 1, circle(bi / 2 + 2), name='axle bore', op=CUT, targets=[body])
+    for x0, x1 in ((g['h1'] - bwid, g['h1'] + 1), (bx0 - bx / 2 - 1, bx0 - bx / 2 + bwid)):
+        p.prism(ax_c, fx.AX['x'], x0, x1, circle(bo / 2 + S['bearing_clear']), name='bearing pocket', op=CUT,
+                targets=[body])
+    for a, b in (beam, diag):                                # pipe sockets into the block's medial face
+        d = unit(sub(b, a))
+        p.prism(b, frame_of(d), -15, S['socket_depth'], circle(S['pipe_bore'] / 2), name='pipe socket', op=CUT,
+                targets=[body])
+        pipe_screws(p, body, b, d, (8, 20), [-1, 0, 0], 12)
+    round_edges(p, p.comp.bRepBodies.item(0))
+    right = p.comp.bRepBodies.item(0)
+    mf = mirror_bodies(p, [right], False, 'mirror to left')
+    mf.bodies.item(0).name = 'Abduction mount block L'
+    p.comp.features.removeFeatures.add(next(b for b in p.comp.bRepBodies if b.name != 'Abduction mount block L'))
+    return p
+
+
+def build_pipes(frame):
+    """PVC pipes (buy): both backbones (the right one runs up through the top node into the shoulder tower), the
+    LEFT beam and the LEFT diagonal. Returns the part and the cut list (name, length)."""
+    _, diag, beam = frame_points()
+    xf, zr = D['xf'], D['zb'][1]
+    y_top, ht = D['y_top'], S['node_h'][2]
+    pipe_lo = D['y_bot'] + S['node_h'][0] / 2 - S['socket_depth']
+    pp = Part(frame, 'PVC pipes 21.5/15.5 (buy)', color='#e9eef2')
+    cut = []
+    def pipe(a, b, name):
+        for body in pp.pipe([a, b], S['pipe_od'] / 2, name=name):
+            body.name = 'PVC ' + name
+        cut.append((name, norm(sub(b, a))))
+    a, b = [xf, pipe_lo, zr], [xf, y_top + ht / 2 - 1, zr]           # left: ends 1 mm under the top node's top face
+    pipe(mz(a), mz(b), 'backbone L')
+    pipe(a, [xf, S['mast_top'] - 8, zr], 'backbone R (up into the shoulder tower)')
+    for key, (a, b) in (('beam L', beam), ('diagonal L', diag)):
+        d = unit(sub(b, a))
+        pipe(mz(socket_bottom(a, b)), mz(add(b, mul(d, S['socket_depth'] - 2))), key)
+    return pp, cut
+
+
+FRAME_PARTS = dict(mid=('Mid node', build_mid_node), top=('Top node', build_top_node),
+                   block=('Abduction mount blocks', build_mount_block), pipes=('PVC pipes', build_pipes))
+
+
+def rebuild_frame_part(which):
+    """Rebuild one frame component in the open design and keep everything else: 'mid', 'top', 'block', 'pipes'."""
+    fx.init()
+    top = next(o for o in fx.design.rootComponent.occurrences if o.component.name == TOP).component
+    frame = next(o for o in top.occurrences if o.component.name == 'Frame').component
+    name, fn = FRAME_PARTS[which]
+    for o in list(frame.occurrences):
+        if o.component.name.startswith(name):
+            fx.retire(o)
+    out = fn(frame)
+    p, cut = out if isinstance(out, tuple) else (out, None)
+    names = [b.name for b in p.comp.bRepBodies]
+    p.finish()
+    for b, n in zip(p.comp.bRepBodies, names):          # finish() renames bodies; keep the given names
+        b.name = n
+    res = {p.comp.name: [b.name for b in p.comp.bRepBodies]}
+    if cut:
+        res['cut_list_mm'] = [(k, round(v, 1)) for k, v in cut]
+    return res
+
+
 def build_frame(parent):
-    """Right halves only; every left side is a Fusion mirror feature of the right."""
+    """Right halves, mirrored to the left; the right beam, diagonal and mount block are left out (the shoulder
+    girdle replaced them)."""
     g = derived()
     xf, zb = D['xf'], D['zb']
     zr = zb[1]                                               # right backbone pipe
@@ -293,10 +478,6 @@ def build_frame(parent):
     bore = S['pipe_bore'] / 2
     frame = fx.group(parent, 'Frame')
     parts = {}
-    blk = g['block']; bx0 = blk[0]
-    zin = blk[2] - S['block'][2] / 2                         # block medial face
-    diag = ([xf, y_mid, zr], [bx0, GH[1] - 50, zin])
-    beam = ([xf, y_top, zr], [bx0, GH[1] + 50, zin])
 
     # ---- bottom node: backbone socket, shoulder-strap (bottom) + waist-strap anchors ----
     p, body = node(frame, 'Bottom node', y_bot, hb, MID_Z, MID_Z + 160)
@@ -370,63 +551,10 @@ def build_frame(parent):
                   % (sp['t'], sp['cb'], sp['t'] - sp['cb'], L4 - sp['t'] + sp['cb'])))
     HWLOG.append(('splice M3 x 8 (flanges)', L4, 'flange %.0f - %.0f = %.0f plastic, %.0f into the insert'
                   % (fl, sp['cb'], fl - sp['cb'], L4 - fl + sp['cb'])))
-    pipe_lo = top_y - S['socket_depth']
-
-    # ---- mid node: backbone through, diagonal socket ----
-    p, body = node(frame, 'Mid node', y_mid, hm, MID_Z, MID_Z + 90)
-    tb = clear_start(sub(diag[1], diag[0]))
-    diag_p0 = socket_boss(p, diag[0], sub(diag[1], diag[0]), 8, tb + S['node_socket_depth'], body, depth=S['node_socket_depth'])
-    p.prism([xf, y_mid, zr], fx.AX['y'], -hm, hm, circle(bore), name='backbone bore', op=CUT, targets=[body])
-    pipe_screws(p, body, [xf, y_mid, zr], [0, 1, 0], (0,), [-1, 0, 0], S['node_depth'] / 2)
-    round_edges(p, p.comp.bRepBodies.item(0), seam_z=MID_Z)
-    mirror_bodies(p, [p.comp.bRepBodies.item(0)], True, 'mirror to left')
-    parts['mid'] = p
-
-    # ---- top node: backbone through (stays continue up), upper-beam socket, shoulder-strap (top) anchor ----
-    p, body = node(frame, 'Top node', y_top, ht, MID_Z, MID_Z + 90)
-    tb = clear_start(sub(beam[1], beam[0]))
-    beam_p0 = socket_boss(p, beam[0], sub(beam[1], beam[0]), 8, tb + S['node_socket_depth'], body, depth=S['node_socket_depth'])
-    p.prism([xf, y_top, zr], fx.AX['y'], -ht, ht, circle(bore), name='backbone bore', op=CUT, targets=[body])
-    pipe_screws(p, body, [xf, y_top, zr], [0, 1, 0], (0,), [-1, 0, 0], S['node_depth'] / 2)
-    strap_tab(p, body, (y_top + ht / 2 - 2, MID_Z + 30), (1, 0), S['shoulder_tab'], 'shoulder strap anchor (top)')
-    round_edges(p, p.comp.bRepBodies.item(0), seam_z=MID_Z)
-    mirror_bodies(p, [p.comp.bRepBodies.item(0)], True, 'mirror to left')
-    parts['top'] = p
-
-    # ---- abduction mount block + bearing housing (axis X through GH); left = mirror ----
-    p = Part(frame, 'Abduction mount blocks', color=PRINT)
-    bx, by, bz = S['block']
-    body = p.box(bx0 - bx / 2, bx0 + bx / 2, blk[1] - by / 2, blk[1] + by / 2, blk[2] - bz / 2, blk[2] + bz / 2,
-                 name='block')[0]
-    ax_c = [0, GH[1], GH[2]]
-    bi, bo, bwid = S['bearing']
-    p.prism(ax_c, fx.AX['x'], g['h0'], g['h1'], circle(S['housing_r']), name='housing', op=JOIN, targets=[body])
-    p.prism(ax_c, fx.AX['x'], bx0 - bx / 2 - 1, g['h1'] + 1, circle(bi / 2 + 2), name='axle bore', op=CUT, targets=[body])
-    for x0, x1 in ((g['h1'] - bwid, g['h1'] + 1), (bx0 - bx / 2 - 1, bx0 - bx / 2 + bwid)):
-        p.prism(ax_c, fx.AX['x'], x0, x1, circle(bo / 2 + S['bearing_clear']), name='bearing pocket', op=CUT,
-                targets=[body])
-    ends = {}
-    for key, (a, b) in (('beam', beam), ('diag', diag)):   # pipe sockets into the block's medial face
-        d = unit(sub(b, a))
-        ends[key] = add(b, mul(d, S['socket_depth'] - 2))
-        p.prism(b, frame_of(d), -15, S['socket_depth'], circle(bore), name='pipe socket', op=CUT, targets=[body])  # starts
-        pipe_screws(p, body, b, d, (8, 20), [-1, 0, 0], 12)
-        # in the air: the pipe meets the face at an angle, its rim reaches the block before the socket axis does
-    round_edges(p, p.comp.bRepBodies.item(0))
-    p.comp.bRepBodies.item(0).name = 'Abduction mount block R'
-    mf = mirror_bodies(p, [p.comp.bRepBodies.item(0)], False, 'mirror to left')
-    mf.bodies.item(0).name = 'Abduction mount block L'
-    parts['block'] = p
-
-    # ---- PVC pipes (buy): right side modelled, left mirrored ----
-    pp = Part(frame, 'PVC pipes 21.5/15.5 (buy)', color='#e9eef2')
-    cut, right = [], []
-    a, b = [xf, pipe_lo, zr], [xf, y_top + ht / 2 - 1, zr]          # ends 1 mm under the top node's top face (no stays)
-    right += pp.pipe([a, b], S['pipe_od'] / 2, name='backbone'); cut.append(('backbone', norm(sub(b, a))))
-    for key, a in (('beam', beam_p0), ('diag', diag_p0)):
-        right += pp.pipe([a, ends[key]], S['pipe_od'] / 2, name=key); cut.append((key, norm(sub(ends[key], a))))
-    mirror_bodies(pp, right, False, 'mirror to left')
-    cut = [(k + ' x2', v) for k, v in cut]
+    parts['mid'] = build_mid_node(frame)
+    parts['top'] = build_top_node(frame)
+    parts['block'] = build_mount_block(frame)
+    pp, cut = build_pipes(frame)
     for q in parts.values():
         q.finish()
     pp.finish()
@@ -599,7 +727,7 @@ def build_moving(parent, g):
     head = p.cring(af, hc, d / 2, cb.band_out(d) + S['head_band_extra'], hh, HEAD['gap'][0], HEAD['gap'][1],
                    name='pipe head band')[0]
     body = p.join([body, head])[0]
-    for a in CP['pipe_angles']:
+    for a in CP.get('ua_pipe_angles', CP['pipe_angles']):
         c = add(hc, add(mul(e, rp * math.cos(math.radians(a))), mul(n, rp * math.sin(math.radians(a)))))
         p.prism(c, af, -hh / 2, hh / 2, circle(rp - d / 2 - 0.5), name='pipe boss', op=JOIN,   # stops 0.5 mm
                 targets=[body])                                                                  # short of the bore
@@ -709,7 +837,7 @@ def build_moving(parent, g):
             targets=[body])
 
     # blind pipe sockets + 2 screws each (nothing reaches into the arm, so no bore cut is needed)
-    for a in CP['pipe_angles']:
+    for a in CP.get('ua_pipe_angles', CP['pipe_angles']):
         c = add(hc, add(mul(e, rp * math.cos(math.radians(a))), mul(n, rp * math.sin(math.radians(a)))))
         p.prism(c, af, -hh / 2 - 1, hh / 2 - cap, circle((CP['pipe_od'] + CP['pipe_clear']) / 2), name='pipe socket',
                 op=CUT, targets=[body])
@@ -911,7 +1039,8 @@ def place_elbow():
 
 
 # ---------------------------------------------------------------- upper-arm pipe head (top of the UA pipes)
-HEAD = dict(gap=(105.0, 200.0),            # (centre, width) deg of the opening: anterior + medial open, strap closes
+HEAD = dict(gap=(137.5, 265.0),            # (centre, width) deg of the opening: anterior + medial open (band
+                                           # covers 270..365: ends inside the back pipe's boss, no loose tab), strap closes
             lug=(34.0, 30.0), lug_back=4.0, m4_insert=(5.7, 8.0), m4_pitch=16.0)
 
 
@@ -947,7 +1076,7 @@ def build_head(abd_comp):
     d, h, zc = CP['ua_d'], CP['ring_h'], hg['zc']
     body = p.cring('z', [0, 0, zc], d / 2, cb.band_out(d), h, HEAD['gap'][0], HEAD['gap'][1], name='band')[0]
     rp = d / 2 + CP['wall'] + CP['pipe_od'] / 2
-    for a in CP['pipe_angles']:
+    for a in CP.get('ua_pipe_angles', CP['pipe_angles']):
         c = [rp * math.cos(math.radians(a)), rp * math.sin(math.radians(a)), zc]
         p.prism(c, fx.AX['z'], -h / 2, h / 2, circle(CP['pipe_od'] / 2 + CP['wall']), name='pipe boss', op=JOIN,
                 targets=[body])
@@ -959,7 +1088,7 @@ def build_head(abd_comp):
     for s_ in (-1, 1):
         p.prism(add(hg['o'], mul(ey, s_ * HEAD['m4_pitch'] / 2)), (ex, ey, ez), -HEAD['m4_insert'][1], 1,
                 circle(HEAD['m4_insert'][0] / 2), name='M4 insert (link)', op=CUT, targets=[body])
-    for a in CP['pipe_angles']:                              # pipe sockets (through) + a self-tapping screw each
+    for a in CP.get('ua_pipe_angles', CP['pipe_angles']):                              # pipe sockets (through) + a self-tapping screw each
         c = [rp * math.cos(math.radians(a)), rp * math.sin(math.radians(a)), zc]
         p.prism(c, fx.AX['z'], -h, h, circle((CP['pipe_od'] + CP['pipe_clear']) / 2), name='pipe socket', op=CUT,
                 targets=[body])
