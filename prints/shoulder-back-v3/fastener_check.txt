@@ -34,7 +34,6 @@ ok     16.0 mm  Carriage HW + pulley P0 (buy) / M8 x 55 socket head (buy) (1)
 ok     16.0 mm  Carriage HW + pulley P0 (buy) / M8 x 55 socket head (buy) (2)
 ok     16.0 mm  Tower HW (buy) / M8 x 55 socket head (buy)
 ok     16.0 mm  Tower HW (buy) / M8 x 55 socket head (buy) (1)
-ok     20.0 mm  Rest HW (buy) / M6 x 65 socket head, bracket pivot (buy)
 ok     24.0 mm  HW flex (buy) / M8 x 55 socket head (buy)
 ok     24.0 mm  End plate HW + pulley P2 (buy) / M8 x 55 socket head (buy)
 ok     25.0 mm  Elbow spool: bolt + pulleys PA/PB  / M8 x 100 socket head, cut to 75 (buy)
@@ -42,5 +41,6 @@ ok     29.0 mm  Rest HW (buy) / Clevis pin M6 x 70 + R-clip (buy), 70 needed
 ok     29.0 mm  Rest HW (buy) / Clevis pin M6 x 70 + R-clip (buy), 70 needed
 ok     29.0 mm  Rest HW (buy) / Clevis pin M6 x 70 + R-clip (buy), 70 needed
 ok     29.0 mm  Rest HW (buy) / Clevis pin M6 x 70 + R-clip (buy), 70 needed
+ok     33.0 mm  Rest HW (buy) / M6 x 65 socket head, bracket pivot (buy)
 ok     47.0 mm  HW abd (buy) / M8 x 100 socket head (buy)
-source ca710729e47de74c
+source 580727725bb03458

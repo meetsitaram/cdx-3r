@@ -40,7 +40,8 @@ P = dict(t=8.0, k=12.0, g=0.5, r_k=6.5, end_gap=8.0, hole=6.3, velcro=1.5, pad=1
          # the bracket's pivot is its fixing: one M6 x 65 socket head through the boss, the tower's front plate, its
          # hollow and its back plate; printed Ø24 x 3 washers both ends, 2 M6 nuts jammed at the back. Clamped, it
          # holds the strap pull and the angle (the old slot lock was one M6 into a nut behind a 1.7 mm wall: docs/bugs/rest-bracket-attachment.md)
-         pivot_bolt=dict(hole=6.6, length=65.0, head=(10.0, 6.0), washer=(24.0, 6.6, 3.0), nuts=2),
+         pivot_bolt=dict(hole=6.6, length=65.0, head=(10.0, 6.0), washer=(24.0, 6.6, 3.0), nuts=2,
+                         spacer=(12.0, 6.8, 0.2)),   # crush tube between the plates: OD, ID, total end clearance
          back_pad=dict(dz=45.0, w=60.0, edge=3.0))
 # Print: blades, root arm and bracket print flat side down (pad side / tower side). The plate's underside is flush
 # with the knuckles' underside (hinge axis r_k above it); each knuckle sits on a gusset: no supports, no overhangs.
@@ -408,6 +409,15 @@ def build_hw(grp):
         n = hw.prism(nc, sh.frame_of(X), 0, nt, sh.hexagon(af), name='M6 nut').bodies.item(0)
         hw.prism(nc, sh.frame_of(X), -1, nt + 1, sh.circle(3.0), name='thread', op=CUT, targets=[n])
         n.name = 'M6 hex nut, bracket pivot (buy)'
+    # crush tube inside the tower's hollow, plate to plate: tightening presses the plates onto it instead of bending
+    # them together (the nuts can only go at the back: the bolt is threaded near its tip only)
+    import girdle
+    import girdle_b as gb
+    (f0, f1), (b0, b1) = girdle.cheek_ranges(gb.XL)              # front cheek, back cheek (x)
+    so, si, sc = pb['spacer']
+    sp = Part(grp, 'Rest pivot spacer (printed)', color=PRINT)
+    sp.ann(sh.frame_of(X), [(b1 + f0) / 2, c[1], c[2]], so / 2, si / 2, f0 - b1 - sc,
+           name='rest pivot spacer')[0].name = 'rest pivot spacer'
     bk = Part(grp, 'Rest buckle 25 mm (buy)', color=BUCKLE)
     pc = pcs[-1]
     c, fr, Lp = frame(pc)
@@ -417,7 +427,7 @@ def build_hw(grp):
     bk.prism(c, fr, -bt / 2, bt / 2, poly([(s0, wc - bw / 2), (s0 + bl, wc - bw / 2), (s0 + bl, wc + bw / 2),
                                            (s0, wc + bw / 2)]), name='buckle').bodies.item(0).name = \
         'Side-release buckle 25 mm, female half (buy)'
-    return hw, bk, wash
+    return hw, bk, wash, sp
 
 
 def build_back_pads(frame_comp):
@@ -464,7 +474,7 @@ def build_step(step):
         grp = _grp()
         names = dict(bracket=['Rest bracket'], root=['Rest root arm'], blade1=['Rest blade 1'], blade2=['Rest blade 2'],
                      blade3=['Rest blade 3'], soft=['Rest hook-and-loop', 'Rest foam pads'],
-                     hw=['Rest HW', 'Rest buckle', 'Rest washers'])[step]
+                     hw=['Rest HW', 'Rest buckle', 'Rest washers', 'Rest pivot spacer'])[step]
         for o in list(grp.occurrences):
             if o.component.name.startswith(tuple(names)):
                 fx.retire(o)

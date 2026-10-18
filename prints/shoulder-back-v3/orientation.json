@@ -235,5 +235,16 @@
   "overhang": 0,
   "on_part": 0,
   "height": 3.0
+ },
+ "32_rest_pivot_spacer.stl": {
+  "up": [
+   1.0,
+   0.0,
+   0.0
+  ],
+  "base": 77,
+  "overhang": 0,
+  "on_part": 0,
+  "height": 26.8
  }
 }

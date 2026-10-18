@@ -52,6 +52,8 @@ the back frame (01–05) so you can assemble as you go.
 | `29_rest_blade_2.stl` | 1 | 84 × 67 × 49 | 24 | flat, pad side down (as exported) | new |
 | `30_rest_blade_3.stl` | 1 | 101 × 82 × 66 | 35 | flat, pad side down (as exported) | new |
 | `31_rest_washer_x2.stl` | 2 | 24 × 24 × 3 | 2 | flat | new (18 Oct): rest pivot bolt washers |
+| `32_rest_pivot_spacer.stl` | 1 | 12 × 12 × 27 | 3 | standing on end (as exported) | new (18 Oct): crush tube between the tower plates on the rest pivot bolt |
+| `retrofit/rest_backer_retrofit.stl` | 1 | 30 × 30 × 8 | 6 | flat, plate side down (as exported) | **only for towers printed before 18 Oct** (with an M6 × 30 instead of the M6 × 65; no spacer 32); made by `cad/fusion/retrofit_backer.py` |
 
 Total about **2.8 kg** at 60 % effective fill. Already printed v2? Skip the parts marked "same as v2" and reprint
 04, 05 and 25. The v2 `Abduction_mount_block_R` is no longer used (the tower replaces it).

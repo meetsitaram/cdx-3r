@@ -53,6 +53,7 @@ SETS = {
         ('29_rest_blade_2', 'Rest blade 2', None),
         ('30_rest_blade_3', 'Rest blade 3', None),
         ('31_rest_washer_x2', 'Rest washers (printed)', 'rest washer, front'),
+        ('32_rest_pivot_spacer', 'Rest pivot spacer (printed)', None),
     ],
 }
 

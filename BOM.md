@@ -18,6 +18,7 @@ Everything else comes from packs already on this list.
 | ☐ | Gas strut 180 / 120 mm, 22 N, eyelet ends | 2 pcs | 1 | [Motoforti 7" 22 N](https://www.amazon.com/dp/B0DHVV6QZW) |
 | ☐ | M6 × 16 socket head cap screw (5 mm hex key) | 40 pcs | 3 | [MewuDecor M6 × 16 socket head, 304](https://www.amazon.com/dp/B07HR6PPX8) |
 | M6 × **65** socket head (head Ø10 × 6, 5 mm key) + 2 M6 hex nuts | 1 + 2 | shoulder rest pivot: through the bracket, the tower's boss, front and back plates; printed Ø24 washers (31) both ends, 2 nuts locked together at the back (docs/bugs/rest-bracket-attachment.md). Nuts from the pack above | **new**: [uxcell M6 × 65 socket head, stainless, 10 pcs](https://www.amazon.com/uxcell-M6x65mm-Stainless-Socket-Screws/dp/B01BBP4VU2) |
+| M6 × **30** socket head + 1 M6 hex nut | 1 + 1 | **only for towers printed before 18 Oct 2026** (retrofit instead of the M6 × 65): clamps the rest bracket to the tower's front plate into a captive nut in the printed backer. Normal right-hand thread | ordered 18 Oct: [uxcell M6 × 30 socket head, 304, 10 pcs](https://www.amazon.com/clp/B019ETH8YI) |
 | ☐ | M6 hex nut | 50 pcs | 3 | [M6 hex nuts](https://www.amazon.com/dp/B0CZQRH3L2) |
 | ☐ | Clevis pin M6 × 70 + R-clip | 6 pcs | 4 | [M6 × 70 clevis pins](https://www.amazon.com/dp/B0FJWVWFBY) |
 | ☐ | ½" adhesive neoprene foam | 12" × 54" sheet | 9 pads | [MYFULLY ½" foam](https://www.amazon.com/dp/B0BTRWTXN4) |

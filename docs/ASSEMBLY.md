@@ -182,8 +182,9 @@ screws, foam + hook-and-loop · **Cut:** 412, 568, 102, 131 mm
 > and tape it.
 >
 > ⚠ **Tower printed before 18 Oct 2026** (it has a nut pocket next to the round boss and no hole in the boss): drill
-> a **Ø6.5 mm** hole through the centre of the boss, square to the plate, on through the back plate. Drill a 3 mm
-> pilot first. The hole exits close to the back plate's slanted edge; the printed washer covers it. See
+> a **Ø6.5 mm** hole through the centre of the boss and the **front plate only** (3 mm pilot first, square to the
+> plate). Its back plate has no material around that line (the slanted edge crosses it), so this tower uses the
+> **retrofit** in step 7: M6 × 30 + printed backer inside the tower, no through-bolt. See
 > [bugs/rest-bracket-attachment](bugs/rest-bracket-attachment.md).
 
 <details markdown="1">
@@ -289,7 +290,7 @@ side.
 
 ![Shoulder rest animation](images/assembly/step7-rest.gif)
 
-**Parts:** bracket, root arm, blades 1–3, 4 clevis pins + R-clips, M6 × 65 bolt, 2 printed washers, 2 M6 nuts,
+**Parts:** bracket, root arm, blades 1–3, 4 clevis pins + R-clips, M6 × 65 bolt, 2 printed washers, printed pivot spacer, 2 M6 nuts,
 buckle, foam, hook-and-loop
 
 > ⚠ **Pin each piece as soon as it's on**, root arm first, then blade 1, 2, 3: the pin + R-clip holds it, so nothing
@@ -298,8 +299,14 @@ buckle, foam, hook-and-loop
 <details markdown="1">
 <summary>Details</summary>
 
-- Bracket over the round boss on the tower. M6 × 65 from the **front**: washer, bracket, boss, through the tower;
-  at the back a washer and 2 nuts. Snug the first nut, then lock the second against it (two 10 mm spanners).
+- Bracket over the round boss on the tower. M6 × 65 from the **front**: washer, bracket, boss, front plate; hold the
+  **pivot spacer** (the 27 mm tube) in the gap between the tower's two plates, reach in from the fork's open side,
+  and push the bolt through it, then through the back plate; at the back a washer and 2 nuts. The spacer keeps the
+  plates from being squeezed together when you tighten.
+- **Retrofit (towers printed before 18 Oct):** M6 × **30** from the front: printed washer, bracket, boss, front plate;
+  inside the tower, the printed **backer** (`retrofit/rest_backer_retrofit.stl`, flat side against the plate) with an
+  M6 nut in its hex pocket. Put the nut in the pocket, hold the backer behind the hole from the fork's open side,
+  thread the bolt in. No spacer, no back washer, no second nut. Snug the first nut, then lock the second against it (two 10 mm spanners).
   Leave it loose enough to turn the bracket.
 - Each piece's middle knuckle goes between the two knuckles of the piece before it.
 - Foam pads a little smaller than each blade, on with hook-and-loop (they come off for washing).
