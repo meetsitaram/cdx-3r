@@ -4,8 +4,8 @@ Watch each animation, then do the same. Open **Details** under a step only if th
 
 ![The finished exo](images/exo-only.png)
 
-**About 6–8 hours** after printing; each step is a good place to stop. **Grown-up needed** for the soldering iron,
-cutting PVC, and shortening one bolt.
+**About 6–8 hours** after printing; each step is a good place to stop. **Grown-up needed** for the soldering iron
+and cutting PVC.
 
 > ⚠ = do it **in this order**, or it can't be done later.
 
@@ -64,7 +64,8 @@ README):
 | M3 brass heat-set **insert** | 38 |
 | **M3 × 8** screw / **M3 × 12** screw | 30 / 8 |
 | **Pipe screw** #4 × 3/8" | 41 |
-| **M8 × 100** bolt (one gets cut to 75 mm) | 2 |
+| **M8 × 100** bolt | 1 |
+| **M8 × 75** bolt | 1 |
 | **M8 × 55** bolt | 7 |
 | M8 **lock nut** | 9 |
 | M8 washer, **32 mm** wide (not 30) | 1 |
@@ -83,7 +84,7 @@ README):
 <details markdown="1">
 <summary><b>Tools</b></summary>
 
-Soldering iron (cone tip) · hex keys **2.5**, **5** and **6 mm** · **13 mm** wrench · hacksaw + file · small pliers ·
+Soldering iron (cone tip) · hex keys **2.5**, **5** and **6 mm** · **13 mm** wrench · small pliers ·
 long thin screwdriver or 8 mm rod · Phillips #1 screwdriver · PVC cutter · sandpaper · ruler in **mm** + marker ·
 super glue · masking tape.
 
@@ -106,7 +107,7 @@ Mark, wrap tape at the mark, cut square, sand the burr, write the name on it. 1 
 </details>
 
 <details markdown="1">
-<summary><b>Skills</b>: inserts, bearings, pipe screws, hidden nuts, cutting a bolt</summary>
+<summary><b>Skills</b>: inserts, bearings, pipe screws, hidden nuts</summary>
 
 - **Insert:** iron at ~225 °C, insert on its hole, let it sink in by itself until **flush**. Practise on a fit-test
   piece.
@@ -114,7 +115,6 @@ Mark, wrap tape at the mark, cut square, sand the burr, write the name on it. 1 
 - **Pipe screw:** pipe all the way in, screw until **snug**, then stop (more strips the pipe). 2 per pipe end.
 - **Hidden nut** ⚠: drop it into its six-sided pocket **before** the next part covers it; tape over it. The pocket
   stops it turning, so you only turn the bolt.
-- **Cutting a bolt:** run a nut past the mark, saw, file the end, unscrew the nut (it cleans the thread).
 
 </details>
 
@@ -237,10 +237,9 @@ screws, foam + hook-and-loop · **Cut:** 412, 568, 102, 131 mm
 ![SCARA animation](images/assembly/step5-scara.gif)
 
 **Parts:** link 1 + link 2 (tray + lid each), end plate, 4 pulleys, 8 thick + 6 thin spacers, 2 belts, 8 × 608,
-8 inserts, 8 M3 × 12, 2 × M8 × 55, **M8 × 100 cut to 75 mm**, 3 lock nuts
+8 inserts, 8 M3 × 12, 2 × M8 × 55, **M8 × 75**, 3 lock nuts
 
 > ⚠ **Nut first** in the end plate: a lock nut in the pocket on its **top**, before it goes under link 2.
-> ⚠ **Cut** one M8 × 100 to 75 mm (Skills).
 
 <details markdown="1">
 <summary>Details</summary>

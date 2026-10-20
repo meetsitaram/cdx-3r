@@ -6,6 +6,11 @@ model=$(git diff --cached --name-only --diff-filter=AMD -- 'cad/fusion/*.py' 'ca
 if [ -n "$model" ]; then
   python cad/fusion/checks.py --verify || { echo "pre-commit: model checks missing, failing or stale"; exit 1; }
 fi
+# Markdown tables must render: the separator row needs as many columns as the header (tools/md_tables.py --fix).
+md=$(git diff --cached --name-only --diff-filter=AM -- '*.md')
+if [ -n "$md" ]; then
+  python tools/md_tables.py $md || { echo "pre-commit: broken markdown table (run python tools/md_tables.py --fix)"; exit 1; }
+fi
 # Bug notes (docs/bugs): named after what went wrong, no numbers; every note listed in the README table.
 for f in docs/bugs/*.md; do
   b=$(basename "$f"); [ "$b" = README.md ] && continue

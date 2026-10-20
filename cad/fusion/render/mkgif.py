@@ -12,7 +12,7 @@ CAP = {
   'Melt in 8 brass inserts',
   'Put the splice plate over the joint',
   'Screw it together (8 x M3 x 8)',
-  'Backbones: left 412 mm, right 583 mm',
+  'Backbones: left 412 mm, right 568 mm',
   'Slide on the middle node',
   'Slide on the top node',
   'Left beam (102 mm) and left diagonal (131 mm)',
@@ -64,7 +64,7 @@ CAP = {
   'Lift link 2 under link 1',
   'Thin spacer between the links',
   'Thin spacer on top',
-  'Elbow bolt (M8 x 100 cut to 75) down through both',
+  'Elbow bolt (M8 x 75) down through both',
   'Spacer + lock nut underneath',
   'End plate',
   'Nut first: lock nut into the pocket on top',
@@ -110,7 +110,11 @@ try:
 except OSError:
     FONT = SMALL = ImageFont.load_default()
 
+import sys
+ONLY = sys.argv[1:]                       # e.g. python mkgif.py 2-frame 5-scara (default: all)
 for name, (nfly, caps) in CAP.items():
+    if ONLY and name not in ONLY:
+        continue
     fs = sorted(glob.glob('asm/%s_*.png' % name))
     ims = [Image.open(f).convert('RGB') for f in fs]
     # crop to the action: every pixel that differs from the finished frame, plus the finished parts around it

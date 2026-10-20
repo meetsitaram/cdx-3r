@@ -1,0 +1,73 @@
+<meta charset="utf-8">
+<title>CDX-3R Assembly Player</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* layout: one column of steps; each step a frame stage with its own transport bar */
+:root{--bg:#f3f1ee;--fg:#1f1d1a;--muted:#6b645b;--card:#ffffff;--line:#e0dad2;--accent:#c4661c;--on-accent:#ffffff;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#181715;--fg:#eeeae4;--muted:#a59e94;--card:#ffffff;--line:#3a3631;--accent:#e08a3c;--on-accent:#1a1209;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#181715;--fg:#eeeae4;--muted:#a59e94;--card:#ffffff;--line:#3a3631;--accent:#e08a3c;--on-accent:#1a1209;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px}
+main{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1{font-size:21px;margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:0;font-size:13px}
+nav{display:flex;flex-wrap:wrap;gap:6px}
+nav a{font-size:13px;color:var(--fg);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:4px 10px}
+section{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:12px}
+h2{font-size:17px;margin:0;text-wrap:balance}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;width:100%;max-width:100%}
+.frame{width:100%;background-repeat:no-repeat;background-color:#fff}
+.ctl{display:flex;gap:8px;align-items:center}
+button{font:inherit;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:8px;padding:8px 12px;min-width:44px;cursor:pointer}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.main{background:var(--accent);color:var(--on-accent);border-color:var(--accent);min-width:72px}
+input[type=range]{flex:1;min-width:0;accent-color:var(--accent)}
+.n{color:var(--muted);font-variant-numeric:tabular-nums;font-size:13px;min-width:56px;text-align:right}
+.speed{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--muted)}
+.speed button{padding:4px 8px;min-width:0}
+.speed button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+</style>
+<main>
+<h1>CDX-3R assembly player</h1>
+<p class="sub">The step animations from the assembly guide, with pause and frame-by-frame stepping. Tap ◀ ▶ to step, drag the slider to scrub. The captions in each frame carry the instructions.</p>
+<div class="speed" role="group" aria-label="Speed">Speed <button data-s="0.5">½×</button><button data-s="1" aria-pressed="true">1×</button><button data-s="2">2×</button></div>
+<nav id="nav"></nav>
+<div id="steps"></div>
+</main>
+<script>
+const STEPS=__STEPS__;
+let speed=1;
+document.querySelectorAll('.speed button').forEach(b=>b.onclick=()=>{speed=+b.dataset.s;document.querySelectorAll('.speed button').forEach(x=>x.setAttribute('aria-pressed',x===b))});
+const nav=document.getElementById('nav'),host=document.getElementById('steps');
+const players=[];
+STEPS.forEach((st,si)=>{
+  const a=document.createElement('a');a.href='#'+st.id;a.textContent=st.title.replace(/^\d+\.\s*/,(m)=>m);nav.appendChild(a);
+  const sec=document.createElement('section');sec.id=st.id;
+  sec.innerHTML=`<h2>${st.title}${st.alt?' <span class="sub">· '+st.alt+'</span>':''}</h2>
+  <div class="stage"><div class="frame" role="img" aria-label="${st.alt||st.title}"></div></div>
+  <div class="ctl"><button class="prev" aria-label="Previous frame">◀</button><button class="main play">Play</button><button class="next" aria-label="Next frame">▶</button><input type="range" min="0" value="0" aria-label="Frame"><span class="n"></span></div>`;
+  host.appendChild(sec);
+  const fr=sec.querySelector('.frame'),pb=sec.querySelector('.play'),sl=sec.querySelector('input'),nn=sec.querySelector('.n');
+  const N=st.dur.length;sl.max=N-1;
+  let i=0,t=null,loaded=false;
+  fr.style.aspectRatio=st.w+' / '+st.h;
+  function load(){if(loaded)return;loaded=true;st.sheets.forEach(s=>{const im=new Image();im.src=s.src})}
+  function show(k){
+    i=(k+N)%N;const sh=Math.floor(i/st.per),j=i%st.per,c=j%st.cols,r=Math.floor(j/st.cols);
+    const rows=Math.ceil(st.sheets[sh].n/st.cols);
+    fr.style.backgroundImage='url('+st.sheets[sh].src+')';
+    fr.style.backgroundSize=(st.cols*100)+'% '+(rows*100)+'%';
+    fr.style.backgroundPosition=(st.cols>1?c*100/(st.cols-1):0)+'% '+(rows>1?r*100/(rows-1):0)+'%';
+    sl.value=i;nn.textContent=(i+1)+'/'+N;
+  }
+  function tick(){show(i+1);t=setTimeout(tick,st.dur[i]/speed)}
+  function play(p){clearTimeout(t);t=null;pb.textContent=p?'Pause':'Play';if(p){players.forEach(o=>o!==api&&o.stop());load();t=setTimeout(tick,st.dur[i]/speed)}}
+  const api={stop:()=>play(false),load};
+  players.push(api);
+  pb.onclick=()=>play(t===null);
+  sec.querySelector('.prev').onclick=()=>{play(false);load();show(i-1)};
+  sec.querySelector('.next').onclick=()=>{play(false);load();show(i+1)};
+  sl.oninput=()=>{play(false);load();show(+sl.value)};
+  show(0);
+  new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)load()}),{rootMargin:'300px'}).observe(sec);
+});
+</script>
