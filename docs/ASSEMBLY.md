@@ -93,7 +93,7 @@ super glue · masking tape.
 <summary><b>PVC cut list</b></summary>
 
 | Piece | Length | How many | Step |
-|---|---|---|
+|---|---|---|---|
 | Forearm pipe | **185 mm** | 3 | 1 |
 | Upper-arm pipe | **127 mm** | 3 | 1 |
 | Backbone left | **412 mm** | 1 | 2 |
