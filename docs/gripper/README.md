@@ -12,7 +12,7 @@ Two gripper designs are kept. Prototype 3 is the one to print; prototype 2 stays
 | Parts | [BOM: gripper prototype 3](../../BOM.md) | listed in `gripper.py` |
 
 Animations (open the HTML files in a browser): `gripper3_open_close.html` (squeeze), `gripper3_fold.html`
-(fold to the Velcro rest), `gripper3_fold_lock.html` (how the plunger locks the hinge), `proto2_motion.html`
+(fold to the Velcro rest), `gripper3_fold_lock.html` (how the plunger locks the hinge), `gripper3_collar_fitting.html` (putting the collar and claws on, guide 11.3-11.4), `proto2_motion.html`
 (prototype 2). Concept pages: `wrist_concept.html`, `mount_options.html`.
 
 ![Gripper 3](../images/gripper3/9_closed.png)
