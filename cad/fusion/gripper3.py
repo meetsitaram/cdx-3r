@@ -51,7 +51,8 @@ P = dict(
     claw=dict(xp=209.0, rp=22.0, L=95.0, root_in=15.0, pad=0.82, cup=14.0, pad_rise=1.2, apex=0.3, wedge_gap=0.1, tooth=(1.0, 4.0), teeth_from=30.0, cells=(9.0, 84.0, 9.0, 2.0, 2.0, 2.2, 3.0), t=14.0,
               root_depth=14.0, tip_depth=9.0, outer_bulge=12.0,
               alphas=(0.0, 120.0, 240.0), tail=(-7.0, 10.0), open_deg=32.0),
-    collar=dict(x=(182.0, 194.0), skirt=(206.0, 29.0), r=(26.4, 36.0), lug_z=(30.0, 37.3), lobe_r=5.5),
+    collar=dict(x=(182.0, 194.0), skirt=(206.0, 29.0), r=(27.8, 36.0), lug_z=(30.0, 37.3), lobe_r=5.5,
+                pad=(26.3, 10.0)),   # bore clears the nose (27.5); 3 pads (inner r, width) ride the hub, pass the claw slots
     link=dict(h=10.0, w=6.0, split=124.0, kink=152.0, diag_w=12.0, arm_z=(37.6, 43.6)),   # Y: stem, 2 angled arms
     spring=dict(rise=11.8, od=10.0, link_hook=115.0, link_holes=(115.0, 120.0, 125.0), hub_hook=160.0, free=36.0,
                 max_ext=15.0, rate=2.0, init=4.0),   # Keadic kit 1.2 x 10 x 45 (loops ~36 apart): measure, pick a hole   # return spring:
@@ -578,6 +579,12 @@ def _collar(g):
     body = p.join([ring, skirt] + lobes)[0]
     p.prism([co['x'][0] - 1, h['y'], 0], XF, 0, co['x'][1] - co['x'][0] + 2, sh.circle(co['r'][0]), name='bore',
             op=CUT, targets=[body])                                  # nothing may reach into the bore (lobes did)
+    pr, pw = co['pad']                                               # the bore clears the nose so the collar goes on
+    for al in c['alphas']:                                           # over it; three pads centre it on the hub, and
+        pad = p.prism(to_xyz(0, 0, al), claw_frame(al), -pw / 2, pw / 2,   # pass the nose through the claw slots
+                      _poly([(co['x'][0] - c['xp'], pr), (co['x'][1] - c['xp'], pr), (co['x'][1] - c['xp'], co['r'][0] + 0.5),
+                             (co['x'][0] - c['xp'], co['r'][0] + 0.5)]), name='centring pad').bodies.item(0)
+        body = p.join([body, pad])[0]
     ta, tr = c['tail']
     for al in c['alphas']:
         p.prism(to_xyz(0, 0, al), claw_frame(al), -TAIL_CHEEK[0], TAIL_CHEEK[0],
@@ -1180,6 +1187,73 @@ def knuckle_neck_rules():
     return [('ok  ' if w >= need else 'FAIL', 'carrier: knuckle neck %.1f mm wide (>= %.0f)' % (w, need), 'carrier')]
 
 
+# How each part goes on, in the assembly guide's order: (part, parts already on, direction it slides in, travel mm,
+# past mm). It starts `travel` back along that direction and slides home, then `past` mm beyond (parked out of the way
+# for the next part); at every mm it must not cut into a part already on. A part already on may be given as
+# (prefix, (dx, dy, dz)): parked that far from its seat.
+COLLAR_PARK = 7.0           # mm: the collar pushed back past its seat while the claws go in (clears their roots)
+def _radial(name):
+    al = P['claw']['alphas'][int(name.split('claw ')[1][0]) - 1]
+    return (0.0, -math.cos(math.radians(al)), -math.sin(math.radians(al)))   # from outside, inward
+
+
+INSERTION = [
+    ('Gripper3 collar', ('Gripper3 carrier',), lambda n: (-1.0, 0.0, 0.0), 50.0, COLLAR_PARK),   # over the nose,
+    ('Gripper3 claw', ('Gripper3 carrier', ('Gripper3 collar', (-COLLAR_PARK, 0.0, 0.0))), _radial, 30.0, 0.0),
+    ('Gripper3 collar', ('Gripper3 claw',), lambda n: (1.0, 0.0, 0.0), COLLAR_PARK, 0.0),   # forward over the tails
+]                           # back past its seat; claws' roots into their slots; then the collar forward over the tails
+
+
+def insertion_rules():
+    """Every part can be put on: slid in along its INSERTION path, it never cuts more than 1 mm3 into a part already
+    on (user, 21 Oct: the collar's bore was smaller than the carrier's nose; it could not go on). Runs in Fusion."""
+    d = adsk.fusion.Design.cast(adsk.core.Application.get().activeProduct)
+    tb = adsk.fusion.TemporaryBRepManager.get()
+    INTER = adsk.fusion.BooleanTypes.IntersectionBooleanType
+
+    def bodies(prefix):
+        return [(o.component.name, b) for o in d.rootComponent.allOccurrences if o.component.name.startswith(prefix)
+                and '(buy)' not in o.component.name for b in o.component.bRepBodies if b.isVisible]
+    out = []
+    def moved(b, v):
+        m = tb.copy(b)
+        t = adsk.core.Matrix3D.create()
+        t.translation = adsk.core.Vector3D.create(v[0] / 10, v[1] / 10, v[2] / 10)
+        tb.transform(m, t)
+        return m
+    for part, before, way, travel, past in INSERTION:
+        fixed = []
+        for pre in before:
+            pre, off = (pre, (0.0, 0.0, 0.0)) if isinstance(pre, str) else pre
+            fixed += [moved(b, off) for _, b in bodies(pre)]
+        for name, b in bodies(part):
+            u = way(name)
+            worst = (0.0, None)
+            for k in list(range(1, int(travel) + 1)) + [-j for j in range(1, int(past) + 1)]:
+                m = tb.copy(b)
+                t = adsk.core.Matrix3D.create()
+                t.translation = adsk.core.Vector3D.create(-u[0] * k / 10, -u[1] * k / 10, -u[2] * k / 10)
+                tb.transform(m, t)
+                for f in fixed:
+                    if k == 0:
+                        continue
+                    probe = tb.copy(f)
+                    try:
+                        tb.booleanOperation(probe, m, INTER)
+                        v = probe.volume * 1000
+                    except Exception:
+                        v = 0.0
+                    if v > max(1.0, worst[0]):
+                        worst = (v, k)
+            out.append(('ok  ' if worst[1] is None else 'FAIL',
+                        '%s goes on: clear all along its path (%d mm in, %d past)' % (name, travel, past)
+                        if worst[1] is None else
+                        '%s goes on: blocked %d mm out (%.0f mm3 into a part already on; < 0: past its seat)'
+                        % (name, worst[1], worst[0]),
+                        'INSERTION'))
+    return out
+
+
 def trigger_neck_rules():
     """The trigger's pivot ring must hang on solid material, not on a sliver: between the bottom of the ring and the
     top of the link's fork slot (cut through the middle layers) there must be >= 4 mm, and the fork's side cheeks
@@ -1216,7 +1290,7 @@ def one_body_rules():
     return out
 
 
-RULES = dict(geometry=[one_body_rules, claw_root_rules, closed_claw_rules, slide_rules, spring_rules, ring_clear_rules, finray_rules, tip_rules, grip_force_rules, trigger_neck_rules, knuckle_neck_rules,
+RULES = dict(geometry=[one_body_rules, claw_root_rules, closed_claw_rules, slide_rules, spring_rules, ring_clear_rules, finray_rules, tip_rules, grip_force_rules, trigger_neck_rules, insertion_rules, knuckle_neck_rules,
                        sharp_edge_rules], 
     anchor='Gripper3 base',
     rest=(0.0, 0.0),

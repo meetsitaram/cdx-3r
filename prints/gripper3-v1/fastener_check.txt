@@ -13,4 +13,4 @@ ok      9.0 mm  Gripper3 HW collar (buy) / M3 x 20 socket head, claw tail pin, t
 ok     12.0 mm  Gripper3 HW trigger (buy) / M3 x 20 socket head + nyloc, pull pin (buy)
 ok     15.0 mm  Gripper3 HW trigger (buy) / M3 x 30 socket head, trigger pivot (buy)
 ok     20.0 mm  Gripper3 HW base (buy) / M8 x 55 socket head + M8 nyloc, fold hinge (
-source edff56444fd287a1
+source 6e2af7584ab6d7a9

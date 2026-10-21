@@ -27,6 +27,7 @@ add a row at the bottom of the table (rows are in the order found).
 | [Gripper damper "gear" was a plain disc](gripper-damper-gear-was-a-disc.md) | review round | `design_rules.py` meshes |
 | [Gripper drive pin and trigger horn too weak to print](gripper-weak-printed-drive-pin.md) | review round | `design_rules.py` strength |
 | [Gripper trigger cable could not be threaded](gripper-cable-could-not-be-threaded.md) | review round | `design_rules.py` cables |
+| [Gripper collar could not go on the carrier](gripper-collar-could-not-go-on.md) | collar reprint | `gripper3.insertion_rules` |
 
 ## Tests that gate every export
 

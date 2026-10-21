@@ -420,23 +420,25 @@ tips touch the pipe. Loosen them to slide the whole gripper up to 50 mm forward 
 - Screw the plunger into the 6.8 mm hole in the outer cheek (it cuts its own thread in the plastic; an M8 tap makes it
   easier), lock nut on the outside. With the gripper pointing forward the pin clicks into the knuckle's first hole.
 
-### 11.3 Claws
-
-![Claws](images/gripper3/3_claws.png)
-
-**Parts:** 3 TPU claws, 3 M3 × 30
-
-Each claw's round root into its slot in the dome; M3 × 30 in through the wide entry, through the claw, into the insert
-in the far wall. Snug only: the claw must swing.
-
-### 11.4 Collar
+### 11.3 Collar on, parked back
 
 ![Collar](images/gripper3/4_collar.png)
 
-**Parts:** collar, 3 M3 × 20 + 3 nylocs
+**Parts:** collar
 
-Slide the collar over the hub so each claw's tail sits between a pair of cheeks. M3 × 20 through the cheeks and the
-tail's slot, nyloc on the far side, snug: the tail must slide in its slot.
+Before the claws: slide the collar over the dome from the front, its three inner pads lined up with the dome's three
+claw slots (they pass through them). Push it back past where it will sit, about 7 mm, up to the bridge.
+
+### 11.4 Claws, then the collar forward
+
+![Claws](images/gripper3/3_claws.png)
+
+**Parts:** 3 TPU claws, 3 M3 × 30, 3 M3 × 20 + 3 nylocs
+
+- Each claw's round root into its slot in the dome; M3 × 30 in through the wide entry, through the claw, into the
+  insert in the far wall. Snug only: the claw must swing.
+- Slide the collar forward again so each claw's tail sits between a pair of cheeks. M3 × 20 through the cheeks and the
+  tail's slot, nyloc on the far side, snug: the tail must slide in its slot.
 
 ### 11.5 Grip and trigger
 
