@@ -243,6 +243,7 @@ steps that fit the 60 s MCP limit, contact-sheet the frames, then `python mkgif.
 | A piece that failed to join stayed a separate overlapping body | `one_body_rules` (every printed part is one solid) |
 | 0.8-1.1 mm skins and walls passed the print check (only area films < 0.8 failed; strips counted as "edges") | `print_validate`: walls < 1.2 mm with parallel faces fail, as areas or as strips > 2 mm; wedges/bevels (faces at an angle) still pass |
 | Validating the oriented STLs gives locations in the print frame | export the bodies unrotated to a scratch folder and validate those to get model coordinates |
+| The carrier's hinge knuckle hung on a 3 mm sliver: the strength load assumed a 26 mm section, and the wall check only sees thin walls, not narrow necks (user found it twice) | `knuckle_neck_rules` measures the neck on the real outline (>= 0.8 x knuckle diameter); the load uses that measured width. Any load case must take its section from the geometry, never a typed-in number |
 
 ## 6. Working agreements with the user
 

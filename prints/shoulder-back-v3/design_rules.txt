@@ -1,4 +1,4 @@
-design rules 74, failing 0 (modules: gripper3)
+design rules 75, failing 0 (modules: gripper3)
 ok   trigger drive: 0.00 mm                                     trigger (printed) -> pull pin
 ok   trigger drive: 0.10 mm                                     pull pin -> link (printed)
 ok   trigger drive: 0.00 mm                                     link (printed) -> yoke pin
@@ -30,15 +30,15 @@ ok   ping-pong ball (grips): 299.5 mm3 overlap                  Gripper3 claw 3 
 ok   ping-pong ball (clear before contact): 0.0 mm3 overlap     Gripper3 claw 1 (TPU)
 ok   ping-pong ball (clear before contact): 0.0 mm3 overlap     Gripper3 claw 2 (TPU)
 ok   ping-pong ball (clear before contact): 0.0 mm3 overlap     Gripper3 claw 3 (TPU)
-ok   Gripper3 carrier (printed) is one body (1)                 Gripper3 carrier (printed)
-ok   Gripper3 collar (printed) is one body (1)                  Gripper3 collar (printed)
-ok   Gripper3 link (printed) is one body (1)                    Gripper3 link (printed)
 ok   Gripper3 base (printed) is one body (1)                    Gripper3 base (printed)
 ok   Gripper3 claw 1 (TPU) is one body (1)                      Gripper3 claw 1 (TPU)
 ok   Gripper3 claw 2 (TPU) is one body (1)                      Gripper3 claw 2 (TPU)
 ok   Gripper3 claw 3 (TPU) is one body (1)                      Gripper3 claw 3 (TPU)
-ok   Gripper3 trigger (printed) is one body (1)                 Gripper3 trigger (printed)
+ok   Gripper3 collar (printed) is one body (1)                  Gripper3 collar (printed)
+ok   Gripper3 link (printed) is one body (1)                    Gripper3 link (printed)
 ok   Gripper3 grip (printed) is one body (1)                    Gripper3 grip (printed)
+ok   Gripper3 trigger (printed) is one body (1)                 Gripper3 trigger (printed)
+ok   Gripper3 carrier (printed) is one body (1)                 Gripper3 carrier (printed)
 ok   claw root: outline corners 0.4 mm inside the root disc (>= 0.2) claw_outline
 ok   claws closed: ridges meet at the axis at the tip (0.30 mm off) claw_curves
 ok   claws closed: tip pad (last 17 mm) within 2 mm of the axis (worst 1.5) claw_curves
@@ -60,6 +60,7 @@ ok   grip: 0.77 N per claw at the tips (>= 0.5)                 spring
 ok   trigger: 14.9 N at the finger, fully squeezed (<= 25)      spring
 ok   trigger: 4.5 mm solid between the pivot ring and the link slot (>= 4) trigger
 ok   trigger: fork cheeks 6.7 mm thick (>= 4)                   trigger
+ok   carrier: knuckle neck 25.8 mm wide (>= 24)                 carrier
 ok   no sharp edges on the trigger (0 sharp)                    Gripper3 trigger
 ok   no sharp edges on the grip bottom (0 sharp)                Gripper3 grip
 ok   no sharp edges on the claw tips (0 sharp)                  Gripper3 claw
@@ -72,5 +73,5 @@ ok   strength SF 11.2 (2.7 MPa, PETG across layers)             claw slot wall i
 ok   strength SF 10.9 (55.1 MPa, steel)                         fold hinge pin M8 (steel), 60 N on the grip at 100 mm: 461.538 N at 6 mm
 ok   strength SF 8.9 (5.0 MPa, PETG along layers)               base hinge cheeks (both), 60 N sideways on the grip, at their neck: 60 N at 72.5 mm
 ok   strength SF 5.7 (8.0 MPa, PETG along layers)               base front beam over the wrist (plate + top rib), 60 N at the grip, from the front clamp: 60 N at 165 mm
-ok   strength SF 31.4 (1.4 MPa, PETG along layers)              carrier spine at the knuckle (60 N steering at the grip): 60 N at 70 mm
-source 74d318943d518d95
+ok   strength SF 30.8 (1.5 MPa, PETG along layers)              carrier neck at the knuckle, as built (60 N steering at the grip): 60 N at 70 mm
+source 91693de83a88afd9

@@ -334,6 +334,57 @@ def _base(g):
     return 'base: %d bodies' % p.comp.bRepBodies.count
 
 
+KNUCKLE_TOP_DEG = -25.0     # where the bridge's top edge leaves the knuckle (deg from +X, round the hinge pin)
+
+
+def carrier_outline():
+    """Carrier side profile (rail X, Y): the bridge from the hinge knuckle over the grip and the trigger, bending down
+    to the hub. Its top edge leaves the knuckle at KNUCKLE_TOP_DEG and its back edge is tangent to the knuckle, so the
+    knuckle sits on a broad shoulder (it hung on a 3 mm sliver until 21 Oct)."""
+    hg, cr, h, tv = P['hinge'], P['carrier'], P['hub'], P['trigger']
+    cx, cy, R_ = hg['x'], hg['y'], hg['knuckle_r']
+    xb = tv['pivot'][0] + 12                                            # bridge lifts clear of the link here
+    ro, ri_ = cr['bend_r']
+    x0, x1, yt, yb = h['x'][0], cr['x1'], cr['y'][1], cr['bridge_y0']
+    k = math.sqrt(0.5)
+    a = math.radians(KNUCKLE_TOP_DEG)
+    top = (cx + (R_ - 0.5) * math.cos(a), cy + (R_ - 0.5) * math.sin(a))   # just inside the knuckle: overlaps it
+    qx, qy = cx + 6, cr['y'][0]                                         # back edge: from the bridge underside,
+    d = math.hypot(cx - qx, cy - qy)                                    # tangent to the knuckle's back
+    ang = math.atan2(cy - qy, cx - qx) + math.asin((R_ - 0.5) / d)
+    tl = math.sqrt(d ** 2 - (R_ - 0.5) ** 2)
+    back = (qx + tl * math.cos(ang), qy + tl * math.sin(ang))
+    return [top, (cx + 35, yt), (x1 - ro, yt),
+            ('arc', (x1 - ro + ro * k, yt - ro + ro * k), (x1, yt - ro)),           # outer bend
+            (x1, h['y'] + 5), (x0, h['y'] + 5), (x0, yb - ri_),
+            ('arc', (x0 - ri_ + ri_ * k, yb - ri_ + ri_ * k), (x0 - ri_, yb)),     # inner bend (fillet)
+            (xb, yb), (xb, cr['y'][0]), (qx, qy), back, (cx, cy)]
+
+
+def knuckle_neck_mm():
+    """Width of solid carrier where the knuckle meets the bridge: the longest run of a circle 2 mm outside the
+    knuckle that lies inside the bridge outline, as a chord (mm)."""
+    hg = P['hinge']
+    cx, cy, r = hg['x'], hg['y'], hg['knuckle_r'] + 2.0
+    poly = [q for q in carrier_outline() if not isinstance(q[0], str)]
+
+    def inside(x, y):
+        n, j = False, len(poly) - 1
+        for i in range(len(poly)):
+            (xi, yi), (xj, yj) = poly[i], poly[j]
+            if (yi > y) != (yj > y) and x < (xj - xi) * (y - yi) / (yj - yi) + xi:
+                n = not n
+            j = i
+        return n
+    N = 720
+    hit = [inside(cx + r * math.cos(2 * math.pi * i / N), cy + r * math.sin(2 * math.pi * i / N)) for i in range(N)]
+    best = run = 0
+    for v in hit + hit:
+        run = run + 1 if v else 0
+        best = max(best, min(run, N))
+    return 2 * r * math.sin(math.pi * best / N)
+
+
 def _carrier(g):
     """Carrier (printed, one piece): hinge knuckle, a bridge forward over the grip and the trigger that bends down in a
     smooth curve to the hub, the hub, and its rounded nose with a slot for each claw (the slot walls carry the claw
@@ -342,17 +393,8 @@ def _carrier(g):
     p = Part(g, 'Gripper3 carrier (printed)', color=PRINT)
     zk = hg['knuckle_z']
     knuckle = p.cyl('z', [hg['x'], hg['y'], 0], hg['knuckle_r'], 2 * zk, name='knuckle')[0]
-    tv = P['trigger']
-    xb = tv['pivot'][0] + 12                                            # bridge lifts clear of the link here
-    ro, ri_ = cr['bend_r']
-    x0, x1, yt, yb = h['x'][0], cr['x1'], cr['y'][1], cr['bridge_y0']
-    k = math.sqrt(0.5)
-    outline = [(hg['x'], hg['y'] - hg['knuckle_r']), (hg['x'] + 35, yt), (x1 - ro, yt),
-               ('arc', (x1 - ro + ro * k, yt - ro + ro * k), (x1, yt - ro)),           # outer bend
-               (x1, h['y'] + 5), (x0, h['y'] + 5), (x0, yb - ri_),
-               ('arc', (x0 - ri_ + ri_ * k, yb - ri_ + ri_ * k), (x0 - ri_, yb)),     # inner bend (fillet)
-               (xb, yb), (xb, cr['y'][0]), (hg['x'] + 6, cr['y'][0]), (hg['x'] - 4, hg['y'] - 6)]
-    web = p.prism([0, 0, 0], ZF, -cr['z'], cr['z'], _path(outline), name='bridge').bodies.item(0)
+    x0 = h['x'][0]
+    web = p.prism([0, 0, 0], ZF, -cr['z'], cr['z'], _path(carrier_outline()), name='bridge').bodies.item(0)
     hub = p.cyl('x', [(x0 + h['x'][1]) / 2, h['y'], 0], h['r'], h['x'][1] - x0, name='hub')[0]
     nr, nx = h['nose_r'], h['nose_x']
     prof = [(h['x'][1] - 1.0, 0.0), (h['x'][1] - 1.0, nr)]
@@ -947,8 +989,8 @@ def _loads():
         dict(name='base front beam over the wrist (plate + top rib), 60 N at the grip, from the front clamp', force=60.0,
              arm=P['grip']['x'] - P['clips'][1], section=('rect', P['base']['rib'][1] - g2.P['ring_top'],
                                                            2 * P['base']['rib'][2]), material='PETG along layers'),
-        dict(name='carrier spine at the knuckle (60 N steering at the grip)', force=60.0, arm=70.0,
-             section=('rect', 26.0, 2 * P['carrier']['z']), material='PETG along layers'),
+        dict(name='carrier neck at the knuckle, as built (60 N steering at the grip)', force=60.0, arm=70.0,
+             section=('rect', knuckle_neck_mm(), 2 * P['carrier']['z']), material='PETG along layers'),
     ]
 
 
@@ -1112,6 +1154,13 @@ def grip_force_rules():
              'spring')]
 
 
+def knuckle_neck_rules():
+    """The carrier's hinge knuckle must sit on a broad neck, measured on the real outline: >= 0.8 x the knuckle's
+    diameter (user, 21 Oct: it hung on a 3 mm sliver and would snap)."""
+    w, need = knuckle_neck_mm(), 1.6 * P['hinge']['knuckle_r']
+    return [('ok  ' if w >= need else 'FAIL', 'carrier: knuckle neck %.1f mm wide (>= %.0f)' % (w, need), 'carrier')]
+
+
 def trigger_neck_rules():
     """The trigger's pivot ring must hang on solid material, not on a sliver: between the bottom of the ring and the
     top of the link's fork slot (cut through the middle layers) there must be >= 4 mm, and the fork's side cheeks
@@ -1148,7 +1197,7 @@ def one_body_rules():
     return out
 
 
-RULES = dict(geometry=[one_body_rules, claw_root_rules, closed_claw_rules, slide_rules, spring_rules, ring_clear_rules, finray_rules, tip_rules, grip_force_rules, trigger_neck_rules,
+RULES = dict(geometry=[one_body_rules, claw_root_rules, closed_claw_rules, slide_rules, spring_rules, ring_clear_rules, finray_rules, tip_rules, grip_force_rules, trigger_neck_rules, knuckle_neck_rules,
                        sharp_edge_rules], 
     anchor='Gripper3 base',
     rest=(0.0, 0.0),
