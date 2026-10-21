@@ -2,12 +2,12 @@
  "01_gripper_base.stl": {
   "up": [
    0.0,
-   0.0,
+   -0.0,
    -1.0
   ],
-  "base": 1944,
-  "overhang": 5391,
-  "on_part": 3356,
+  "base": 1902,
+  "overhang": 5219,
+  "on_part": 2596,
   "height": 44.8
  },
  "02_gripper_carrier.stl": {
@@ -18,7 +18,7 @@
   ],
   "base": 71,
   "overhang": 6201,
-  "on_part": 1302,
+  "on_part": 1411,
   "height": 55.0
  },
  "03_gripper_grip.stl": {

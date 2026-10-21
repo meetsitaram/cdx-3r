@@ -235,6 +235,20 @@ def _mm(e):
     return q.x * 10, q.y * 10, q.z * 10
 
 
+HOLE_R = (1.6, 1.7, 2.0, 3.4, 4.2)        # mm: screw, insert, plunger and pin holes: their edges stay sharp (fits)
+
+
+def _hole_edge(e):
+    """An edge of a drilled hole or the pipe bore (a concave cylinder of a hole radius): left sharp, it sets a fit."""
+    for i in range(e.faces.count):
+        g = e.faces.item(i).geometry
+        if isinstance(g, adsk.core.Cylinder):
+            r = g.radius * 10
+            if any(abs(r - h) < 0.05 for h in HOLE_R + (g2.P['bore_r'],)):
+                return True
+    return False
+
+
 def _soften(p, body, r, test):
     """Cosmetic fillets on the body's edges that pass test(edge): all at once, else one by one at r then r/2; a fillet
     Fusion can't build is deleted again so it never breaks the features after it."""
@@ -314,6 +328,9 @@ def _base(g):
     parts.append(p.prism([0, 0, 0], ZF, -rz, rz,                     # flush with the rib's sides
                          _poly([(ax, ay), (bx, by), (bx, b['rib'][1] - 0.5), (ax, b['rib'][1] - 0.5)]),
                          name='stow pad').bodies.item(0))
+    parts.append(p.prism([0, 0, 0], ZF, -rz, rz,                     # the rib's sloped end runs straight up into the pad
+                         _poly([(xs, b['y'][1] - 0.5), (bx, by), (bx, rt - 0.5), (xs + rt - b['y'][1], rt - 0.5)]),
+                         name='ramp up to the stow pad (no step)').bodies.item(0))
     body = p.join(parts)[0]
     p.prism([b['x0'] - 1, 0, 0], XF, 0, b['x1'] - b['x0'] + 2, sh.circle(g2.P['bore_r']), name='pipe bore', op=CUT,
             targets=[body])
@@ -329,6 +346,7 @@ def _base(g):
     p.prism([hg['x'] - hg['latch_r'], hg['y'], zk], ZF, 0, ct + 2, sh.circle(3.4), name='latch plunger hole (6.8: the M8 plunger cuts its own thread)', op=CUT,
             targets=[body])
     _soften(p, body, 2.0, lambda e: _mm(e)[1] > rt - 0.5 and _is_sharp(e))      # round the rib's top edges
+    _soften(p, body, 1.5, lambda e: _is_sharp(e, 50.0) and not _hole_edge(e))   # and every other edge (user, 21 Oct)
     body.name = 'base (printed)'
     p.finish()
     return 'base: %d bodies' % p.comp.bRepBodies.count
@@ -1113,12 +1131,13 @@ def tip_rules():
 
 def sharp_edge_rules():
     """No sharp edges where hands and fingers touch: the trigger below its link fork, the bottom of the grip, the
-    claw tips. An edge is sharp when its two faces meet at more than 50 deg. Runs in Fusion, at rest."""
+    claw tips, the whole base (it sits on the forearm; hole edges excepted). An edge is sharp when its two faces meet at more than 50 deg. Runs in Fusion, at rest."""
     d = adsk.fusion.Design.cast(adsk.core.Application.get().activeProduct)
     hy, c = pull_point(0.0)[1], P['claw']
     zones = [('trigger', 'Gripper3 trigger', lambda q: q[1] < hy - 7.0),
              ('grip bottom', 'Gripper3 grip', lambda q: q[1] < P['grip']['y'][0] + 12.0),
-             ('claw tips', 'Gripper3 claw', lambda q: q[0] > c['xp'] + c['L'] - 7.0)]   # the cap's front, past teeth + cells
+             ('claw tips', 'Gripper3 claw', lambda q: q[0] > c['xp'] + c['L'] - 7.0),   # the cap's front, past teeth + cells
+             ('base', 'Gripper3 base', lambda q: True)]                    # all of it (hole edges excepted: fits)
     out = []
     for label, prefix, zone in zones:
         n = 0
@@ -1128,7 +1147,7 @@ def sharp_edge_rules():
             for body in o.component.bRepBodies:
                 for e in body.edges:
                     pt = e.pointOnEdge
-                    if not zone((pt.x * 10, pt.y * 10, pt.z * 10)) or e.faces.count != 2 or e.length * 10 < 0.2:
+                    if not zone((pt.x * 10, pt.y * 10, pt.z * 10)) or e.faces.count != 2 or e.length * 10 < 0.2                             or _hole_edge(e):
                         continue                                    # (a zero-length edge is a point, not an edge)
                     ok1, n1 = e.faces.item(0).evaluator.getNormalAtPoint(pt)
                     ok2, n2 = e.faces.item(1).evaluator.getNormalAtPoint(pt)
