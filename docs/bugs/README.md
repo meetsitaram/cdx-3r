@@ -22,12 +22,18 @@ add a row at the bottom of the table (rows are in the order found).
 | [**Open:** arm raised past ~80° swings into the shoulder rest](raised-arm-hits-shoulder-rest.md) | — | motion sweep |
 | [**Open:** full shrug, lift link touches carriage (20 mm³)](full-shrug-lift-link-touches-carriage.md) | — | motion sweep |
 | [**Open:** lift carriage over-stressed under an M8 pivot nut (FEA, 150 N)](carriage-nut-seat-overstressed.md) | — | stress study (manual) |
+| [Gripper cable housing hung in thin air](gripper-cable-housing-in-thin-air.md) | review round | `design_rules.py` floating |
+| [Gripper trigger was not connected to anything](gripper-trigger-drove-nothing.md) | review round | `design_rules.py` chains |
+| [Gripper damper "gear" was a plain disc](gripper-damper-gear-was-a-disc.md) | review round | `design_rules.py` meshes |
+| [Gripper drive pin and trigger horn too weak to print](gripper-weak-printed-drive-pin.md) | review round | `design_rules.py` strength |
+| [Gripper trigger cable could not be threaded](gripper-cable-could-not-be-threaded.md) | review round | `design_rules.py` cables |
 
 ## Tests that gate every export
 
 `checks.run_all(<set>)` in Fusion on the assembly (also the first step of every export): `fastener_check.py` (screws
 bite), `collision_check.py` (no part or bolt inside another) and its motion sweep (the same through 22 poses of the
-girdle and arm). Reports land in `prints/<set>/`, stamped with a hash of the model code; the pre-commit hook
+girdle and arm), and `design_rules.py` on each mechanism module (floating parts, drive chains, gear meshes, strength of
+slender printed features). Reports land in `prints/<set>/`, stamped with a hash of the model code; the pre-commit hook
 (`checks.py --verify`) refuses any commit touching model code or prints unless every report says `failing 0` and has
 the current stamp. Offline: `print_validate.py` (no film, one shell) and orientation.
 

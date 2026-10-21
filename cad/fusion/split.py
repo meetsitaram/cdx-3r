@@ -19,7 +19,8 @@ import shoulder as sh
 
 FOLDER = 'CDX-3R v3'
 DOCS = {'frame': 'CDX-3R frame', 'girdle': 'CDX-3R shoulder girdle', 'rest': 'CDX-3R shoulder rest',
-        'arm': 'CDX-3R shoulder hinges + arm', 'assembly': 'CDX-3R assembly'}
+        'arm': 'CDX-3R shoulder hinges + arm', 'gripper': 'CDX-3R gripper', 'gripper3': 'CDX-3R gripper 3',
+        'assembly': 'CDX-3R assembly'}
 STEPS = {'girdle': ('start', 'tower', 'lift0', 'lift1', 'carriage', 'link1', 'link2', 'spool', 'end', 'spring', 'finish'),
          'rest': ('start', 'bracket', 'root', 'blade1', 'blade2', 'blade3', 'soft', 'hw')}
 
@@ -65,6 +66,12 @@ def build(module, step=None):
     if module == 'rest':
         import shoulder_rest as sr
         return sr.build_step(step)
+    if module == 'gripper':
+        import gripper
+        return gripper.build(top, step)
+    if module == 'gripper3':
+        import gripper3
+        return gripper3.build(top, step)
     if module == 'arm':
         out, cp = sh.build_moving(top, sh.derived())
         return sh.place_elbow()
@@ -95,13 +102,25 @@ def assembly():
     fx.init()
     root = d.rootComponent
     out = []
-    for m in ('frame', 'girdle', 'rest', 'arm'):
+    for m in ('frame', 'girdle', 'rest', 'arm', 'gripper3'):
         occ = root.occurrences.addByInsert(_file(DOCS[m]), adsk.core.Matrix3D.create(), True)
         occ.isGroundToParent = True
         out.append(occ.component.name)
     top = sh.top_component()                              # scan reference + harness live in the assembly itself
     sh.reference(top)
     return out
+
+
+def link(module):
+    """Insert one module into the open assembly document (identity, grounded), if it isn't linked yet."""
+    fx.init()
+    root = fx.design.rootComponent
+    for o in root.occurrences:
+        if o.isReferencedComponent and o.component.name.startswith(DOCS[module]):
+            return o.component.name, False
+    occ = root.occurrences.addByInsert(_file(DOCS[module]), adsk.core.Matrix3D.create(), True)
+    occ.isGroundToParent = True
+    return occ.component.name, True
 
 
 def save_assembly():

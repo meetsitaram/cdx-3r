@@ -42,6 +42,11 @@ Read this before starting a new part.
 | Insert holes sized for 4 mm inserts; the inserts actually bought were ruthex 5.7 mm | size insert holes from the actual part bought (ruthex RX-M3 × 5.7: Ø4.0 × ~7 mm); model the insert at its real length |
 | Mesh bodies in a parametric design | add them inside a base feature (`baseFeatures.add(); startEdit(); meshBodies.add(...); finishEdit()`) |
 | Left/right copies drifted when edited separately | build the right half and add a **Mirror feature** about a midline construction plane (associative); for split prints use `isCombine=False` |
+| A long MCP script that times out may be re-sent, leaving `name (1)` copies of parts | after a rebuild delete occurrences named ` (n)` (`gripper3.rebuild` does); check part counts |
+| `split.save()` uses saveAs: saving a module again leaves several files with the same name in the Fusion project, and `split.link()` may link an old one (the assembly showed the old gripper, 21 Oct) | link the open document's own file (`doc.dataFile`); after saving a module, `doc.save()` instead of saveAs (to do in split.py) |
+| `saveAsImageFile` gave blank pictures after hiding occurrences in a loop | hide/show bodies (`body.isLightBulbOn`) rather than occurrences, and check one picture before rendering a set |
+| A move/rotate feature placed a part at the mirror spot (free-move transforms are not in the component's frame) | build each copy in place, in its own frame (e.g. a revolve about the claw's own axis), instead of moving one |
+| Fillets Fusion can't build stay in the timeline as broken features and break the features after them | check `healthState` after each fillet and `deleteMe()` the failed ones (`gripper3._soften`) |
 
 ## 3. Geometry and modelling mistakes
 
@@ -85,6 +90,8 @@ Read this before starting a new part.
 | A hand-drawn line on a screenshot ("slide to that place") meant *cut along this line*; I read it as "add a gusset" and added material where the user wanted it removed | a line drawn across a part is a cut line; if unsure, say back "cut along this line?" before building |
 | A timed-out MCP call that rebuilt the pipes left the old component next to the new one ("... (1)") | after any timeout, list components and delete duplicates before the next check |
 | The static scan never moves the shoulder blade, so a girdle placed at blade height looked clear (48 mm) | move torso points near the shoulder with it (`girdle_follow.py`: weight fades toward the spine and down the back) and **swing the arm back** about GH before trusting any part behind the upper arm; under the housing the arm hit the SCARA elbow at 35° (24° squeezed) |
+
+| A rounding cap inscribed in a rectangular section cut flat steps off its corners, and a test zone that started past the cut missed it | make the cap circumscribe the section (no step), and start a geometry test's zone before any cut it guards; compare part volumes and lengths of copies that should be identical |
 
 ## 4. Design and ergonomics (from the body scan and fitting)
 
@@ -213,10 +220,29 @@ What went wrong in the first v3 guide (user review, Oct 2026), and the rule each
 | A fix (rest pivot bolt) was checked for grip and printability but not collisions: its head sat inside the rest's hinge knuckle and clevis pin (docs/bugs/pivot-bolt-hits-rest-hinge.md) | `collision_check.py` runs on the whole assembly before every export (hook requires `failing 0`). Moving parts: also sweep them through their range (rotate a temporary copy with `TemporaryBRepManager` and intersect). |
 | Checks only ran when someone exported; moving parts were never checked against fixed ones (raised arm into the shoulder rest, docs/bugs/raised-arm-hits-shoulder-rest.md) | `checks.run_all` (fasteners, static collisions, motion sweep through `collision_check.POSES`) writes reports stamped with a hash of the model code; the pre-commit hook refuses commits of model code or prints without passing, current reports. Every new check is run on a known-bad case first: the first versions of the collision test and of the sweep both reported nonsense (part names with '+', results without assembly paths). |
 | Questions the guide didn't answer ("how is the strut attached?") | Every bought part gets its attachment shown and named, even if it's "snaps on, no screw". |
+| Gripper review (Oct 2026): a cable housing ended in mid-air, the trigger drove nothing (no wire), the damper "gear" was a plain disc, a printed pin stood upright under a sideways push; collision and fastener checks passed all of it | `design_rules.py` (in `checks.run_all` + hook) for every mechanism module: **floating** (each body touches another and links to the anchor), **chains** (each declared drive chain's links touch, in its pose), **meshes** (gears have teeth and sit at their partner), **strength** (slender printed features as cantilevers under a hard squeeze, SF >= 3, layer direction counted). Write the rules first and prove them on the bad model, then fix. Placeholders for bought parts must still be the right *kind* of part (a gear has teeth, a cable has a wire and stops). |
 | Sim animation didn't show forces | Draw the strap pull as arrows from the skin outward (2 cm per N), from a view where they aren't foreshortened; label forces and units in the frame. |
 
 Render loop: `recollect` (close temp doc, `restore`, `collect`, `migrate`), then `render(step)` in batches of
 steps that fit the 60 s MCP limit, contact-sheet the frames, then `python mkgif.py`.
+
+## 5d. Gripper checks learned the hard way (`gripper3.RULES`)
+
+| Flaw the user caught | Test that now catches it |
+|---|---|
+| One-sided pull on a short sliding collar would cock and jam | `slide_rules`: sliding length >= 2.5 x mu x pull offset |
+| Thin rods/links snap when knocked | 20 N side knock at mid-span of every exposed link |
+| Hinge cheeks and the base front beam were too thin | strength loads at their necks (60 N on the grip) |
+| Base dipped over the wrist ring / hand at some slide positions | `ring_clear_rules` at every slide position |
+| Claws left big gaps when closed; no pinch at the tips | `closed_claw_rules` (drill-chuck wedges, tips first, teeth) |
+| Return spring too weak to hold a grape | `grip_force_rules`: >= 0.8 N per claw at a ball, finger <= 25 N |
+| Sharp edges where fingers touch, pointy claw tips | `sharp_edge_rules` in the hand zones, `tip_rules` |
+| A spring poked into the trigger | `apart` rule: the spring clear of the trigger |
+| Trigger pivot ring hung on a 0.2 mm neck over the link slot | `trigger_neck_rules` (>= 4 mm solid under the ring) |
+| Claw outline corners stuck out of the root disc as little spikes | `claw_root_rules` (corners inside the disc) |
+| A piece that failed to join stayed a separate overlapping body | `one_body_rules` (every printed part is one solid) |
+| 0.8-1.1 mm skins and walls passed the print check (only area films < 0.8 failed; strips counted as "edges") | `print_validate`: walls < 1.2 mm with parallel faces fail, as areas or as strips > 2 mm; wedges/bevels (faces at an angle) still pass |
+| Validating the oriented STLs gives locations in the print frame | export the bodies unrotated to a scratch folder and validate those to get model coordinates |
 
 ## 6. Working agreements with the user
 

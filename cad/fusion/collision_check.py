@@ -24,6 +24,18 @@ ALLOWED = [
     (r'Gas spring (cylinder|rod)', r'Gas spring (cylinder|rod)', 'the bought strut itself: rod in cylinder, end fittings'),
     (r'Clevis pin', r'R-clip', 'the R-clip goes through the pin'),
     (r'hook-and-loop', r'M3 x 8 socket head', 'soft pad over M3 heads 0.5 mm proud (ASSEMBLY step 3 note)'),
+    (r'extension spring', r'drive pin|head plate|gear R', 'spring hooks wrap the drive pin and the plate lug pin'),
+    (r'inner wire', r'cable housing', 'the wire runs inside its housing'),
+    (r'inner wire', r'pusher lever', 'the wire end (nipple) is fixed in the pusher lever'),
+    (r'nipple', r'inner wire', 'the nipple is crimped / clamped on the wire'),
+    (r'compression spring', r'collar|carrier', 'spring seated on the flange, pushing the collar'),
+    (r'index plunger', r'carrier', 'the latch pin rides on the knuckle between its two holes'),
+    (r'trigger return', r'trigger', 'the return spring squashes as the trigger is squeezed (its solid length is a gripper3 design rule)'),
+    (r'trigger return', r'link|carrier', 'the return spring loops wrap through the lug holes and stretch as the link moves'),
+    (r'constant-force spring tape', r'constant-force spring ~', 'the tape winds onto its own coil'),
+    (r'socket head, carriage', r'MGN12H carriage', 'screw in its tapped hole'),
+    (r'socket head, rail', r'MGN12 linear rail', 'head in the rail counterbore'),
+    (r'constant-force spring', r'spool|rail base', 'coil wraps the spool boss'),
 ]
 
 
@@ -132,7 +144,8 @@ def _known(lab, n1, n2):
 
 
 ARM = ('Yoke', 'Abduction sleeve', 'HW abd (buy)', 'Upper-arm link', 'Flexion axle sleeve', 'HW flex (buy)')
-FLEX = ('Upper-arm link', 'Flexion axle sleeve', 'HW flex (buy)', 'Elbow concept')
+FLEX = ('Upper-arm link', 'Flexion axle sleeve', 'HW flex (buy)', 'Elbow concept', 'Gripper')
+RIDES_FOREARM = 'Gripper'                                     # mounted on the forearm's wrist ring: moves with it
 
 
 def record_poses(path, start=0, count=None):
@@ -203,6 +216,8 @@ def sweep(path, log_path, min_vol=MIN_VOL, labels=None):
         for p, b in bodies:
             cn = b.parentComponent.name                        # not split from the path: names contain '+'
             D = data[lab].get(cn)
+            if D is None and cn.startswith(RIDES_FOREARM):
+                D = next((v for k, v in data[lab].items() if k.startswith('Elbow concept')), None)
             fl = F is not None and cn.startswith(FLEX)
             if D is None and not fl:
                 cur.append((p + '/' + b.name, b, None))

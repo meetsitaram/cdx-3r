@@ -16,12 +16,13 @@ and cutting PVC.
 | 2 | [Back frame](#2-build-the-back-frame) | |
 | 3 | [Shoulder tower](#3-put-on-the-shoulder-tower) | 2 hidden nuts |
 | 4 | [Lift](#4-build-the-lift) | 2 hidden nuts |
-| 5 | [SCARA arms](#5-build-the-scara-arms) | 1 hidden nut, 1 bolt cut short |
+| 5 | [SCARA arms](#5-build-the-scara-arms) | 1 hidden nut, the M8 × 75 bolt |
 | 6 | [Shoulder hinge](#6-build-the-shoulder-hinge) | 1 hidden nut |
 | 7 | [Shoulder rest](#7-build-the-shoulder-rest) | pin each piece as it goes on |
 | 8 | [Join the arm](#8-join-the-arm-to-the-shoulder) | |
 | 9 | [Straps](#9-add-the-straps) | |
 | 10 | [Try it on](#10-try-it-on) | |
+| 11 | [Gripper](#11-add-the-gripper-optional) (optional) | inserts first; spring last |
 
 ---
 
@@ -365,5 +366,111 @@ Upper-arm pipes all the way into the arm link, 2 pipe screws each.
 5. After the first wear, re-check every M8 nut, the M6 screws and the pipe screws.
 
 </details>
+
+
+---
+
+## 11. Add the gripper (optional)
+
+![Gripper 3, finished](images/gripper3/7_done.png)
+
+Prototype 3: a three-claw gripper on a pistol grip, clamped to the forearm's middle pipe behind the wrist. Squeeze the
+trigger and the three claws open; let go and they close. It folds up and back over the forearm when you don't need it.
+
+<details markdown="1">
+<summary><b>Printed parts and hardware</b></summary>
+
+Print files: [prints/gripper3-v1](../prints/gripper3-v1/) (pre-oriented, checked).
+
+| File | Material | Qty | Note |
+|---|---|---|---|
+| 01_gripper_base | PETG | 1 | supports on |
+| 02_gripper_carrier | PETG | 1 | on its side, tree supports under the hub and dome |
+| 03_gripper_grip | PETG | 1 | |
+| 04_gripper_trigger | PETG | 1 | lies on its flat back face |
+| 05_gripper_y_link | PETG | 1 | |
+| 06_gripper_collar | PETG | 1 | |
+| 07_gripper_claw_TPU_x3 | TPU 95A | 3 | flat, slow (20–30 mm/s) |
+
+Hardware ([BOM](../BOM.md), gripper prototype 3): 11 ruthex M3 inserts, M3 × 12 (6), M3 × 20 (4), M3 × 30 (4), M3 nylocs
+(4), 2 M3 × 10 knurled thumb screws, M8 × 55 + nyloc, the M8 index plunger (pull ring), one extension spring
+(1.2 × 10 × 45 mm, from the Keadic kit), two 22 mm hook-and-loop dots.
+
+</details>
+
+> ⚠ **Inserts first** (soldering iron): 2 in the base's clamp holes (from the top), 4 in the bridge's underside, 3 in
+> the dome from the outside (claw pivots), 2 in the collar's side lobes. Every one is hard to reach later.
+
+### 11.1 Base on the pipe
+
+![Base](images/gripper3/1_base.png)
+
+**Parts:** base, 2 M3 × 10 thumb screws
+
+Snap the two clips onto the forearm's **middle** pipe, behind the wrist ring. Thumb screws in from the top until their
+tips touch the pipe. Loosen them to slide the whole gripper up to 50 mm forward or back; tighten where it suits your hand.
+
+### 11.2 Fold hinge and lock
+
+![Hinge](images/gripper3/2_hinge.png)
+
+**Parts:** carrier, M8 × 55 + nyloc, index plunger with its lock nut
+
+- Carrier's round knuckle between the base's two cheeks, M8 × 55 through, nyloc snug: it must still turn freely.
+- Screw the plunger into the 6.8 mm hole in the outer cheek (it cuts its own thread in the plastic; an M8 tap makes it
+  easier), lock nut on the outside. With the gripper pointing forward the pin clicks into the knuckle's first hole.
+
+### 11.3 Claws
+
+![Claws](images/gripper3/3_claws.png)
+
+**Parts:** 3 TPU claws, 3 M3 × 30
+
+Each claw's round root into its slot in the dome; M3 × 30 in through the wide entry, through the claw, into the insert
+in the far wall. Snug only: the claw must swing.
+
+### 11.4 Collar
+
+![Collar](images/gripper3/4_collar.png)
+
+**Parts:** collar, 3 M3 × 20 + 3 nylocs
+
+Slide the collar over the hub so each claw's tail sits between a pair of cheeks. M3 × 20 through the cheeks and the
+tail's slot, nyloc on the far side, snug: the tail must slide in its slot.
+
+### 11.5 Grip and trigger
+
+![Grip and trigger](images/gripper3/5_grip_trigger.png)
+
+**Parts:** grip, trigger, 4 M3 × 12, M3 × 30
+
+Grip's top plate up under the bridge, 4 × M3 × 12 into the inserts. Trigger between the grip's two cheeks, M3 × 30
+through as its pivot.
+
+### 11.6 Y link and spring
+
+![Y link and spring](images/gripper3/6_link_spring.png)
+
+**Parts:** Y link, M3 × 20 + nyloc, 2 M3 × 12, extension spring
+
+- Link's stem into the trigger's slot, M3 × 20 + nyloc as the pin (snug, it must turn).
+- Its two arms onto the collar's side lobes, M3 × 12 into the inserts (they are pivots: snug, not tight).
+- Spring last: one loop through the hook hole on the back of the hub, the other through the link's hole **farthest
+  from the hub**. If squeezing is too hard, use the middle hole.
+
+### 11.7 Velcro and check
+
+![Open and closed](images/gripper3/9_open.png)
+
+![Stowed](images/gripper3/8_stowed.png)
+
+**Parts:** 2 hook-and-loop dots (22 mm)
+
+One dot on top of the bridge, the other on the sloped pad on the base.
+
+**Check:**
+- Squeeze: the claws open about 34°. Let go: they snap shut, tips touching.
+- Fold: pull the plunger's ring, swing the gripper up and back until the bridge lands on the pad, let go: the pin
+  clicks into its second hole and the Velcro holds it.
 
 You built an exo!

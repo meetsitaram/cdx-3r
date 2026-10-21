@@ -1,0 +1,76 @@
+design rules 74, failing 0 (touch <= 0.3 mm, safety factor >= 3)
+ok   trigger drive: 0.00 mm                                     trigger (printed) -> pull pin
+ok   trigger drive: 0.10 mm                                     pull pin -> link (printed)
+ok   trigger drive: 0.00 mm                                     link (printed) -> yoke pin
+ok   trigger drive: 0.00 mm                                     yoke pin -> collar
+ok   trigger drive: 0.00 mm                                     collar -> tail pin
+ok   trigger drive: 0.20 mm                                     tail pin -> claw 1
+ok   trigger drive: 0.20 mm                                     tail pin -> claw 2
+ok   trigger drive: 0.20 mm                                     tail pin -> claw 3
+ok   claws closed: tips meet: 0.20 mm                           claw 1 -> claw 2
+ok   claws closed: tips meet: 0.20 mm                           claw 2 -> claw 3
+ok   claws closed: tips meet: 0.20 mm                           claw 3 -> claw 1
+ok   fold hinge: 0.20 mm                                        carrier -> fold hinge
+ok   fold hinge: 0.00 mm                                        fold hinge -> base (printed)
+ok   claws held on their pivot screws (in the nose) and tail pins (in the collar): 0.00 mm claw pivot -> carrier (printed)
+ok   claws held on their pivot screws (in the nose) and tail pins (in the collar): 0.20 mm claw pivot -> claw 1
+ok   claws held on their pivot screws (in the nose) and tail pins (in the collar): 0.20 mm claw pivot -> claw 2
+ok   claws held on their pivot screws (in the nose) and tail pins (in the collar): 0.20 mm claw pivot -> claw 3
+ok   claws held on their pivot screws (in the nose) and tail pins (in the collar): 0.00 mm claw tail pin -> collar (printed)
+ok   stowed: the Velcro dots meet: 0.00 mm                      carrier side -> base side
+ok   return spring hooked on the link and the hub: 0.00 mm      trigger return -> link (printed)
+ok   return spring hooked on the link and the hub: 0.00 mm      trigger return -> carrier (printed)
+ok   claws fully open: 18.29 mm apart                           claw 1 / claw 2
+ok   claws fully open: 18.29 mm apart                           claw 2 / claw 3
+ok   claws fully open: 18.29 mm apart                           claw 3 / claw 1
+ok   return spring clear of the trigger, squeezed: 8.57 mm apart trigger return / trigger (printed)
+ok   ping-pong ball (grips): 299.4 mm3 overlap                  Gripper3 claw 1 (TPU)
+ok   ping-pong ball (grips): 299.8 mm3 overlap                  Gripper3 claw 2 (TPU)
+ok   ping-pong ball (grips): 299.5 mm3 overlap                  Gripper3 claw 3 (TPU)
+ok   ping-pong ball (clear before contact): 0.0 mm3 overlap     Gripper3 claw 1 (TPU)
+ok   ping-pong ball (clear before contact): 0.0 mm3 overlap     Gripper3 claw 2 (TPU)
+ok   ping-pong ball (clear before contact): 0.0 mm3 overlap     Gripper3 claw 3 (TPU)
+ok   Gripper3 carrier (printed) is one body (1)                 Gripper3 carrier (printed)
+ok   Gripper3 collar (printed) is one body (1)                  Gripper3 collar (printed)
+ok   Gripper3 link (printed) is one body (1)                    Gripper3 link (printed)
+ok   Gripper3 base (printed) is one body (1)                    Gripper3 base (printed)
+ok   Gripper3 claw 1 (TPU) is one body (1)                      Gripper3 claw 1 (TPU)
+ok   Gripper3 claw 2 (TPU) is one body (1)                      Gripper3 claw 2 (TPU)
+ok   Gripper3 claw 3 (TPU) is one body (1)                      Gripper3 claw 3 (TPU)
+ok   Gripper3 trigger (printed) is one body (1)                 Gripper3 trigger (printed)
+ok   Gripper3 grip (printed) is one body (1)                    Gripper3 grip (printed)
+ok   claw root: outline corners 0.4 mm inside the root disc (>= 0.2) claw_outline
+ok   claws closed: ridges meet at the axis at the tip (0.30 mm off) claw_curves
+ok   claws closed: tip pad (last 17 mm) within 2 mm of the axis (worst 1.5) claw_curves
+ok   claws closed: tips touch first (pinch at the tip)          claw_curves
+ok   claws: C-cup, inner surface bows 7.6 mm out past root-tip line (>= 4) claw_curves
+ok   claws closed: wedge faces meet at the tips (gap 0.1 mm per face) sector cut
+ok   gripping edge has teeth (14)                               claw_outline
+ok   collar slides without jamming: 12 mm long, needs >= 4 (pull 7 mm off axis, mu 0.25) collar on hub
+ok   return spring: 45.0 mm between hooks at rest, pulling (free 36) spring
+ok   return spring: stretched 13.4 mm at full squeeze (max 15)  spring
+ok   base clear of the ring and the wrist, slid +0 mm: 0 mm3 below ring top base
+ok   base clear of the ring and the wrist, slid +25 mm: 0 mm3 below ring top base
+ok   base clear of the ring and the wrist, slid +50 mm: 0 mm3 below ring top base
+ok   claws are fin-ray: 8 open cells (>= 5)                     claw_cells
+ok   fin-ray cells at least 2 mm tall (smallest 7.2)            claw_cells
+ok   claw tips smooth: sharpest corner turns 23 deg (< 30)      claw_outline
+ok   grip: 1.13 N per claw on a ping-pong ball (>= 0.8)         spring
+ok   grip: 0.77 N per claw at the tips (>= 0.5)                 spring
+ok   trigger: 14.9 N at the finger, fully squeezed (<= 25)      spring
+ok   trigger: 4.5 mm solid between the pivot ring and the link slot (>= 4) trigger
+ok   trigger: fork cheeks 6.7 mm thick (>= 4)                   trigger
+ok   no sharp edges on the trigger (0 sharp)                    Gripper3 trigger
+ok   no sharp edges on the grip bottom (0 sharp)                Gripper3 grip
+ok   no sharp edges on the claw tips (0 sharp)                  Gripper3 claw
+ok   strength SF 6.9 (6.6 MPa, PETG along layers)               trigger lever: 40 N at 35 mm
+ok   strength SF 24.7 (1.8 MPa, PETG along layers)              trigger fork cheek round the pull pin (each): 41.1765 N at 4 mm
+ok   strength SF 10.9 (4.1 MPa, PETG along layers)              Y link, 20 N side knock at mid-span of its longest leg (fingers, bumps): 20 N at 12.3297 mm
+ok   strength SF 6.5 (7.0 MPa, PETG along layers)               Y link angled arm at the split (half the pull, offset to the arm line): 41.1765 N at 40.6 mm
+ok   strength SF 49.5 (0.9 MPa, PETG along layers)              collar side lug (each): 41.1765 N at 5.3 mm
+ok   strength SF 11.2 (2.7 MPa, PETG across layers)             claw slot wall in the nose (pivot load): 54.902 N at 8 mm
+ok   strength SF 10.9 (55.1 MPa, steel)                         fold hinge pin M8 (steel), 60 N on the grip at 100 mm: 461.538 N at 6 mm
+ok   strength SF 8.9 (5.0 MPa, PETG along layers)               base hinge cheeks (both), 60 N sideways on the grip, at their neck: 60 N at 72.5 mm
+ok   strength SF 5.7 (8.0 MPa, PETG along layers)               base front beam over the wrist (plate + top rib), 60 N at the grip, from the front clamp: 60 N at 165 mm
+ok   strength SF 31.4 (1.4 MPa, PETG along layers)              carrier spine at the knuckle (60 N steering at the grip): 60 N at 70 mm
+source 74d318943d518d95

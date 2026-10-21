@@ -55,7 +55,60 @@ SETS = {
         ('31_rest_washer_x2', 'Rest washers (printed)', 'rest washer, front'),
         ('32_rest_pivot_spacer', 'Rest pivot spacer (printed)', None),
     ],
+    'gripper3-v1': [                     # prototype 3 gripper, from the 'CDX-3R gripper 3' module doc
+        ('01_gripper_base', 'Gripper3 base (printed)', None),
+        ('02_gripper_carrier', 'Gripper3 carrier (printed)', None),
+        ('03_gripper_grip', 'Gripper3 grip (printed)', None),
+        ('04_gripper_trigger', 'Gripper3 trigger (printed)', None),
+        ('05_gripper_y_link', 'Gripper3 link (printed)', None),
+        ('06_gripper_collar', 'Gripper3 collar (printed)', None),
+        ('07_gripper_claw_TPU_x3', 'Gripper3 claw 1 (TPU)', None),
+    ],
 }
+MODULE_CHECKS = {'gripper3-v1': 'gripper3'}   # sets built in a module doc: run that module's own checks instead
+
+
+def module_checks(name, out, waive=()):
+    """Design rules, collisions in the working poses, a motion sweep (squeeze and fold steps) and fasteners for a
+    module doc; reports into the print folder in the format checks.verify() wants (first line 'failing N', a
+    'source <hash>' stamp). Raises (nothing exported) if any fail."""
+    import checks, collision_check, design_rules, fastener_check
+    mod = importlib.import_module(MODULE_CHECKS[name])
+    for m in (checks, collision_check, design_rules, fastener_check, mod):
+        importlib.reload(m)
+    stamp = 'source %s' % checks.source_hash()
+    nl = chr(10)
+    rf = os.path.join(out, 'design_rules.txt')
+    design_rules.run(rf, mod)
+    fails = [l for l in open(rf) if l.startswith('FAIL') and not any(w in l for w in waive)]
+    if waive:                                                     # a waived rule is recorded, never hidden
+        open(rf, 'a').write(nl + 'WAIVED for this export (cosmetic, user asked to export): %s' % '; '.join(waive) + nl)
+    open(rf, 'a').write(stamp + nl)
+    bad = ['design rules: %d' % len(fails)]
+
+    def sweep(poses, fname, title):
+        n_bad, body = 0, []
+        for f_, q in poses:
+            mod.pose(f_, q)
+            tmp = os.path.join(out, '_col.txt')
+            n = collision_check.run_check(tmp)
+            n_bad += n
+            body.append('== fold %s, squeeze %s: %d failing' % (f_, q, n) + nl + open(tmp).read())
+            os.remove(tmp)
+        with open(os.path.join(out, fname), 'w') as f:
+            f.write('%s %d poses, failing %d' % (title, len(poses), n_bad) + nl + nl.join(body) + nl + stamp + nl)
+        bad.append('%s: %d' % (title, n_bad))
+    stow = mod.P['hinge']['stow_deg']
+    sweep([(0, 0), (0, 0.5), (0, 1), (stow, 0)], 'collision_check.txt', 'collisions in the working poses:')
+    sweep([(0, k / 4) for k in range(5)] + [(stow * k / 8, 0) for k in range(1, 9)], 'motion_check.txt',
+          'motion sweep (squeeze 0..1, fold 0..%d):' % stow)
+    mod.pose(0, 0)
+    ff = os.path.join(out, 'fastener_check.txt')
+    bad.append('fasteners: %d' % fastener_check.run_check(ff))
+    open(ff, 'a').write(stamp + nl)
+    if any(not b.endswith(': 0') for b in bad):
+        raise RuntimeError('checks failing, nothing exported: ' + '; '.join(bad))
+    return bad
 
 
 def system_python():
@@ -74,7 +127,7 @@ def orient(folder):
     return r.stdout
 
 
-def export(name, only=None, start=0, count=None, orient_after=True):
+def export(name, only=None, start=0, count=None, orient_after=True, waive=()):
     d = adsk.fusion.Design.cast(adsk.core.Application.get().activeProduct)
     out = os.path.join(ROOT, 'prints', name)
     os.makedirs(out, exist_ok=True)
@@ -84,9 +137,12 @@ def export(name, only=None, start=0, count=None, orient_after=True):
             occ.setdefault(o.component.name, o)
     # every model check (fasteners bite, nothing collides) on the whole assembly first: nothing is exported if one
     # fails. The reports go with the STLs; the git hook refuses a commit without clean, current ones
-    import checks
-    importlib.reload(checks)
-    checks.run_all(name)
+    if name in MODULE_CHECKS:
+        module_checks(name, out, waive)
+    else:
+        import checks
+        importlib.reload(checks)
+        checks.run_all(name)
     parts = [p for p in SETS[name] if not only or p[0] in only]
     parts = parts[start:None if count is None else start + count]
     em = d.exportManager

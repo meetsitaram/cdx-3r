@@ -6,8 +6,9 @@ nothing, e.g. moved hardware):
     import checks
     checks.run_all('shoulder-back-v3')
 
-It writes fastener_check.txt, collision_check.txt and motion_check.txt (moving parts swept through the poses in
-collision_check.POSES) into prints/<set>/, each stamped with a hash of the model
+It writes fastener_check.txt, collision_check.txt, motion_check.txt (moving parts swept through the poses in
+collision_check.POSES) and design_rules.txt (design_rules.py on each module in RULE_MODULES, in its own open
+document) into prints/<set>/, each stamped with a hash of the model
 sources (the build scripts and layout files here). The pre-commit hook runs `python cad/fusion/checks.py --verify`
 whenever model sources or prints are staged: every report must say "failing 0" and carry the current hash, so a
 change to the model can't be committed without the checks having run on it.
@@ -23,7 +24,8 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
 ASSEMBLY = 'CDX-3R assembly'
-REPORTS = ('fastener_check.txt', 'collision_check.txt', 'motion_check.txt')
+REPORTS = ('fastener_check.txt', 'collision_check.txt', 'motion_check.txt', 'design_rules.txt')
+RULE_MODULES = {'gripper3': 'CDX-3R gripper 3'}         # modules with design_rules RULES, checked in their own document
 ARCHIVE = 'CDX-3R shoulder + back'                       # the one document holding girdle + arm together (for poses)
 POSES = os.path.join(HERE, 'motion_poses.json')         # recorded poses: each moving part's motion from rest
 # offline tools that don't change the model
@@ -92,6 +94,32 @@ def run_all(name):
             bad.append(path)
         with open(path, 'a') as f:
             f.write('source %s\n' % stamp)
+    # design rules (floating parts, drive chains, gear meshes, strength) per mechanism module, in its own document
+    import design_rules
+    importlib.reload(design_rules)
+    path = os.path.join(out, 'design_rules.txt')
+    fails, lines = 0, []
+    for mod, docname in RULE_MODULES.items():
+        mdoc = next((app.documents.item(i) for i in range(app.documents.count)
+                     if app.documents.item(i).name == docname), None)
+        if mdoc is None:
+            raise RuntimeError('open "%s" (design rules run in it)' % docname)
+        m = importlib.import_module(mod)
+        importlib.reload(m)
+        mdoc.activate()
+        try:
+            fails += design_rules.run(path + '.' + mod, m)
+        finally:
+            doc.activate()
+        lines += open(path + '.' + mod).read().splitlines()
+        os.remove(path + '.' + mod)
+    total = sum(1 for x in lines if x[:4] in ('ok  ', 'FAIL'))
+    with open(path, 'w') as f:
+        f.write('design rules %d, failing %d (modules: %s)\n' % (total, fails, ', '.join(RULE_MODULES)))
+        f.write('\n'.join(x for x in lines if not x.startswith('design rules')) + '\n')
+        f.write('source %s\n' % stamp)
+    if fails:
+        bad.append(path)
     if bad:
         raise RuntimeError('model checks failed: see ' + ', '.join(bad))
     return 'checks ok, source ' + stamp

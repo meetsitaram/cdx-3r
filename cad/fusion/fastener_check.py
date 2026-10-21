@@ -66,7 +66,7 @@ def check(design, min_grip=MIN_GRIP):
             if buy and FASTENER.search(b.name) and not SKIP.search(b.name):
                 fasteners.append((o.component.name, b.name, px))
             elif (not buy or 'printed' in b.name or 'PVC' in b.name or 'PVC' in o.component.name
-                  or re.search(r'(nut|insert)', b.name, re.I)):
+                  or re.search(r'(nut|insert|carriage)', b.name, re.I)):
                 printed.append(px)                         # what a screw can bite: printed parts, PVC, nuts, inserts
     out = []
     boxes = [(b, b.boundingBox) for b in printed]

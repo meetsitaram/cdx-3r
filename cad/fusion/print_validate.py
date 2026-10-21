@@ -12,9 +12,13 @@ import sys
 
 import numpy as np
 
-MIN_WALL = 0.8          # mm, measured sideways (2 lines of a 0.4 mm nozzle: the thinnest wall that prints solid)
-MIN_FLOOR = 0.6         # mm, measured vertically in the print orientation (3 layers of 0.2 mm)
-SAMPLES = 12000
+MIN_WALL = 1.2          # mm, measured sideways (3 lines of a 0.4 mm nozzle). 0.8 let a 0.8 mm skin over a slot end
+MIN_FLOOR = 0.8         # mm, measured vertically in the print orientation (4 layers of 0.2 mm)    through (collar, 21 Oct)
+SKIN_DEG = 20.0         # opposite faces within this angle of parallel: a skin (fails when thin); wider: an edge (ok)
+THIN_STRIP = 2.0        # mm: parallel-faced thin points strung out longer than this are a thin wall (0.3 mm between
+                        # two holes in the gripper base, 21 Oct), not a knife edge
+FILM_SPREAD = 0.6       # mm: thin points spread this wide in two directions are a skin/plate, not a knife edge
+SAMPLES = 30000          # dense enough that a 3 x 4 mm skin gets several hits
 
 
 def load(p):
@@ -44,10 +48,12 @@ def shells(t):
     return len({find(x) for x in np.unique(inv)})
 
 
-def first_hit(orig, dirs, tris):
-    """Distance along each ray (origin, direction) to the nearest triangle, inf if none (Moller-Trumbore)."""
+def first_hit(orig, dirs, tris, want_index=False):
+    """Distance along each ray (origin, direction) to the nearest triangle, inf if none (Moller-Trumbore); with
+    want_index also the index of the triangle hit (-1 if none)."""
     e1, e2, v0 = tris[:, 1] - tris[:, 0], tris[:, 2] - tris[:, 0], tris[:, 0]
     out = np.full(len(orig), np.inf)
+    idx = np.full(len(orig), -1)
     for i0 in range(0, len(orig), 48):
         o, d = orig[i0:i0 + 48][:, None, :], dirs[i0:i0 + 48][:, None, :]
         p = np.cross(d, e2[None])
@@ -60,8 +66,10 @@ def first_hit(orig, dirs, tris):
         w = np.einsum('mij,mij->mi', d, q) / det
         t = np.einsum('ij,mij->mi', e2, q) / det
         hit = ok & (u >= 0) & (w >= 0) & (u + w <= 1) & (t > 1e-3)
-        out[i0:i0 + 48] = np.where(hit, t, np.inf).min(1)
-    return out
+        tt = np.where(hit, t, np.inf)
+        out[i0:i0 + 48] = tt.min(1)
+        idx[i0:i0 + 48] = np.where(np.isfinite(tt.min(1)), tt.argmin(1), -1)
+    return (out, idx) if want_index else out
 
 
 def wall_check(t, rng):
@@ -77,9 +85,14 @@ def wall_check(t, rng):
     tri = t[idx]
     pts = tri[:, 0] + r1[:, None] * (tri[:, 1] - tri[:, 0]) + r2[:, None] * (tri[:, 2] - tri[:, 0])
     d = -nr[idx]
-    th = first_hit(pts + d * 0.01, d, t) + 0.01
+    th, hit = first_hit(pts + d * 0.01, d, t, want_index=True)
+    th = th + 0.01
+    # the opposite wall's slope tells a skin from an edge: a skin's two faces are (nearly) parallel; near an edge or a
+    # bevel the faces meet at an angle and the thin band is just the last bit of a wedge, which prints fine
+    nh = np.where(hit[:, None] >= 0, nr[np.maximum(hit, 0)], 0.0)
+    parallel = np.abs(np.einsum('ij,ij->i', nh, d)) > np.cos(np.radians(SKIN_DEG))
     vertical = np.abs(d[:, 2]) > 0.7                       # STLs are in print orientation: z is up
-    thin = th < np.where(vertical, MIN_FLOOR, MIN_WALL)
+    thin = (th < np.where(vertical, MIN_FLOOR, MIN_WALL)) & parallel
     groups = []
     for pnt, val in sorted(zip(pts[thin], th[thin]), key=lambda x: x[1]):
         for g in groups:
@@ -96,7 +109,8 @@ def wall_check(t, rng):
         q = np.array(g['pts'])
         ev = np.sort(np.linalg.eigvalsh(np.cov((q - q.mean(0)).T))) if len(q) >= 3 else np.zeros(3)
         g['spread'] = float(np.sqrt(max(ev[1], 0.0)))
-        g['film'] = g['spread'] > 1.0
+        g['length'] = float(np.sqrt(max(ev[2], 0.0))) * 2
+        g['film'] = g['spread'] > FILM_SPREAD or g['length'] > THIN_STRIP   # a skin, or a thin wall along a line
     return groups, float(np.percentile(th[np.isfinite(th)], 5)), pts[thin], th[thin]
 
 
@@ -104,6 +118,7 @@ THIN = {}
 
 
 def validate(paths):
+    import orient_stls
     bad = 0
     for p in paths:
         rng = np.random.default_rng(sum(map(ord, os.path.basename(p))))      # repeatable per file
@@ -113,11 +128,14 @@ def validate(paths):
         THIN[os.path.basename(p)] = (tp, tv)
         groups = [g for g in groups if g['n'] >= 3]             # 1-2 rays grazing an edge are noise
         films = [g for g in groups if g['film']]
-        ok = sh == 1 and not films
+        _, tilt = orient_stls.level(t)                         # the bed face must lie dead flat, or the slicer
+        ok = sh == 1 and not films and tilt < 0.01              # sees an edge on the bed (rest blades, 18 Oct)
         bad += not ok
         msg = '%-32s %s  shells %d  5th-pct wall %.1f mm' % (os.path.basename(p), 'OK  ' if ok else 'FAIL', sh, p5)
         if films:
             msg += '  FILM: ' + '; '.join('%.2f mm at (%.0f, %.0f, %.0f) over %.1f mm' % (g['min'], *g['at'], g['spread']) for g in films[:4])
+        if tilt >= 0.01:
+            msg += '  BED FACE TILTED %.3f deg (run orient_stls.py on the folder)' % tilt
         edges = [g for g in groups if not g['film']]
         if edges:
             msg += '  (edges/tips, ok: %d)' % len(edges)

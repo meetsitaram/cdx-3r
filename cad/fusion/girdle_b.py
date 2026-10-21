@@ -498,7 +498,7 @@ def build_elbow_spool(grp):
     _spacer(hw, C, G['yL'] + h, G['yU'] - h, 'link spacer Ø11 x 1 (printed)')
     _spacer(hw, C, G['yL'] - h - 1.0, G['yL'] - h, 'nut spacer Ø11 x 1 (printed)')
     L = _bolt(hw, C, G['yU'] + h + 1.0, G['yL'] - h - 1.0, 'C')
-    next(b for b in hw.comp.bRepBodies if b.name.startswith('M8 x %d' % L)).name = 'M8 x 100 socket head, cut to %d (buy)' % L
+    next(b for b in hw.comp.bRepBodies if b.name.startswith('M8 x %d' % L)).name = 'M8 x 75 socket head, fully threaded (buy)' if L <= 75 else 'M8 x %d socket head (buy)' % L
     return hw
 
 

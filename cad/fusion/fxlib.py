@@ -486,6 +486,20 @@ class Part:
             if len(left) == len(todo):
                 break
             todo = left
+        # last try for what the distance pre-check skipped (it can misfire on fresh bodies, 21 Oct: a trigger neck
+        # stayed a separate body): join anyway; a tool that really does not touch stays a separate body
+        for tool in list(todo):
+            try:
+                n = self.comp.bRepBodies.count
+                ci = cf.createInput(target, coll([tool]))
+                ci.operation = JOIN
+                ci.isKeepToolBodies = False
+                f = cf.add(ci)
+                if self.comp.bRepBodies.count < n:
+                    target = f.bodies.item(0)
+                    todo.remove(tool)
+            except Exception:
+                pass
         return [target] + todo
 
     # -- one model, many copies: Fusion patterns and mirrors, so editing the seed updates them all

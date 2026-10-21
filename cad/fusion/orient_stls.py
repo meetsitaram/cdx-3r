@@ -99,13 +99,14 @@ def candidates(t):
     nr /= (2 * ar[:, None] + 1e-12)
     pts = t.reshape(-1, 3)
     groups = {}
-    for n, a, tri in zip(np.round(nr, 2), ar, t):
-        groups.setdefault(tuple(n), [0.0, []])
+    for n, nf, a, tri in zip(np.round(nr, 2), nr, ar, t):
+        groups.setdefault(tuple(n), [0.0, [], np.zeros(3)])
         groups[tuple(n)][0] += a
         groups[tuple(n)][1].append(tri[0] @ n)
+        groups[tuple(n)][2] += a * nf
     out = []
-    for n, (a, offs) in groups.items():
-        n = np.array(n); n /= np.linalg.norm(n)
+    for n, (a, offs, ns) in groups.items():
+        n = ns / np.linalg.norm(ns)               # the true face normal: the rounded key tilts it up to ~0.3 deg
         if a < 150:
             continue
         top = (pts @ n).max()                     # the plane must be extremal: nothing sticks out past it
@@ -118,6 +119,26 @@ def candidates(t):
         if all(np.dot(u, v) < 0.999 for v in uniq):
             uniq.append(u)
     return uniq
+
+
+def level(t):
+    """Lay the bed face exactly flat: rotate the near-flat downward faces touching the bed (within 1 deg, 0.5 mm) so
+    their true area-weighted normal is -z, then drop to z = 0. Returns (triangles, tilt fixed in deg)."""
+    nr = np.cross(t[:, 1] - t[:, 0], t[:, 2] - t[:, 0])
+    ar = np.linalg.norm(nr, axis=1) / 2
+    nr /= (2 * ar[:, None] + 1e-12)
+    z0 = t[:, :, 2].min()
+    sel = (nr[:, 2] < -0.9998) & (t[:, :, 2].max(1) < z0 + 0.5)
+    if ar[sel].sum() < 1.0:
+        return t, 0.0
+    n = (nr[sel] * ar[sel][:, None]).sum(0)
+    n /= np.linalg.norm(n)
+    tilt = float(np.degrees(np.arccos(min(1.0, -n[2]))))
+    if tilt < 1e-4:
+        return t, 0.0
+    tr = t @ rot_to_z(-n).T
+    tr[:, :, 2] -= tr[:, :, 2].min()
+    return tr, tilt
 
 
 # the shoulder-rest pieces (27-30) are left to the search: it lays them flat (honeycomb holes vertical, pin holes
@@ -140,6 +161,10 @@ def main(folder, dry=False):
             continue
         p = os.path.join(folder, f)
         if open(p, 'rb').read(80).startswith(b'oriented for printing'):
+            t, tilt = level(load(p))                         # already oriented: only make the bed face dead flat
+            if tilt and not dry:
+                print('%-32s levelled: bed face was tilted %.3f deg' % (f, tilt))
+                save(p, t)
             continue
         t = load(p)
         ev = []
@@ -160,6 +185,7 @@ def main(folder, dry=False):
         tr = t @ R.T
         lo, hi = tr.reshape(-1, 3).min(0), tr.reshape(-1, 3).max(0)
         tr -= np.array([(lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2, lo[2]])
+        tr, _ = level(tr)
         rows[f] = dict(up=[round(x, 3) for x in up], base=round(b), overhang=round(o), on_part=round(on),
                        height=round(float(hi[2] - lo[2]), 1))
         print('%-32s base %6.0f  overhang %6.0f  on-part %5.0f  height %5.1f  up %s' % (f, b, o, on, hi[2] - lo[2], np.round(up, 2)))

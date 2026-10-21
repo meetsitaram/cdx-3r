@@ -111,4 +111,4 @@ ok   abduct 75                   1.8 mm3  de (rest 20 deg):1+HW flex (buy):1/680
 ok   abduct 75 + reach           1.6 mm3  de (rest 20 deg):1+HW flex (buy):1/6808-2RS outer (buy)  <>  ):1+Rest HW (buy):1/R-clip / split pin 1.2 mm (buy) (3)  (open: docs/bugs/raised-arm-hits-shoulder-rest.md)
 ok   abduct 75 + squeeze         1.3 mm3  der + back:1+Abduction side (rest 20 deg):1+Yoke:1/Yoke  <>  buy):1/Clevis pin M6 x 70 + R-clip (buy), 70 needed (2)  (open: docs/bugs/raised-arm-hits-shoulder-rest.md)
 ok   abduct 75 + in              1.3 mm3  de (rest 20 deg):1+HW flex (buy):1/6808-2RS inner (buy)  <>  k:1+Shoulder rest (right):1+Rest blade 2:1/Rest blade 2  (open: docs/bugs/raised-arm-hits-shoulder-rest.md)
-source 580727725bb03458
+source 74d318943d518d95

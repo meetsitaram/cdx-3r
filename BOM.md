@@ -112,11 +112,51 @@ The total is about 2.15 m; **buy 3 m** (cuts plus saw kerf and spares). A left a
 |  | Hook-and-loop strap *(optional)* | 25 mm | ~1 m | arm retention across the open front of the pipe head / rings | |
 |  | Foam padding *(optional)* | thin closed-cell, self-adhesive | small sheet | skin-side faces of the arm rings / pipe head, if they rub | |
 
+## Gripper prototype 3 (fold-up, 3 fin-ray claws): hardware (Fusion doc "CDX-3R gripper 3", prints/gripper3-v1)
+
+**To buy** (all Prime eligible, checked on Amazon 20 Oct 2026: Prime delivery in 1 to 2 days):
+
+| ☐ | Item | Qty used | Pick |
+|---|---|---|---|
+| ☐ | M3 nyloc nut (304) | 4 | [BinifiMux M3 nylock, 100 pcs](https://www.amazon.com/dp/B075ZZW7VL) |
+| ☐ | M3 × 10 knurled thumb screw | 2 | [MECCANIXITY M3 × 10 knurled thumb screw, 12 pcs](https://www.amazon.com/dp/B0DBM2YK63) |
+| ☐ | Index plunger M8-1.25, 5 mm pin, pull ring (screws into a 6.8 mm hole, its own lock nut outside) | 1 | [Bitray spring plunger M8-1.25-5, 4 pcs](https://www.amazon.com/dp/B0DFP11V6C) |
+| ☐ | Extension spring, 1.2 mm wire × ~10 mm OD × 45 mm, hook ends | 1 | [Keadic 100 pcs stainless extension spring kit (has 1.2 × 10 × 45)](https://www.amazon.com/dp/B0D9H4VB5T) |
+| ☐ | TPU 95A filament, 1.75 mm | ~60 g | [SUNLU TPU 95A, 1 kg](https://www.amazon.com/dp/B0BXNWK6NS) |
+
+**From stock** (already ordered for the shoulder):
+
+| Item | Qty | Where | From |
+|---|---|---|---|
+| ruthex M3 × 5.7 heat-set insert | 11 | claw pivots (3, pressed in from outside the dome), grip (4), pipe clamps (2), Y-link pins (2) | ruthex 100-pack (38 used by the shoulder) |
+| M3 × 12 socket head | 6 | grip to bridge (4), Y-link pins into the collar (2) | Fgruh M3 kit |
+| M3 × 20 socket head | 4 | claw tail pins (3, + nyloc), trigger pull pin (1, + nyloc) | Fgruh M3 kit |
+| M3 × 30 socket head | 4 | claw pivots (3, into inserts), trigger pivot (1) | Fgruh M3 kit |
+| M8 × 55 socket head + M8 nyloc | 1 + 1 | fold hinge | M8 × 55 pack (2 spare) + Vifmy nylocs |
+| Hook-and-loop | 2 dots, 22 mm | stowed rest: one on the bridge top, one on the base pad | cut from the Navona 2" roll |
+
+If the Fgruh kit lacks 12, 20 or 30 mm: [VIGRUE M3 kit, 4–30 mm](https://www.amazon.com/dp/B083SGJ7BD) (Prime).
+Spring: hook it in the link hole farthest from the hub (45 mm between hooks); if the trigger feels too stiff, use
+the middle (40 mm) hole.
+
+**Prints** (`prints/gripper3-v1`, oriented, checked):
+
+| File | Material | Qty | Note |
+|---|---|---|---|
+| 01_gripper_base | PETG | 1 | stands at a tilt; supports on |
+| 02_gripper_carrier | PETG | 1 | on its side; tree supports under the hub and dome |
+| 03_gripper_grip | PETG | 1 | |
+| 04_gripper_trigger | PETG | 1 | lies on its straight back edge |
+| 05_gripper_y_link | PETG | 1 | |
+| 06_gripper_collar | PETG | 1 | |
+| 07_gripper_claw_TPU_x3 | TPU 95A | 3 | flat; slow (20–30 mm/s) |
+
 ## Filament
 
 | Item | Qty | Notes |
 |---|---|---|
-| PETG | ~4 kg | shoulder + back v3 ~2.8 kg (60 % effective fill), elbow set ~0.6 kg, plus fit coupons and reprints |
+| PETG | ~4 kg | shoulder + back v3 ~2.8 kg (60 % effective fill), elbow set ~0.6 kg, gripper 3 ~0.4 kg (600 g solid, 60 % effective fill, plus supports), plus fit coupons and reprints |
+| TPU 95A | ~60 g | gripper 3 claws (see above) |
 
 ## Not included yet
 

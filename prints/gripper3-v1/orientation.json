@@ -1,0 +1,79 @@
+{
+ "01_gripper_base.stl": {
+  "up": [
+   0.0,
+   0.0,
+   -1.0
+  ],
+  "base": 1944,
+  "overhang": 5391,
+  "on_part": 3356,
+  "height": 44.8
+ },
+ "02_gripper_carrier.stl": {
+  "up": [
+   0.0,
+   0.0,
+   -1.0
+  ],
+  "base": 71,
+  "overhang": 5828,
+  "on_part": 1064,
+  "height": 55.0
+ },
+ "03_gripper_grip.stl": {
+  "up": [
+   -0.0,
+   -1.0,
+   -0.0
+  ],
+  "base": 1394,
+  "overhang": 127,
+  "on_part": 58,
+  "height": 110.9
+ },
+ "04_gripper_trigger.stl": {
+  "up": [
+   0.949,
+   0.314,
+   -0.0
+  ],
+  "base": 806,
+  "overhang": 100,
+  "on_part": 60,
+  "height": 12.2
+ },
+ "05_gripper_y_link.stl": {
+  "up": [
+   -0.0,
+   1.0,
+   -0.0
+  ],
+  "base": 1409,
+  "overhang": 68,
+  "on_part": 54,
+  "height": 20.3
+ },
+ "06_gripper_collar.stl": {
+  "up": [
+   1.0,
+   -0.0,
+   -0.0
+  ],
+  "base": 1907,
+  "overhang": 137,
+  "on_part": 137,
+  "height": 24.0
+ },
+ "07_gripper_claw_TPU_x3.stl": {
+  "up": [
+   -0.0,
+   0.0,
+   1.0
+  ],
+  "base": 680,
+  "overhang": 36,
+  "on_part": 0,
+  "height": 14.0
+ }
+}

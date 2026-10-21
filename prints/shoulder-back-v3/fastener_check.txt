@@ -1,4 +1,4 @@
-fasteners 44, failing 0 (grip < 3.0 mm)
+fasteners 58, failing 0 (grip < 3.0 mm)
 ok      5.0 mm  Tower HW (buy) / #4 x 3/8" pan-head self-tapping screw (buy)
 ok      5.0 mm  Tower HW (buy) / #4 x 3/8" pan-head self-tapping screw (buy) 
 ok      6.0 mm  HW frame (buy) / M3 x 8 socket head (buy)
@@ -19,6 +19,12 @@ ok      6.0 mm  Tower HW (buy) / M3 x 8 socket head (buy)
 ok      6.0 mm  Tower HW (buy) / M3 x 8 socket head (buy) (1)
 ok      6.0 mm  Tower HW (buy) / M3 x 8 socket head (buy) (2)
 ok      6.0 mm  Tower HW (buy) / M3 x 8 socket head (buy) (3)
+ok      7.0 mm  Gripper3 HW base (buy) / M3 x 10 knurled thumb screw, pipe clamp (buy
+ok      7.0 mm  Gripper3 HW base (buy) / M3 x 10 knurled thumb screw, pipe clamp (buy
+ok      7.0 mm  Gripper3 HW carrier (buy) / M3 x 12 socket head, grip (buy)
+ok      7.0 mm  Gripper3 HW carrier (buy) / M3 x 12 socket head, grip (buy) (1)
+ok      7.0 mm  Gripper3 HW carrier (buy) / M3 x 12 socket head, grip (buy) (2)
+ok      7.0 mm  Gripper3 HW carrier (buy) / M3 x 12 socket head, grip (buy) (3)
 ok      8.0 mm  SCARA link 1 HW (buy) / M3 x 12 socket head (buy)
 ok      8.0 mm  SCARA link 1 HW (buy) / M3 x 12 socket head (buy) (1)
 ok      8.0 mm  SCARA link 1 HW (buy) / M3 x 12 socket head (buy) (2)
@@ -29,11 +35,19 @@ ok      8.0 mm  SCARA link 2 HW (buy) / M3 x 12 socket head (buy) (2)
 ok      8.0 mm  SCARA link 2 HW (buy) / M3 x 12 socket head (buy) (3)
 ok      8.0 mm  Carriage HW + pulley P0 (buy) / M6 x 16 socket head (buy)
 ok      8.0 mm  Tower HW (buy) / M6 x 16 socket head (buy)
+ok      8.0 mm  Gripper3 HW collar (buy) / M3 x 20 socket head, claw tail pin, through 
+ok      8.0 mm  Gripper3 HW collar (buy) / M3 x 12 socket head, yoke pin (buy)
+ok      8.0 mm  Gripper3 HW collar (buy) / M3 x 12 socket head, yoke pin (buy) (1)
+ok      9.0 mm  Gripper3 HW collar (buy) / M3 x 20 socket head, claw tail pin, through 
+ok      9.0 mm  Gripper3 HW collar (buy) / M3 x 20 socket head, claw tail pin, through 
+ok     12.0 mm  Gripper3 HW trigger (buy) / M3 x 20 socket head + nyloc, pull pin (buy)
+ok     15.0 mm  Gripper3 HW trigger (buy) / M3 x 30 socket head, trigger pivot (buy)
 ok     16.0 mm  Carriage HW + pulley P0 (buy) / M8 x 55 socket head (buy)
 ok     16.0 mm  Carriage HW + pulley P0 (buy) / M8 x 55 socket head (buy) (1)
 ok     16.0 mm  Carriage HW + pulley P0 (buy) / M8 x 55 socket head (buy) (2)
 ok     16.0 mm  Tower HW (buy) / M8 x 55 socket head (buy)
 ok     16.0 mm  Tower HW (buy) / M8 x 55 socket head (buy) (1)
+ok     20.0 mm  Gripper3 HW base (buy) / M8 x 55 socket head + M8 nyloc, fold hinge (
 ok     24.0 mm  HW flex (buy) / M8 x 55 socket head (buy)
 ok     24.0 mm  End plate HW + pulley P2 (buy) / M8 x 55 socket head (buy)
 ok     25.0 mm  Elbow spool: bolt + pulleys PA/PB  / M8 x 100 socket head, cut to 75 (buy)
@@ -43,4 +57,4 @@ ok     29.0 mm  Rest HW (buy) / Clevis pin M6 x 70 + R-clip (buy), 70 needed
 ok     29.0 mm  Rest HW (buy) / Clevis pin M6 x 70 + R-clip (buy), 70 needed
 ok     33.0 mm  Rest HW (buy) / M6 x 65 socket head, bracket pivot (buy)
 ok     47.0 mm  HW abd (buy) / M8 x 100 socket head (buy)
-source 580727725bb03458
+source 74d318943d518d95
