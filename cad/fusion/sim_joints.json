@@ -1,0 +1,14 @@
+{
+  "_doc": "Every joint in cad/sim/exo_sim.py and the real hardware that makes it. fastener_check.joint_check() checks each in Fusion: the bolt passes THREAD/HELD, every 'clamped' part is in its clamped stack (head to nut), and for each 'bearings' pair the bearing sits in the stack and the named part holds it. exo_sim.py refuses to run with a joint missing here. 'open' marks a joint whose hardware is not modelled yet (reported, not passed).",
+  "lift":  [{"bolt": ["Tower HW", "M8 x 55 socket head (buy)"], "clamped": ["Shoulder tower"], "bearings": [["608", "Lift link upper"]]}],
+  "lift2": [{"bolt": ["Tower HW", "M8 x 55 socket head (buy) (1)"], "clamped": ["Shoulder tower"], "bearings": [["608", "Lift link lower"]]}],
+  "carr":  [{"bolt": ["Carriage HW", "M8 x 55 socket head (buy) (1)"], "clamped": ["Lift carriage"], "bearings": [["608", "Lift link upper"]]},
+            {"bolt": ["Carriage HW", "M8 x 55 socket head (buy) (2)"], "clamped": ["Lift carriage"], "bearings": [["608", "Lift link lower"]]}],
+  "q1":    [{"bolt": ["Carriage HW", "M8 x 55 socket head (buy)"], "clamped": ["Lift carriage"], "bearings": [["608", "SCARA link 1"]]}],
+  "qs":    [{"bolt": ["Elbow spool", "M8 x 100 socket head, cut to 75 (buy)"], "clamped": [], "bearings": [["608", "SCARA link 1"], ["608", "SCARA link 2"]]}],
+  "q2":    [{"bolt": ["Elbow spool", "M8 x 100 socket head, cut to 75 (buy)"], "clamped": [], "bearings": [["608", "SCARA link 1"], ["608", "SCARA link 2"]]}],
+  "q3":    [{"bolt": ["End plate HW", "M8 x 55 socket head (buy)"], "clamped": ["SCARA end plate"], "bearings": [["608", "SCARA link 2"]]}],
+  "abd":   [{"bolt": ["HW abd", "M8 x 100 socket head (buy)"], "clamped": ["Yoke", "Abduction sleeve"], "bearings": [["6806", "SCARA end plate"]]}],
+  "flex":  [{"bolt": ["HW flex", "M8 x 55 socket head (buy)"], "clamped": ["Upper-arm link", "Flexion axle sleeve"], "bearings": [["6808", "Yoke"]]}],
+  "elbow": [{"open": "elbow concept B: its hinge hardware is not modelled yet"}]
+}

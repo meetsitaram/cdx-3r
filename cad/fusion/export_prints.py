@@ -42,7 +42,7 @@ SETS = {
         ('18_pulley_PB', 'Elbow spool: bolt + pulleys PA/PB (buy)', 'pulley PB (printed)'),
         ('19_pulley_P2', 'End plate HW + pulley P2 (buy)', 'pulley P2 (fixed, printed)'),
         ('20_spacer_thick_x8', 'Elbow spool: bolt + pulleys PA/PB (buy)', 'inner-ring spacer (printed)'),
-        ('21_spacer_thin_x6', 'Elbow spool: bolt + pulleys PA/PB (buy)', 'link spacer Ø11 x 1 (printed)'),
+        ('21_spacer_thin_x7', 'Elbow spool: bolt + pulleys PA/PB (buy)', 'link spacer Ø11 x 1 (printed)'),
         ('22_abduction_sleeve', 'Abduction sleeve', None),
         ('23_yoke', 'Yoke', None),
         ('24_flexion_sleeve', 'Flexion axle sleeve', None),
@@ -104,7 +104,7 @@ def module_checks(name, out, waive=()):
           'motion sweep (squeeze 0..1, fold 0..%d):' % stow)
     mod.pose(0, 0)
     ff = os.path.join(out, 'fastener_check.txt')
-    bad.append('fasteners: %d' % fastener_check.run_check(ff))
+    bad.append('fasteners: %d' % fastener_check.run_check(ff, joints=False))
     open(ff, 'a').write(stamp + nl)
     if any(not b.endswith(': 0') for b in bad):
         raise RuntimeError('checks failing, nothing exported: ' + '; '.join(bad))
@@ -137,6 +137,11 @@ def export(name, only=None, start=0, count=None, orient_after=True, waive=()):
             occ.setdefault(o.component.name, o)
     # every model check (fasteners bite, nothing collides) on the whole assembly first: nothing is exported if one
     # fails. The reports go with the STLs; the git hook refuses a commit without clean, current ones
+    hidden = [o.component.name + ' / ' + b.name for o in d.rootComponent.allOccurrences if o.isVisible
+              for b in o.component.bRepBodies if not b.isLightBulbOn and '(buy)' not in o.component.name + b.name
+              and not o.component.name.startswith('zz') and '/zz' not in o.fullPathName]
+    if hidden:                                    # every check skips hidden bodies: a hidden part is never checked
+        raise RuntimeError('hidden bodies (show them first, the checks would skip them): ' + '; '.join(hidden[:8]))
     if name in MODULE_CHECKS:
         module_checks(name, out, waive)
     else:

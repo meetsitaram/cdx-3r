@@ -28,6 +28,7 @@ add a row at the bottom of the table (rows are in the order found).
 | [Gripper drive pin and trigger horn too weak to print](gripper-weak-printed-drive-pin.md) | review round | `design_rules.py` strength |
 | [Gripper trigger cable could not be threaded](gripper-cable-could-not-be-threaded.md) | review round | `design_rules.py` cables |
 | [Gripper collar could not go on the carrier](gripper-collar-could-not-go-on.md) | collar reprint | `gripper3.insertion_rules` |
+| [**SCARA end plate hung below the nut meant to hold it**](end-plate-hung-below-its-nut.md) | end plate reprint | `fastener_check.py` THREAD / HELD / JOINTS |
 
 ## Tests that gate every export
 

@@ -35,13 +35,13 @@ the back frame (01–05) so you can assemble as you go.
 | `12_scara_link1_lid.stl` | 1 | 106 × 62 × 8 | 23 | outer face down | new |
 | `13_scara_link2_tray.stl` | 1 | 109 × 47 × 22 | 41 | outer face down | new |
 | `14_scara_link2_lid.stl` | 1 | 109 × 47 × 8 | 23 | outer face down | new |
-| `15_end_plate_housing.stl` | 1 | 77 × 69 × 62 | 99 | on the housing's front face (E nut pocket opens upward) | new |
+| `15_end_plate_housing.stl` | 1 | 77 × 69 × 62 | 99 | on the housing's front face (the E nut slot runs up from the bed, its V end on top: no supports) | **reprint 25 Oct**: the nut is now captive under a ceiling |
 | `16_pulley_P0.stl` | 1 | 22 × 22 × 8 | 2 | flat | new |
 | `17_pulley_PA.stl` | 1 | 22 × 22 × 8 | 2 | flat | new |
 | `18_pulley_PB.stl` | 1 | 22 × 22 × 8 | 2 | flat | new |
 | `19_pulley_P2.stl` | 1 | 22 × 22 × 8 | 2 | flat | new |
 | `20_spacer_thick_x8.stl` | 8 | 11 × 11 × 4 | 1 | flat | new |
-| `21_spacer_thin_x6.stl` | 6 | 11 × 11 × 1 | 0 | flat | new (one is the carriage root spacer) |
+| `21_spacer_thin_x7.stl` | 7 | 11 × 11 × 1 | 0 | flat | one is the carriage root spacer; the 7th (25 Oct) sits between link 2 and the end plate |
 | `22_abduction_sleeve.stl` | 1 | 69 × 30 × 30 | 34 | on end (bore vertical) | same as v2 |
 | `23_yoke.stl` | 1 | 165 × 112 × 88 | 154 | flexion housing axis vertical; support the root boss | same as v2 |
 | `24_flexion_sleeve.stl` | 1 | 40 × 40 × 25 | 23 | on end | same as v2 |

@@ -502,11 +502,14 @@ def build_elbow_spool(grp):
     return hw
 
 
+E_NUT_CEILING = 4.0         # mm of end plate above the captive E nut: the nut pulls up against it
+
+
 def build_end(grp):
     p = Part(grp, 'SCARA end plate + abduction housing', color=PRINT)
     E = rest()['E']
     yL, h = G['yL'], G['box_h']
-    y_top = yL - h - 0.5                                    # end plate under link 2
+    y_top = yL - h - 1.0                                    # end plate under link 2 (a 1 mm spacer between)
     x0, x1 = G['housing']
     bodies = [plan_prism(p, stadium(E, E, G['r_plate']), y_top - G['end_t'], y_top, 'end plate'),
               plan_prism(p, stadium(E, E, 18.0), GH[1], y_top - G['end_t'] + 0.5, 'drop to the housing'),
@@ -520,21 +523,30 @@ def build_end(grp):
     for a0, a1 in ((x1 - bw, x1 + 1), (x0 - 1, x0 + bw)):
         p.prism(ax, fx.AX['x'], a0, a1, sh.circle(bo / 2 + sh.S['bearing_clear']), name='6806 pocket', op=CUT,
                 targets=[body])
-    # E: the nyloc sits in a hex pocket in the end plate's top (it can't turn, so P2 stays fixed); link 2 slides on
-    # over it and the M8 x 55 goes in from the top of link 2. A Ø11 spacer on the nut carries the clamp to the
-    # bearing's inner ring.
-    nh = sh.S['m8']['nut_h']
-    y_nut = y_top - 0.4                                      # nut top, 0.4 under the plate's top face
-    p.prism(P3(E, y_top + 0.1), sh.frame_of([0, -1, 0]), 0, nh + 0.4 + 0.3, sh.hexagon(sh.S['m8']['nut_af'] + 0.3),
-            name='E nut (hex, locked)', op=CUT, targets=[body])
+    # E: the nyloc is captive INSIDE the end plate, under a solid ceiling, so the bolt clamps the plate itself to the
+    # stack (until 25 Oct its pocket was open at the top: the nut pulled up out of it and nothing held the plate;
+    # docs/bugs/end-plate-hung-below-its-nut.md). It slides in from the front through a slot as wide as the nut and
+    # stops in the slot's V end, centred on the bolt; a smaller hole from the back pushes it out again. Link 2 sits
+    # on the plate and the M8 x 55 goes in from the top of link 2; a Ø11 spacer carries the clamp to the bearing's
+    # inner ring. The hex stops the nut turning, so P2 stays fixed.
+    nh, af = sh.S['m8']['nut_h'], sh.S['m8']['nut_af'] + 0.4
+    y_nut = y_top - E_NUT_CEILING                            # nut top, under the ceiling
+    rv = af / math.sqrt(3)                                   # V end: half a hex, flats along the slot
+    plan_prism(p, poly([(E[0] - rv, E[1]), (E[0] - rv / 2, E[1] - af / 2), (E[0] + 40, E[1] - af / 2),
+                        (E[0] + 40, E[1] + af / 2), (E[0] - rv / 2, E[1] + af / 2)]), y_nut - nh - 0.4, y_nut,
+               'E nut slot (from the front, V stop on the bolt axis)', op=CUT, targets=[body])
+    p.prism(P3([E[0] - rv + 1.0, E[1]], y_nut - nh / 2 - 0.2), sh.frame_of([-1, 0, 0]), 0, 40, sh.circle(2.5),
+            name='E nut push-out hole (from the back)', op=CUT, targets=[body])
     L = 55.0
     y_head = yL + h + 1.0
     p.prism(P3(E, y_nut - nh), fx.AX['y'], -(L - (y_head - y_nut + nh)) - 2, 0.5, sh.circle(4.25), name='E bolt hole',
             op=CUT, targets=[body])                         # room for the bolt's end below the nut
+    p.prism(P3(E, y_nut - 0.1), fx.AX['y'], 0, E_NUT_CEILING + 1.2, sh.circle(4.25), name='E bolt hole (ceiling)',
+            op=CUT, targets=[body])
     hw = Part(grp, 'End plate HW + pulley P2 (buy)', color=HWC)
     _pulley(hw, E, yL, 'pulley P2 (fixed, printed)')
     _stack(hw, E, yL)
-    _spacer(hw, E, y_nut, yL - h, 'nut spacer Ø11 (printed)')
+    _spacer(hw, E, y_top, yL - h, 'nut spacer Ø11 x 1 (printed)')   # plate top to the bearing's inner ring
     _spacer(hw, E, yL + h, y_head, 'head spacer Ø11 x 1 (printed)')
     sh.hw_bolt(hw, [E[0], y_head, E[1]], sh.frame_of([0, -1, 0]), L, sh.S['m8']['shcs_head'], 'M8 x 55 socket head (buy)')
     sh.hw_nut(hw, [E[0], y_nut, E[1]], sh.frame_of([0, -1, 0]))

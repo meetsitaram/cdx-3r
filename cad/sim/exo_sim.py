@@ -39,6 +39,22 @@ STRAP_K, STRAP_C = 3000.0, 30.0           # N/m, N s/m: a snug 25 mm webbing str
 JOINT_FRICTION = 0.05                     # N m, sealed 608 / 6806 with a little preload
 
 
+HARDWARE = os.path.join(HERE, '..', 'fusion', 'sim_joints.json')
+
+
+def model():
+    """The MuJoCo model, after checking that every hinge in it is made by real hardware listed in
+    cad/fusion/sim_joints.json (fastener_check.joint_check verifies that hardware in Fusion). The sim's joints are
+    ideal and can't come apart, so a joint with no bolt behind it would pass here unseen (the end plate, 25 Oct)."""
+    m = mujoco.MjModel.from_xml_string(mjcf())
+    hw = json.load(open(HARDWARE))
+    hinges = [m.joint(i).name for i in range(m.njnt) if m.jnt_type[i] == mujoco.mjtJoint.mjJNT_HINGE]
+    missing = [n for n in hinges if n not in hw]
+    if missing:
+        raise RuntimeError('sim joints with no hardware in sim_joints.json: %s' % ', '.join(missing))
+    return m
+
+
 def P(p):
     """scan mm -> MuJoCo m."""
     return np.array([p[0], -p[2], p[1]]) / 1000.0
@@ -210,7 +226,7 @@ def human_pose(t):
 
 def run(record_every=40):
     os.makedirs(OUT, exist_ok=True)
-    m = mujoco.MjModel.from_xml_string(mjcf())
+    m = model()
     d = mujoco.MjData(m)
     gh, el = P(GH), P(EL)
     sid = {n: mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_SITE, n) for n in ('hum_strap', 'exo_strap', 'hum_strap2', 'exo_strap2', 'hum_cuff', 'exo_cuff')}
@@ -323,7 +339,7 @@ def render_gif(path, fps=20, size=(600, 480), strut=20.0, azimuth=190.0, elevati
     except OSError:
         FONT_B = FONT = ImageFont.load_default()
     SPRING_F = strut
-    m = mujoco.MjModel.from_xml_string(mjcf())
+    m = model()
     d = mujoco.MjData(m)
     r = mujoco.Renderer(m, size[1], size[0])
     cam = mujoco.MjvCamera()

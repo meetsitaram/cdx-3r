@@ -803,6 +803,14 @@ def _trigger(g):
     return 'trigger ok'
 
 
+def _m3_nyloc(part, c, name):
+    """M3 nyloc (5.5 across flats, 4 tall) on the +Z face at c: the screw's thread bites it (fastener_check THREAD)."""
+    nut = part.prism(c, ZF, 0, 4.0, sh.hexagon(5.5), name='nut').bodies.item(0)
+    part.prism(c, ZF, -1, 6.0, sh.circle(1.5), name='nut bore', op=CUT, targets=[nut])
+    nut.name = name
+    return nut
+
+
 def _hw(g):
     """Bought parts: hinge pin, latch plunger, clamp screws, claw pivot pins, tail pins, grip screws + inserts,
     trigger pivot + pull pin, yoke pins + inserts, return spring."""
@@ -810,8 +818,9 @@ def _hw(g):
     up, down = sh.frame_of([0, -1, 0]), sh.frame_of([0, 1, 0])
     base_hw = Part(g, 'Gripper3 HW base (buy)', color=HWC)
     zt = hg['knuckle_z'] + 0.4 + hg['cheek_t']
-    sh.hw_bolt(base_hw, [hg['x'], hg['y'], -zt], sh.frame_of([0, 0, 1]), 55.0, (13.0, 8.0),
-               'M8 x 55 socket head + M8 nyloc, fold hinge (buy)', dia=8.0)
+    sh.hw_bolt(base_hw, [hg['x'], hg['y'], zt], sh.frame_of([0, 0, -1]), 55.0, (13.0, 8.0),   # head by the plunger,
+               'M8 x 55 socket head, fold hinge (buy)', dia=8.0)                              # nut on the open side
+    sh.hw_nut(base_hw, [hg['x'], hg['y'], -zt], sh.frame_of([0, 0, -1]), 'M8 nyloc nut, fold hinge (buy)')
     lx = hg['x'] - hg['latch_r']
     pl = base_hw.cyl('z', [lx, hg['y'], zt + 6], 3.9, 12, name='plunger')[0]
     pin = base_hw.cyl('z', [lx, hg['y'], (hg['knuckle_z'] - 1.5 + zt) / 2], 2.5, zt - hg['knuckle_z'] + 1.5, name='pin')[0]
@@ -858,11 +867,13 @@ def _hw(g):
     car.finish()
     px_, py_ = tv['pivot']
     trg = Part(g, 'Gripper3 HW trigger (buy)', color=HWC)
-    sh.hw_bolt(trg, [px_, py_, tv['z'][0] - 4.5], sh.frame_of([0, 0, 1]), 30.0, (5.5, 3.0),
-               'M3 x 30 socket head, trigger pivot (buy)', dia=3.0)
+    sh.hw_bolt(trg, [px_, py_, tv['z'][0] - 4.5], sh.frame_of([0, 0, 1]), 35.0, (5.5, 3.0),
+               'M3 x 35 socket head, trigger pivot (buy)', dia=3.0)        # through both grip cheeks and the trigger
+    _m3_nyloc(trg, [px_, py_, tv['z'][1] + 4.5], 'M3 nyloc nut, trigger pivot (buy)')
     hx, hy = pull_point(0.0)
-    sh.hw_bolt(trg, [hx, hy, tv['z'][0]], sh.frame_of([0, 0, 1]), tv['z'][1] - tv['z'][0], (5.5, 3.0),
-               'M3 x 20 socket head + nyloc, pull pin (buy)', dia=3.0)
+    sh.hw_bolt(trg, [hx, hy, tv['z'][0]], sh.frame_of([0, 0, 1]), tv['z'][1] - tv['z'][0] + 5.0, (5.5, 3.0),
+               'M3 x 25 socket head, pull pin (buy)', dia=3.0)
+    _m3_nyloc(trg, [hx, hy, tv['z'][1]], 'M3 nyloc nut, pull pin (buy)')
     trg.finish()
     col = Part(g, 'Gripper3 HW collar (buy)', color=HWC)
     ta, tr = c['tail']
@@ -1054,6 +1065,9 @@ def closed_claw_rules():
     n = len(claw_teeth())
     out.append(('ok  ' if n >= 6 else 'FAIL', 'gripping edge has teeth (%d)' % n, 'claw_outline'))
     return out
+
+
+MU_SLIDE = 0.25            # PETG on PETG, lightly greased (dry is ~0.3-0.4)
 
 
 def slide_rules():

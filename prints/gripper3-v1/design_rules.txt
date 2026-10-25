@@ -80,4 +80,4 @@ ok   strength SF 10.9 (55.1 MPa, steel)                         fold hinge pin M
 ok   strength SF 8.9 (5.0 MPa, PETG along layers)               base hinge cheeks (both), 60 N sideways on the grip, at their neck: 60 N at 72.5 mm
 ok   strength SF 5.7 (8.0 MPa, PETG along layers)               base front beam over the wrist (plate + top rib), 60 N at the grip, from the front clamp: 60 N at 165 mm
 ok   strength SF 30.8 (1.5 MPa, PETG along layers)              carrier neck at the knuckle, as built (60 N steering at the grip): 60 N at 70 mm
-source 6e2af7584ab6d7a9
+source ea01c0568f21f2d4

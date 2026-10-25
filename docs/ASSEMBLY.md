@@ -48,7 +48,7 @@ README):
 | SCARA link 1 tray + lid, link 2 tray + lid | 1 each |
 | End plate + shoulder housing | 1 |
 | Pulleys (35 teeth) | 4 |
-| Spacers: thick Ø11 × 4, thin Ø11 × 1 | 8 thick, 6 thin |
+| Spacers: thick Ø11 × 4, thin Ø11 × 1 | 8 thick, 7 thin |
 | Abduction sleeve, yoke, flexion sleeve, arm link | 1 each |
 | Shoulder rest: bracket, root arm, blades 1–3 | 1 each |
 
@@ -237,7 +237,7 @@ screws, foam + hook-and-loop · **Cut:** 412, 568, 102, 131 mm
 
 ![SCARA animation](images/assembly/step5-scara.gif)
 
-**Parts:** link 1 + link 2 (tray + lid each), end plate, 4 pulleys, 8 thick + 6 thin spacers, 2 belts, 8 × 608,
+**Parts:** link 1 + link 2 (tray + lid each), end plate, 4 pulleys, 8 thick + 7 thin spacers, 2 belts, 8 × 608,
 8 inserts, 8 M3 × 12, 2 × M8 × 55, **M8 × 75**, 3 lock nuts
 
 > ⚠ **Nut first** in the end plate: a lock nut in the pocket on its **top**, before it goes under link 2.
@@ -252,7 +252,10 @@ Build each link on the table, then hang it.
 3. **S0:** link 1 under the carriage, thin spacer between; M8 × 55 **up from below** into the waiting nut.
 4. **Elbow:** link 2 under link 1, thin spacer between; thin spacer + **75 mm bolt down from the top**, thin spacer +
    lock nut underneath. Tighten until the pulleys turn **with** the bolt.
-5. **E:** end plate under link 2, thin spacer between; thin spacer + M8 × 55 **down from the top** into the nut.
+5. **E:** first push the M8 nyloc into the end plate's side slot (from the front, flat side first) until it stops:
+   the V end centres it on the bolt hole. End plate under link 2, thin spacer between; thin spacer + M8 × 55
+   **down from the top** into the nut, and tighten: the bolt clamps the end plate up against link 2. To take the nut
+   out later, push it from the back through the small hole.
 
 Line-up trick: before each bolt, push a long thin screwdriver through bearings, spacers and pulley; push the bolt in
 as you pull the screwdriver out.
@@ -392,8 +395,8 @@ Print files: [prints/gripper3-v1](../prints/gripper3-v1/) (pre-oriented, checked
 | 06_gripper_collar | PETG | 1 | |
 | 07_gripper_claw_TPU_x3 | TPU 95A | 3 | flat, slow (20–30 mm/s) |
 
-Hardware ([BOM](../BOM.md), gripper prototype 3): 11 ruthex M3 inserts, M3 × 12 (6), M3 × 20 (4), M3 × 30 (4), M3 nylocs
-(4), 2 M3 × 10 knurled thumb screws, M8 × 55 + nyloc, the M8 index plunger (pull ring), one extension spring
+Hardware ([BOM](../BOM.md), gripper prototype 3): 11 ruthex M3 inserts, M3 × 12 (6), M3 × 20 (3), M3 × 25 (1), M3 × 30 (3),
+M3 × 35 (1), M3 nylocs (5), 2 M3 × 10 knurled thumb screws, M8 × 55 + nyloc, the M8 index plunger (pull ring), one extension spring
 (1.2 × 10 × 45 mm, from the Keadic kit), two 22 mm hook-and-loop dots.
 
 </details>
@@ -444,18 +447,18 @@ claw slots (they pass through them). Push it back past where it will sit, about 
 
 ![Grip and trigger](images/gripper3/5_grip_trigger.png)
 
-**Parts:** grip, trigger, 4 M3 × 12, M3 × 30
+**Parts:** grip, trigger, 4 M3 × 12, M3 × 35 + nyloc
 
-Grip's top plate up under the bridge, 4 × M3 × 12 into the inserts. Trigger between the grip's two cheeks, M3 × 30
-through as its pivot.
+Grip's top plate up under the bridge, 4 × M3 × 12 into the inserts. Trigger between the grip's two cheeks, M3 × 35
+through as its pivot, nyloc on the far side, snug: the trigger must swing freely.
 
 ### 11.6 Y link and spring
 
 ![Y link and spring](images/gripper3/6_link_spring.png)
 
-**Parts:** Y link, M3 × 20 + nyloc, 2 M3 × 12, extension spring
+**Parts:** Y link, M3 × 25 + nyloc, 2 M3 × 12, extension spring
 
-- Link's stem into the trigger's slot, M3 × 20 + nyloc as the pin (snug, it must turn).
+- Link's stem into the trigger's slot, M3 × 25 + nyloc as the pin (snug, it must turn).
 - Its two arms onto the collar's side lobes, M3 × 12 into the inserts (they are pivots: snug, not tight).
 - Spring last: one loop through the hook hole on the back of the hub, the other through the link's hole **farthest
   from the hub**. If squeezing is too hard, use the middle hole.

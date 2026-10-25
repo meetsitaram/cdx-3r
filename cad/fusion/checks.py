@@ -30,7 +30,7 @@ ARCHIVE = 'CDX-3R shoulder + back'                       # the one document hold
 POSES = os.path.join(HERE, 'motion_poses.json')         # recorded poses: each moving part's motion from rest
 # offline tools that don't change the model
 NOT_MODEL = {'orient_stls.py', 'print_validate.py', 'print_check.py', 'diag.py', 'export_prints.py',
-             'motion_poses.json', 'fea.py', 'retrofit_backer.py'}
+             'motion_poses.json', 'fea.py', 'retrofit_backer.py', 'undefined_names.py'}
 
 
 def source_hash():

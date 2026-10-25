@@ -245,6 +245,9 @@ steps that fit the 60 s MCP limit, contact-sheet the frames, then `python mkgif.
 | Validating the oriented STLs gives locations in the print frame | export the bodies unrotated to a scratch folder and validate those to get model coordinates |
 | The carrier's hinge knuckle hung on a 3 mm sliver: the strength load assumed a 26 mm section, and the wall check only sees thin walls, not narrow necks (user found it twice) | `knuckle_neck_rules` measures the neck on the real outline (>= 0.8 x knuckle diameter); the load uses that measured width. Any load case must take its section from the geometry, never a typed-in number |
 | The collar could not go on: its bore was smaller than the nose, and the other end is closed by the bridge. Every check looked only at the finished assembly | `insertion_rules`: each part slides in along its path (`INSERTION`, in the guide's order) and must not cut into parts already on. When a printed part is already made, redesign the cheaper part around it |
+| The end plate hung below the nut of the bolt meant to hold it (pocket open on the head side); the screw check only looked for plastic round the tip, and the MuJoCo sim's ideal joints can't come apart | `fastener_check` THREAD / HELD / JOINTS (`sim_joints.json`: each sim joint names its bolt, clamped parts and bearings). A nut pocket must have material on the head side of the nut |
+| A constant deleted from gripper3.py kept working in Fusion: `importlib.reload` keeps old globals | `undefined_names.py` in the commit hook |
+| Render scripts that hide bodies left them hidden in a saved file, and every check skips hidden bodies | restore visibility in a `finally`, and show all bodies before checks |
 
 ## 6. Working agreements with the user
 

@@ -118,7 +118,8 @@ The total is about 2.15 m; **buy 3 m** (cuts plus saw kerf and spares). A left a
 
 | ☐ | Item | Qty used | Pick |
 |---|---|---|---|
-| ☐ | M3 nyloc nut (304) | 4 | [BinifiMux M3 nylock, 100 pcs](https://www.amazon.com/dp/B075ZZW7VL) |
+| ☐ | M3 nyloc nut (304) | 5 | [BinifiMux M3 nylock, 100 pcs](https://www.amazon.com/dp/B075ZZW7VL) |
+| ☐ | M3 × 35 socket head (trigger pivot: through both grip cheeks and the trigger, nyloc outside) | 1 | (see the note under the table) |
 | ☐ | M3 × 10 knurled thumb screw | 2 | [MECCANIXITY M3 × 10 knurled thumb screw, 12 pcs](https://www.amazon.com/dp/B0DBM2YK63) |
 | ☐ | Index plunger M8-1.25, 5 mm pin, pull ring (screws into a 6.8 mm hole, its own lock nut outside) | 1 | [Bitray spring plunger M8-1.25-5, 4 pcs](https://www.amazon.com/dp/B0DFP11V6C) |
 | ☐ | Extension spring, 1.2 mm wire × ~10 mm OD × 45 mm, hook ends | 1 | [Keadic 100 pcs stainless extension spring kit (has 1.2 × 10 × 45)](https://www.amazon.com/dp/B0D9H4VB5T) |
@@ -130,12 +131,14 @@ The total is about 2.15 m; **buy 3 m** (cuts plus saw kerf and spares). A left a
 |---|---|---|---|
 | ruthex M3 × 5.7 heat-set insert | 11 | claw pivots (3, pressed in from outside the dome), grip (4), pipe clamps (2), Y-link pins (2) | ruthex 100-pack (38 used by the shoulder) |
 | M3 × 12 socket head | 6 | grip to bridge (4), Y-link pins into the collar (2) | Fgruh M3 kit |
-| M3 × 20 socket head | 4 | claw tail pins (3, + nyloc), trigger pull pin (1, + nyloc) | Fgruh M3 kit |
-| M3 × 30 socket head | 4 | claw pivots (3, into inserts), trigger pivot (1) | Fgruh M3 kit |
-| M8 × 55 socket head + M8 nyloc | 1 + 1 | fold hinge | M8 × 55 pack (2 spare) + Vifmy nylocs |
+| M3 × 20 socket head | 3 | claw tail pins (+ nyloc) | Fgruh M3 kit |
+| M3 × 25 socket head | 1 | trigger pull pin (+ nyloc: the trigger is 20 mm thick, a 20 mm screw leaves nothing for the nut) | Fgruh M3 kit |
+| M3 × 30 socket head | 3 | claw pivots (into inserts) | Fgruh M3 kit |
+| M8 × 55 socket head + M8 nyloc | 1 + 1 | fold hinge: head on the plunger side, nyloc on the other | M8 × 55 pack (2 spare) + Vifmy nylocs |
 | Hook-and-loop | 2 dots, 22 mm | stowed rest: one on the bridge top, one on the base pad | cut from the Navona 2" roll |
 
-If the Fgruh kit lacks 12, 20 or 30 mm: [VIGRUE M3 kit, 4–30 mm](https://www.amazon.com/dp/B083SGJ7BD) (Prime).
+Every screw here ends in a nut or an insert (the screw check fails one that doesn't, 25 Oct). M3 × 35 is longer than
+most kits: buy a small pack if yours stops at 30. If the Fgruh kit lacks 12, 20, 25 or 30 mm: [VIGRUE M3 kit, 4–30 mm](https://www.amazon.com/dp/B083SGJ7BD) (Prime).
 Spring: hook it in the link hole farthest from the hub (45 mm between hooks); if the trigger feels too stiff, use
 the middle (40 mm) hole.
 

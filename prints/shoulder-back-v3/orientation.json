@@ -106,10 +106,14 @@
   "height": 8.5
  },
  "15_end_plate_housing.stl": {
-  "up": "as exported (z up)",
-  "base": 772,
-  "overhang": 1086,
-  "on_part": 92,
+  "up": [
+   1.0,
+   0.0,
+   0.0
+  ],
+  "base": 782,
+  "overhang": 936,
+  "on_part": 56,
   "height": 69.0
  },
  "16_pulley_P0.stl": {
@@ -146,13 +150,6 @@
   "overhang": 0,
   "on_part": 0,
   "height": 4.0
- },
- "21_spacer_thin_x6.stl": {
-  "up": "as exported (z up)",
-  "base": 40,
-  "overhang": 0,
-  "on_part": 0,
-  "height": 1.0
  },
  "22_abduction_sleeve.stl": {
   "up": "as exported (z up)",
@@ -246,5 +243,16 @@
   "overhang": 0,
   "on_part": 0,
   "height": 26.8
+ },
+ "21_spacer_thin_x7.stl": {
+  "up": [
+   0.0,
+   1.0,
+   0.0
+  ],
+  "base": 40,
+  "overhang": 0,
+  "on_part": 0,
+  "height": 1.0
  }
 }

@@ -6,6 +6,12 @@ model=$(git diff --cached --name-only --diff-filter=AMD -- 'cad/fusion/*.py' 'ca
 if [ -n "$model" ]; then
   python cad/fusion/checks.py --verify || { echo "pre-commit: model checks missing, failing or stale"; exit 1; }
 fi
+# Names used but defined nowhere: Fusion's module reload keeps deleted globals alive, so such code passes in Fusion
+# and breaks in a fresh session (gripper3.MU_SLIDE, 25 Oct).
+py=$(git diff --cached --name-only --diff-filter=AM -- 'cad/fusion/*.py' 'cad/sim/*.py')
+if [ -n "$py" ]; then
+  python cad/fusion/undefined_names.py $py || { echo "pre-commit: undefined names (see above)"; exit 1; }
+fi
 # Markdown tables must render: the separator row needs as many columns as the header (tools/md_tables.py --fix).
 md=$(git diff --cached --name-only --diff-filter=AM -- '*.md')
 if [ -n "$md" ]; then

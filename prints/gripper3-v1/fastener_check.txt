@@ -1,4 +1,4 @@
-fasteners 14, failing 0 (grip < 3.0 mm)
+fasteners 14, failing 0 (grip < 3.0 mm; THREAD: ends in a nut or insert; HELD: every part it passes is clamped; JOINTS: every sim joint is real hardware)
 ok      7.0 mm  Gripper3 HW base (buy) / M3 x 10 knurled thumb screw, pipe clamp (buy
 ok      7.0 mm  Gripper3 HW base (buy) / M3 x 10 knurled thumb screw, pipe clamp (buy
 ok      7.0 mm  Gripper3 HW carrier (buy) / M3 x 12 socket head, grip (buy)
@@ -10,7 +10,7 @@ ok      8.0 mm  Gripper3 HW collar (buy) / M3 x 12 socket head, yoke pin (buy) (
 ok      9.0 mm  Gripper3 HW collar (buy) / M3 x 20 socket head, claw tail pin, through 
 ok      9.0 mm  Gripper3 HW collar (buy) / M3 x 20 socket head, claw tail pin, through 
 ok      9.0 mm  Gripper3 HW collar (buy) / M3 x 20 socket head, claw tail pin, through 
-ok     12.0 mm  Gripper3 HW trigger (buy) / M3 x 20 socket head + nyloc, pull pin (buy)
-ok     15.0 mm  Gripper3 HW trigger (buy) / M3 x 30 socket head, trigger pivot (buy)
-ok     20.0 mm  Gripper3 HW base (buy) / M8 x 55 socket head + M8 nyloc, fold hinge (
-source 6e2af7584ab6d7a9
+ok     13.0 mm  Gripper3 HW trigger (buy) / M3 x 25 socket head, pull pin (buy)
+ok     16.0 mm  Gripper3 HW trigger (buy) / M3 x 35 socket head, trigger pivot (buy)
+ok     28.0 mm  Gripper3 HW base (buy) / M8 x 55 socket head, fold hinge (buy)
+source ea01c0568f21f2d4

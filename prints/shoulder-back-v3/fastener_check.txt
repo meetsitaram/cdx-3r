@@ -1,4 +1,4 @@
-fasteners 58, failing 0 (grip < 3.0 mm)
+fasteners 58, failing 0 (grip < 3.0 mm; THREAD: ends in a nut or insert; HELD: every part it passes is clamped; JOINTS: every sim joint is real hardware)
 ok      5.0 mm  Tower HW (buy) / #4 x 3/8" pan-head self-tapping screw (buy)
 ok      5.0 mm  Tower HW (buy) / #4 x 3/8" pan-head self-tapping screw (buy) 
 ok      6.0 mm  HW frame (buy) / M3 x 8 socket head (buy)
@@ -40,21 +40,33 @@ ok      8.0 mm  Gripper3 HW collar (buy) / M3 x 12 socket head, yoke pin (buy)
 ok      8.0 mm  Gripper3 HW collar (buy) / M3 x 12 socket head, yoke pin (buy) (1)
 ok      9.0 mm  Gripper3 HW collar (buy) / M3 x 20 socket head, claw tail pin, through 
 ok      9.0 mm  Gripper3 HW collar (buy) / M3 x 20 socket head, claw tail pin, through 
-ok     12.0 mm  Gripper3 HW trigger (buy) / M3 x 20 socket head + nyloc, pull pin (buy)
-ok     15.0 mm  Gripper3 HW trigger (buy) / M3 x 30 socket head, trigger pivot (buy)
+ok     13.0 mm  Gripper3 HW trigger (buy) / M3 x 25 socket head, pull pin (buy)
 ok     16.0 mm  Carriage HW + pulley P0 (buy) / M8 x 55 socket head (buy)
 ok     16.0 mm  Carriage HW + pulley P0 (buy) / M8 x 55 socket head (buy) (1)
 ok     16.0 mm  Carriage HW + pulley P0 (buy) / M8 x 55 socket head (buy) (2)
 ok     16.0 mm  Tower HW (buy) / M8 x 55 socket head (buy)
 ok     16.0 mm  Tower HW (buy) / M8 x 55 socket head (buy) (1)
-ok     20.0 mm  Gripper3 HW base (buy) / M8 x 55 socket head + M8 nyloc, fold hinge (
+ok     16.0 mm  Gripper3 HW trigger (buy) / M3 x 35 socket head, trigger pivot (buy)
 ok     24.0 mm  HW flex (buy) / M8 x 55 socket head (buy)
-ok     24.0 mm  End plate HW + pulley P2 (buy) / M8 x 55 socket head (buy)
 ok     25.0 mm  Elbow spool: bolt + pulleys PA/PB  / M8 x 100 socket head, cut to 75 (buy)
+ok     25.0 mm  End plate HW + pulley P2 (buy) / M8 x 55 socket head (buy)
+ok     28.0 mm  Gripper3 HW base (buy) / M8 x 55 socket head, fold hinge (buy)
 ok     29.0 mm  Rest HW (buy) / Clevis pin M6 x 70 + R-clip (buy), 70 needed
 ok     29.0 mm  Rest HW (buy) / Clevis pin M6 x 70 + R-clip (buy), 70 needed
 ok     29.0 mm  Rest HW (buy) / Clevis pin M6 x 70 + R-clip (buy), 70 needed
 ok     29.0 mm  Rest HW (buy) / Clevis pin M6 x 70 + R-clip (buy), 70 needed
 ok     33.0 mm  Rest HW (buy) / M6 x 65 socket head, bracket pivot (buy)
 ok     47.0 mm  HW abd (buy) / M8 x 100 socket head (buy)
-source 6e2af7584ab6d7a9
+sim joints (cad/sim/exo_sim.py) against their hardware (sim_joints.json):
+ok    lift   Tower HW / M8 x 55 socket head (buy)
+ok    lift2  Tower HW / M8 x 55 socket head (buy) (1)
+ok    carr   Carriage HW / M8 x 55 socket head (buy) (1)
+ok    carr   Carriage HW / M8 x 55 socket head (buy) (2)
+ok    q1     Carriage HW / M8 x 55 socket head (buy)
+ok    qs     Elbow spool / M8 x 100 socket head, cut to 75 (buy)
+ok    q2     Elbow spool / M8 x 100 socket head, cut to 75 (buy)
+ok    q3     End plate HW / M8 x 55 socket head (buy)
+ok    abd    HW abd / M8 x 100 socket head (buy)
+ok    flex   HW flex / M8 x 55 socket head (buy)
+OPEN  elbow  elbow concept B: its hinge hardware is not modelled yet
+source ea01c0568f21f2d4
