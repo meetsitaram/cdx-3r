@@ -25,6 +25,9 @@ ok      7.0 mm  Gripper3 HW carrier (buy) / M3 x 12 socket head, grip (buy)
 ok      7.0 mm  Gripper3 HW carrier (buy) / M3 x 12 socket head, grip (buy) (1)
 ok      7.0 mm  Gripper3 HW carrier (buy) / M3 x 12 socket head, grip (buy) (2)
 ok      7.0 mm  Gripper3 HW carrier (buy) / M3 x 12 socket head, grip (buy) (3)
+ok      8.0 mm  Gripper3 HW collar (buy) / M3 x 20 socket head, claw tail pin, through 
+ok      8.0 mm  Gripper3 HW collar (buy) / M3 x 12 socket head, yoke pin (buy)
+ok      8.0 mm  Gripper3 HW collar (buy) / M3 x 12 socket head, yoke pin (buy) (1)
 ok      8.0 mm  SCARA link 1 HW (buy) / M3 x 12 socket head (buy)
 ok      8.0 mm  SCARA link 1 HW (buy) / M3 x 12 socket head (buy) (1)
 ok      8.0 mm  SCARA link 1 HW (buy) / M3 x 12 socket head (buy) (2)
@@ -35,18 +38,15 @@ ok      8.0 mm  SCARA link 2 HW (buy) / M3 x 12 socket head (buy) (2)
 ok      8.0 mm  SCARA link 2 HW (buy) / M3 x 12 socket head (buy) (3)
 ok      8.0 mm  Carriage HW + pulley P0 (buy) / M6 x 16 socket head (buy)
 ok      8.0 mm  Tower HW (buy) / M6 x 16 socket head (buy)
-ok      8.0 mm  Gripper3 HW collar (buy) / M3 x 20 socket head, claw tail pin, through 
-ok      8.0 mm  Gripper3 HW collar (buy) / M3 x 12 socket head, yoke pin (buy)
-ok      8.0 mm  Gripper3 HW collar (buy) / M3 x 12 socket head, yoke pin (buy) (1)
 ok      9.0 mm  Gripper3 HW collar (buy) / M3 x 20 socket head, claw tail pin, through 
 ok      9.0 mm  Gripper3 HW collar (buy) / M3 x 20 socket head, claw tail pin, through 
 ok     13.0 mm  Gripper3 HW trigger (buy) / M3 x 25 socket head, pull pin (buy)
+ok     16.0 mm  Gripper3 HW trigger (buy) / M3 x 35 socket head, trigger pivot (buy)
 ok     16.0 mm  Carriage HW + pulley P0 (buy) / M8 x 55 socket head (buy)
 ok     16.0 mm  Carriage HW + pulley P0 (buy) / M8 x 55 socket head (buy) (1)
 ok     16.0 mm  Carriage HW + pulley P0 (buy) / M8 x 55 socket head (buy) (2)
 ok     16.0 mm  Tower HW (buy) / M8 x 55 socket head (buy)
 ok     16.0 mm  Tower HW (buy) / M8 x 55 socket head (buy) (1)
-ok     16.0 mm  Gripper3 HW trigger (buy) / M3 x 35 socket head, trigger pivot (buy)
 ok     24.0 mm  HW flex (buy) / M8 x 55 socket head (buy)
 ok     25.0 mm  Elbow spool: bolt + pulleys PA/PB  / M8 x 100 socket head, cut to 75 (buy)
 ok     25.0 mm  End plate HW + pulley P2 (buy) / M8 x 55 socket head (buy)
@@ -69,4 +69,4 @@ ok    q3     End plate HW / M8 x 55 socket head (buy)
 ok    abd    HW abd / M8 x 100 socket head (buy)
 ok    flex   HW flex / M8 x 55 socket head (buy)
 OPEN  elbow  elbow concept B: its hinge hardware is not modelled yet
-source ea01c0568f21f2d4
+source 72d507c3d3fa4238

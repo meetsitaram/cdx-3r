@@ -503,6 +503,8 @@ def build_elbow_spool(grp):
 
 
 E_NUT_CEILING = 4.0         # mm of end plate above the captive E nut: the nut pulls up against it
+E_NUT_PLAY = 0.6            # mm over the nut, across flats and in height: the Vifmy M8 nyloc is 13.0 AF x 8.0 max,
+                            # and a printed slot shrinks ~0.1-0.2 per side (0.4 would be a tight push)
 
 
 def build_end(grp):
@@ -529,11 +531,11 @@ def build_end(grp):
     # stops in the slot's V end, centred on the bolt; a smaller hole from the back pushes it out again. Link 2 sits
     # on the plate and the M8 x 55 goes in from the top of link 2; a Ø11 spacer carries the clamp to the bearing's
     # inner ring. The hex stops the nut turning, so P2 stays fixed.
-    nh, af = sh.S['m8']['nut_h'], sh.S['m8']['nut_af'] + 0.4
+    nh, af = sh.S['m8']['nut_h'], sh.S['m8']['nut_af'] + E_NUT_PLAY
     y_nut = y_top - E_NUT_CEILING                            # nut top, under the ceiling
     rv = af / math.sqrt(3)                                   # V end: half a hex, flats along the slot
     plan_prism(p, poly([(E[0] - rv, E[1]), (E[0] - rv / 2, E[1] - af / 2), (E[0] + 40, E[1] - af / 2),
-                        (E[0] + 40, E[1] + af / 2), (E[0] - rv / 2, E[1] + af / 2)]), y_nut - nh - 0.4, y_nut,
+                        (E[0] + 40, E[1] + af / 2), (E[0] - rv / 2, E[1] + af / 2)]), y_nut - nh - E_NUT_PLAY, y_nut,
                'E nut slot (from the front, V stop on the bolt axis)', op=CUT, targets=[body])
     p.prism(P3([E[0] - rv + 1.0, E[1]], y_nut - nh / 2 - 0.2), sh.frame_of([-1, 0, 0]), 0, 40, sh.circle(2.5),
             name='E nut push-out hole (from the back)', op=CUT, targets=[body])

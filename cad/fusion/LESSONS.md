@@ -248,6 +248,7 @@ steps that fit the 60 s MCP limit, contact-sheet the frames, then `python mkgif.
 | The end plate hung below the nut of the bolt meant to hold it (pocket open on the head side); the screw check only looked for plastic round the tip, and the MuJoCo sim's ideal joints can't come apart | `fastener_check` THREAD / HELD / JOINTS (`sim_joints.json`: each sim joint names its bolt, clamped parts and bearings). A nut pocket must have material on the head side of the nut |
 | A constant deleted from gripper3.py kept working in Fusion: `importlib.reload` keeps old globals | `undefined_names.py` in the commit hook |
 | Render scripts that hide bodies left them hidden in a saved file, and every check skips hidden bodies | restore visibility in a `finally`, and show all bodies before checks |
+| Fusion kept several open copies of one file (old versions opened as references); a script that picked the document by name edited a stale v6, and its save made no new version | pick the copy whose `dataFile.versionNumber == latestVersionNumber`; close stale copies without saving |
 
 ## 6. Working agreements with the user
 
