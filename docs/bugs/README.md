@@ -29,6 +29,7 @@ add a row at the bottom of the table (rows are in the order found).
 | [Gripper trigger cable could not be threaded](gripper-cable-could-not-be-threaded.md) | review round | `design_rules.py` cables |
 | [Gripper collar could not go on the carrier](gripper-collar-could-not-go-on.md) | collar reprint | `gripper3.insertion_rules` |
 | [**SCARA end plate hung below the nut meant to hold it**](end-plate-hung-below-its-nut.md) | end plate reprint | `fastener_check.py` THREAD / HELD / JOINTS |
+| [**Open (to investigate):** end plate ceiling and E bolt under the arm's tipping load](end-plate-tipped-by-the-arm.md) | — | nothing yet (stress study to do) |
 
 ## Tests that gate every export
 

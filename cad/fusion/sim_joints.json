@@ -10,5 +10,5 @@
   "q3":    [{"bolt": ["End plate HW", "M8 x 55 socket head (buy)"], "clamped": ["SCARA end plate"], "bearings": [["608", "SCARA link 2"]]}],
   "abd":   [{"bolt": ["HW abd", "M8 x 100 socket head (buy)"], "clamped": ["Yoke", "Abduction sleeve"], "bearings": [["6806", "SCARA end plate"]]}],
   "flex":  [{"bolt": ["HW flex", "M8 x 55 socket head (buy)"], "clamped": ["Upper-arm link", "Flexion axle sleeve"], "bearings": [["6808", "Yoke"]]}],
-  "elbow": [{"open": "elbow concept B: its hinge hardware is not modelled yet"}]
+  "elbow": [{"open": "elbow concept B: two printed axles in 6806 bearings, no through-bolt for this check to follow; the lateral axle drives the XL430 horn through the coupler pegs"}]
 }

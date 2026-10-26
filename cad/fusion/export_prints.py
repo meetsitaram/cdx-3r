@@ -65,6 +65,13 @@ SETS = {
         ('07_gripper_claw_TPU_x3', 'Gripper3 claw 1 (TPU)', None),
     ],
 }
+ELBOW = 'Elbow concept B (copy of CDX-3R elbow concepts, 12 deg)'
+SETS['elbow-servo-v1'] = [                     # the XL430 on the elbow's lateral side (elbow-test-v10 parts unchanged)
+    ('01_servo_case', ELBOW, 'Hardware (6806 bearings, covers): servo case (print plate down; 6 x M3 x 12 into the old cover inserts)'),
+    ('02_servo_strap', ELBOW, 'Hardware (6806 bearings, covers): servo strap (print flat; 2 x M3 x 8)'),
+    ('03_servo_horn_coupler', ELBOW, 'Forearm unit: servo horn coupler (print flat, pegs up; 2 x M2.5 x 6 into the horn)'),
+    ('04_servo_axle_lateral', ELBOW, 'Forearm unit: servo axle, lateral (print flat, pilot up; 3 x M3 x 8 to hub)'),
+]
 MODULE_CHECKS = {'gripper3-v1': 'gripper3'}   # sets built in a module doc: run that module's own checks instead
 
 
@@ -123,7 +130,7 @@ def orient(folder):
     r = subprocess.run([system_python(), os.path.join(HERE, 'orient_stls.py'), folder], capture_output=True, text=True,
                        creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
     if r.returncode:
-        raise RuntimeError('orient_stls failed:\n' + r.stderr)
+        raise RuntimeError('orient_stls failed (an STL open in the slicer is locked: close it there):\n' + r.stderr)
     return r.stdout
 
 
@@ -131,10 +138,6 @@ def export(name, only=None, start=0, count=None, orient_after=True, waive=()):
     d = adsk.fusion.Design.cast(adsk.core.Application.get().activeProduct)
     out = os.path.join(ROOT, 'prints', name)
     os.makedirs(out, exist_ok=True)
-    occ = {}
-    for o in d.rootComponent.allOccurrences:
-        if o.isVisible and not o.component.name.startswith('zz') and '/zz' not in o.fullPathName:
-            occ.setdefault(o.component.name, o)
     # every model check (fasteners bite, nothing collides) on the whole assembly first: nothing is exported if one
     # fails. The reports go with the STLs; the git hook refuses a commit without clean, current ones
     hidden = [o.component.name + ' / ' + b.name for o in d.rootComponent.allOccurrences if o.isVisible
@@ -148,6 +151,10 @@ def export(name, only=None, start=0, count=None, orient_after=True, waive=()):
         import checks
         importlib.reload(checks)
         checks.run_all(name)
+    occ = {}                                      # after the checks: they refresh the linked modules, which replaces
+    for o in d.rootComponent.allOccurrences:      # every occurrence (looked up before, the export saw the old parts)
+        if o.isVisible and not o.component.name.startswith('zz') and '/zz' not in o.fullPathName:
+            occ.setdefault(o.component.name, o)
     parts = [p for p in SETS[name] if not only or p[0] in only]
     parts = parts[start:None if count is None else start + count]
     em = d.exportManager

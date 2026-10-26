@@ -249,6 +249,8 @@ steps that fit the 60 s MCP limit, contact-sheet the frames, then `python mkgif.
 | A constant deleted from gripper3.py kept working in Fusion: `importlib.reload` keeps old globals | `undefined_names.py` in the commit hook |
 | Render scripts that hide bodies left them hidden in a saved file, and every check skips hidden bodies | restore visibility in a `finally`, and show all bodies before checks |
 | Fusion kept several open copies of one file (old versions opened as references); a script that picked the document by name edited a stale v6, and its save made no new version | pick the copy whose `dataFile.versionNumber == latestVersionNumber`; close stale copies without saving |
+| `export_prints.export` looked up the parts before `checks.run_all` refreshed the linked modules, so it exported (or failed to find) the old parts | look parts up after the checks |
+| Writing an STL failed with 'Invalid argument': the file was open in Bambu Studio | close it in the slicer first (the error now says so) |
 
 ## 6. Working agreements with the user
 

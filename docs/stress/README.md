@@ -76,6 +76,7 @@ load ~3x), larger seat; washers under link 1's lid screws.
 
 ## Next
 
+- **Arm load at the arm line, not on the housing:** the arm hangs ~156 mm ahead of joint E, so the SCARA joints also carry a tipping moment (7.8 N·m at 50 N). Check the end plate's nut ceiling and the E bolt first ([open note](../bugs/end-plate-tipped-by-the-arm.md)).
 - Separation (lift-off) contacts at screw and nut seats instead of bonded.
 - More load cases: arm forward (+x) and sideways; the shrug end-stop.
 - Inserts as brass, nuts/washers as steel; finer mesh at the hot spots.

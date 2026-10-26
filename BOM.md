@@ -154,6 +154,18 @@ the middle (40 mm) hole.
 | 06_gripper_collar | PETG | 1 | |
 | 07_gripper_claw_TPU_x3 | TPU 95A | 3 | flat; slow (20–30 mm/s) |
 
+## Elbow servo (prints/elbow-servo-v1)
+
+A Dynamixel XL430-W250-T in a case on the elbow's outer side, instead of the outer bearing cover.
+
+| Item | Qty | Where | From |
+|---|---|---|---|
+| Dynamixel XL430-W250-T, with its horn | 1 | elbow, outer side | Koch arm parts |
+| U2D2 (or another TTL adapter) + 12 V supply | 1 | to run it | Koch arm parts |
+| M2.5 × 6 socket head | 2 | horn coupler to the horn | M2.5 kit (Robotis horn screws are M2.5) |
+| M3 × 12 socket head | 6 | case into the old cover's inserts | Fgruh M3 kit |
+| M3 × 8 socket head + ruthex M3 insert | 2 + 2 | strap | stock |
+
 ## Filament
 
 | Item | Qty | Notes |

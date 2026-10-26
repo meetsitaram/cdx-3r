@@ -81,6 +81,15 @@ P = dict(
                                     # overlaps the outer ring ~1.5 mm, so the cover keeps retaining it)
     cover_windows=(6, 6.0, 25.0),   # spoked look: n round windows, diameter, radius (on the screw circle, between screws)
     rom=(0, 135),
+    # Lateral side: a Dynamixel XL430-W250-T replaces the cover (user, 25 Oct: the elbow swung too freely). The
+    # servo lies along the upper arm, horn on the elbow axis facing in; its case bolts to the cover's 6 inserts.
+    # A horn coupler (2 x M2.5 into the horn) drops 3 pegs into the outer axle's screw pockets, so the forearm
+    # turns the horn. Sizes from Robotis' STEP (koch-v1-1/hardware/follower/STEP): body 28.5 x 46.5 x 34.0,
+    # output 11.25 from one end, horn Ø20.8 x 3.86 proud of the face, M2.5 holes on a 16 mm circle.
+    servo=dict(on=True, body=(28.5, 46.5, 34.04), axis_end=11.25, horn_r=10.4, horn_h=3.86, horn_pcd=16.0,
+               plate_t=10.0, wall=3.0, side_wall=8.0, clear=0.25, low_wall=5.0, opening_d=31.0,
+               axle_face=79.5, flange_d=36.0, pocket_d=5.6, coupler_d=28.0, peg_d=5.2, peg_len=3.0, under_head=2.0,
+               strap=(10.0, 3.0), strap_z=12.0),
     # forearm door: the front halves of both forearm rings + a 5th pipe; hinged at the wrist ring,
     # pinned shut at the elbow ring. Each joint is a fork and tongue at the ring's side (y = 0):
     # two full-height cheeks on the ring (inner and outer skin) around a slot, the door band's
@@ -642,6 +651,90 @@ def cut_axis(p, body, d, xa, xb, r_extra=0.0):
     return p.cut([body], p.cyl('x', [(a + b) / 2, 0, 0], d / 2 + r_extra, b - a))[0]
 
 
+def servo_side(ua, fa, hw, ux0, ux1, fx1):
+    """Lateral side with the XL430 (P['servo']): drop that side's cover, its screws and the plain axle, then build
+    the servo axle (screw pockets deepened into peg sockets), the horn coupler and the horn (they turn with the
+    forearm), and the case, strap, servo and screws (fixed to the upper arm)."""
+    S, c = P['servo'], P['axle']
+    bore, od, w = P['bearing']
+    bw, bl, bd = S['body']
+    for part, pre in ((hw, ('cover', 'M3 x 8 socket head')), (fa, ('bearing axle',))):
+        while True:                                        # re-find each time: a removal can stale the others
+            b = next((b for b in part.comp.bRepBodies if b.name.startswith(pre) and b.boundingBox.minPoint.x > 0),
+                     None)
+            if b is None:
+                break
+            part.comp.features.removeFeatures.add(b)
+    # servo axle: the plain axle's Ø30 stub and pilot, 2 mm longer; the screw seats stay where they were (same
+    # M3 x 8 into the same hub inserts), the pockets above them become 3.2 mm sockets for the coupler's pegs
+    xf, seat = S['axle_face'], ux0 + w + 0.5 - c['head_depth']
+    xb = ux0 + w + 0.5                                     # past the bearing: a Ø36 flange (the lip bore is Ø39.5)
+    ax = fa.join(fa.cyl('x', [(fx1 + xb) / 2, 0, 0], bore / 2, xb - fx1)
+                 + fa.cyl('x', [(xb + xf) / 2, 0, 0], S['flange_d'] / 2, xf - xb)
+                 + fa.cyl('x', [fx1 - c['pilot_len'] / 2, 0, 0], c['pilot_d'] / 2, c['pilot_len']))[0]
+    x0 = fx1 - c['pilot_len']
+    holes = [fa.hole('x', [(x0 + xf) / 2, 0, c['screw_r']], c['screw_clear'], xf - x0 + 1, ax, name='axle screw hole'),
+             fa.hole('x', [(seat + xf) / 2 + 0.5, 0, c['screw_r']], S['pocket_d'], xf - seat + 1, ax,
+                     name='axle screw pocket + peg socket')]                 # Ø5.6: 1.2 mm wall inside the bearing
+    fa.circular(holes, 'x', c['screws'], 360.0 / c['screws'], name='servo axle screw holes')
+    ax.name = 'servo axle, lateral (print flat, pilot up; 3 x M3 x 8 to hub)'
+    # horn coupler: between the axle face and the horn, turns with the forearm
+    xp1 = ux1 + S['plate_t']                               # case floor = the servo's horn face
+    xh = xp1 - S['horn_h']                                 # horn's outer face
+    cp0 = xf + 0.2
+    parts = fa.cyl('x', [(cp0 + xh) / 2, 0, 0], S['coupler_d'] / 2, xh - cp0)
+    for k in range(c['screws']):                           # pegs on the axle screws' circle: 90, 210, 330 deg
+        a = math.radians(90 + 120 * k)
+        parts += fa.cyl('x', [cp0 - S['peg_len'] / 2 + 0.01, c['screw_r'] * math.cos(a), c['screw_r'] * math.sin(a)],
+                        S['peg_d'] / 2, S['peg_len'] + 0.02)
+    cpl = fa.join(parts)[0]
+    hr = S['horn_pcd'] / 2
+    for y in (hr, -hr):                                    # 2 horn screws, between the pegs
+        fa.hole('x', [(cp0 + xh) / 2, y, 0], 2.7, xh - cp0 + 1, cpl, name='horn screw hole')
+        fa.hole('x', [(cp0 + xh - S['under_head']) / 2 - 0.5, y, 0], 5.0, xh - S['under_head'] - cp0 + 1, cpl,
+                name='horn screw counterbore')
+    cpl.name = 'servo horn coupler (print flat, pegs up; 2 x M2.5 x 6 into the horn)'
+    horn = fa.cyl('x', [(xh + xp1) / 2, 0, 0], S['horn_r'], S['horn_h'])[0]
+    for y in (hr, -hr):
+        fa.hole('x', [(xh + xp1) / 2, y, 0], 2.5, S['horn_h'] + 1, horn, name='horn thread')
+    horn.name = 'XL430 horn, threaded for M2.5 (buy)'
+    for y in (hr, -hr):
+        fastener(fa, -1, y, 0, -(xh - S['under_head']), 6.0, 2.5, 4.5, 2.5,
+                 'M2.5 x 6 socket head, coupler to horn (buy)')
+    # case (fixed to the upper arm): plate on the old cover's seat, pocket for the servo, low wall at the cable end
+    yi, zi0, zi1 = bw / 2 + S['clear'], -(S['axis_end'] + S['clear']), bl - S['axis_end'] + S['clear']
+    yo, zo0, zo1 = yi + S['side_wall'], zi0 - S['wall'], zi1 + S['wall']
+    xt = xp1 + bd + 0.1                                    # wall tops: the strap seats here
+    parts = hw.cyl('x', [(ux1 + xp1) / 2, 0, 0], P['hub_r'], S['plate_t'])
+    parts += [hw.box(ux1, xp1, -yo, yo, zo0, zo1, name='plate')[0]]
+    for sg in (1, -1):
+        parts += [hw.box(xp1 - 0.5, xt, *sorted((sg * yi, sg * yo)), zo0, zo1, name='side wall')[0]]
+    parts += [hw.box(xp1 - 0.5, xt, -yo, yo, zo0, zi0, name='end wall (horn end)')[0],
+              hw.box(xp1 - 0.5, xp1 + S['low_wall'], -yo, yo, zi1, zo1, name='low end wall (cable end)')[0]]
+    case = hw.join(parts)[0]
+    case = hw.cut([case], [hw.box(xp1, xt + 1, -yi, yi, zi0, zi1, name='servo pocket')[0]])[0]
+    hw.hole('x', [(ux1 + xp1) / 2, 0, 0], S['opening_d'], S['plate_t'] + 1, case, name='coupler opening')
+    pcd = P['cover_pcd'] / 2
+    pts = [(pcd * math.cos(math.radians(60 * k)), pcd * math.sin(math.radians(60 * k))) for k in range(6)]
+    for y, z in pts:                                       # the cover's 6 inserts: M3 x 12 through the plate
+        hw.hole('x', [(ux1 + xp1) / 2, y, z], 3.4, S['plate_t'] + 1, case, name='plate screw hole')
+        hw.hole('x', [xp1 - 1.65 + 0.5, y, z], 6.0, 3.3 + 1, case, name='plate screw counterbore')
+        fastener(hw, 1, y, z, xp1 - 3.3, 12.0, 3.0, 5.5, 3.0, 'M3 x 12 socket head, servo case (buy)')
+    sw, st = S['strap']
+    ys, zs = (yi + yo) / 2, S['strap_z']
+    strap = hw.box(xt, xt + st, -yo, yo, zs - sw / 2, zs + sw / 2, name='strap')[0]
+    for y in (ys, -ys):
+        hw.hole('x', [xt - 3.0, y, zs], 4.0, 7.0, case, name='strap insert hole')
+        hw.hole('x', [xt + st / 2, y, zs], 3.4, st + 1, strap, name='strap screw hole')
+        insert(hw, 1, y, zs, xt, 5.7, 4.0, 3.0, 'M3 heat-set insert ruthex 5.7, servo case (buy)')
+        fastener(hw, 1, y, zs, xt + st, 8.0, 3.0, 5.5, 3.0, 'M3 x 8 socket head, servo strap (buy)')
+    case.name = 'servo case (print plate down; 6 x M3 x 12 into the old cover inserts)'
+    strap.name = 'servo strap (print flat; 2 x M3 x 8)'
+    servo = hw.box(xp1, xp1 + bd, -bw / 2, bw / 2, -S['axis_end'], bl - S['axis_end'], name='servo')[0]
+    servo.name = 'Dynamixel XL430-W250-T servo (buy)'
+    return case
+
+
 def variant(parent, key, offset):
     """Two-sided 6806 joint. Each unit's near ring, elbow shell and hubs are one printed part
     (ring face down, shell rising, hubs on top); the forearm shell's posterior ledge meets the
@@ -765,6 +858,8 @@ def variant(parent, key, offset):
     name_like(f.bodies, [brg, cover] + cov_hw)
 
     ubody.name = 'upper arm: near ring + elbow shell + bearing housings (print ring down)'
+    if P['servo']['on']:
+        servo_side(ua, fa, hw, ux0, ux1, fx1)
     for part, color in ((ua, UA_COLOR), (fa, FA_COLOR), (hw, HW_COLOR)):
         for b in part.comp.bRepBodies:
             b.appearance = fx.appearance(SCREW_COLOR if ('socket head' in b.name or 'insert' in b.name)

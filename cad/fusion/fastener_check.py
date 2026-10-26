@@ -30,7 +30,8 @@ import adsk.fusion
 MIN_GRIP = 3.0                                            # mm of the shank's TIP half surrounded by printed material
 FASTENER = re.compile(r'(socket head|pan-head|Clevis pin|ball stud|thumb screw|M\d+ x \d+)', re.I)
 SKIP = re.compile(r'(nut|insert|washer|spacer|bearing|608|6806|6808|belt|^R-clip|pulley|webbing|buckle)', re.I)
-ANCHOR = re.compile(r'(nut|insert)', re.I)                 # what a machine screw's thread bites
+ANCHOR = re.compile(r'(nut|insert|threaded)', re.I)        # what a machine screw's thread bites (a tapped
+                                                          # part, e.g. the servo horn, is named 'threaded')
 NO_ANCHOR_OK = re.compile(r'(self-tapping|Clevis pin|R-clip|cuts its own thread)', re.I)
 BEARING = re.compile(r'(608|6806|6808)', re.I)
 BEARING_OD = {'6806': 42.0, '6808': 52.0, '608': 22.0}     # mm (6806/6808 first: '608' is in neither)
@@ -81,7 +82,7 @@ def check(design, min_grip=MIN_GRIP):
             if buy and FASTENER.search(b.name) and not SKIP.search(b.name):
                 fasteners.append((o.component.name, b.name, px))
             elif (not buy or 'printed' in b.name or 'PVC' in b.name or 'PVC' in o.component.name
-                  or re.search(r'(nut|insert|carriage)', b.name, re.I)):
+                  or re.search(r'(nut|insert|carriage|threaded)', b.name, re.I)):
                 printed.append(px)                         # what a screw can bite: printed parts, PVC, nuts, inserts
             if buy and ANCHOR.search(b.name) and not FASTENER.search(b.name):
                 anchors.append(px)

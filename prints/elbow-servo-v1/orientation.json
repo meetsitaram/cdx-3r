@@ -1,0 +1,46 @@
+{
+ "01_servo_case.stl": {
+  "up": [
+   1.0,
+   -0.0,
+   -0.0
+  ],
+  "base": 2541,
+  "overhang": 72,
+  "on_part": 8,
+  "height": 44.1
+ },
+ "02_servo_strap.stl": {
+  "up": [
+   -1.0,
+   -0.0,
+   -0.0
+  ],
+  "base": 432,
+  "overhang": 0,
+  "on_part": 0,
+  "height": 3.0
+ },
+ "03_servo_horn_coupler.stl": {
+  "up": [
+   -1.0,
+   -0.0,
+   -0.0
+  ],
+  "base": 603,
+  "overhang": 0,
+  "on_part": 0,
+  "height": 9.4
+ },
+ "04_servo_axle_lateral.stl": {
+  "up": [
+   -1.0,
+   -0.0,
+   -0.0
+  ],
+  "base": 943,
+  "overhang": 46,
+  "on_part": 0,
+  "height": 13.0
+ }
+}
