@@ -90,6 +90,9 @@ P = dict(
                plate_t=10.0, wall=3.0, side_wall=8.0, clear=0.25, low_wall=5.0, opening_d=31.0,
                axle_face=79.5, flange_d=36.0, pocket_d=5.6, coupler_d=28.0, peg_d=5.2, peg_len=3.0, under_head=2.0,
                strap=(10.0, 3.0), strap_z=12.0, led_r=4.5,
+               horn_screw=(5.0, 2.0), centre_d=7.0,   # the horn's centre screw: head Ø, proud of the horn (not in
+                                                     # the STEP; it held the coupler off the horn, 27 Oct) -> hole
+                                                     # through the coupler (also lets a screwdriver reach it)
                round=dict(case=1.5, strap=1.0, coupler=1.0, axle=0.8)),   # outer edges (fit edges stay sharp)
     # forearm door: the front halves of both forearm rings + a 5th pipe; hinged at the wrist ring,
     # pinned shut at the elbow ring. Each joint is a fork and tongue at the ring's side (y = 0):
@@ -652,6 +655,23 @@ def cut_axis(p, body, d, xa, xb, r_extra=0.0):
     return p.cut([body], p.cyl('x', [(a + b) / 2, 0, 0], d / 2 + r_extra, b - a))[0]
 
 
+def horn_fit(part, cpl, horn_parts):
+    """The coupler must sit flat on the horn: nothing on the horn's face (its centre screw head) may reach into
+    it. The sweeps can't see this (coupler and horn are in the same part), so it is checked here."""
+    des = adsk.fusion.Design.cast(adsk.core.Application.get().activeProduct)
+    items = adsk.core.ObjectCollection.create()
+    for b in [cpl] + horn_parts:
+        items.add(b.createForAssemblyContext(part.occ) if part.occ else b)
+    ii = des.createInterferenceInput(items)
+    ii.areCoincidentFacesIncluded = False
+    res = des.analyzeInterference(ii)
+    hits = [(round(res.item(i).interferenceBody.volume * 1000, 1), res.item(i).entityOne.name,
+             res.item(i).entityTwo.name) for i in range(res.count)]
+    hits = [h for h in hits if h[0] >= 0.1 and cpl.name in h[1:]]
+    if hits:
+        raise RuntimeError('horn coupler does not sit flat on the horn: %s' % hits)
+
+
 def servo_side(ua, fa, hw, ux0, ux1, fx1):
     """Lateral side with the XL430 (P['servo']): drop that side's cover, its screws and the plain axle, then build
     the servo axle (screw pockets deepened into peg sockets), the horn coupler and the horn (they turn with the
@@ -694,11 +714,17 @@ def servo_side(ua, fa, hw, ux0, ux1, fx1):
         fa.hole('x', [(cp0 + xh) / 2, y, 0], 2.7, xh - cp0 + 1, cpl, name='horn screw hole')
         fa.hole('x', [(cp0 + xh - S['under_head']) / 2 - 0.5, y, 0], 5.0, xh - S['under_head'] - cp0 + 1, cpl,
                 name='horn screw counterbore')
+    if S['centre_d']:
+        fa.hole('x', [(cp0 + xh) / 2, 0, 0], S['centre_d'], xh - cp0 + 1, cpl, name='horn centre screw clearance')
     cpl.name = 'servo horn coupler (print flat, pegs up; 2 x M2.5 x 6 into the horn)'
     horn = fa.cyl('x', [(xh + xp1) / 2, 0, 0], S['horn_r'], S['horn_h'])[0]
     for y in (hr, -hr):
         fa.hole('x', [(xh + xp1) / 2, y, 0], 2.5, S['horn_h'] + 1, horn, name='horn thread')
     horn.name = 'XL430 horn, threaded for M2.5 (buy)'
+    hd, hh = S['horn_screw']
+    head = fa.cyl('x', [xh - hh / 2, 0, 0], hd / 2, hh)[0]
+    head.name = 'XL430 horn centre screw head (comes with the servo) (buy)'
+    horn_fit(fa, cpl, [horn, head])
     for y in (hr, -hr):
         fastener(fa, -1, y, 0, -(xh - S['under_head']), 6.0, 2.5, 4.5, 2.5,
                  'M2.5 x 6 socket head, coupler to horn (buy)')

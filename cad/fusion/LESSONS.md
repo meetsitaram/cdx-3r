@@ -251,6 +251,7 @@ steps that fit the 60 s MCP limit, contact-sheet the frames, then `python mkgif.
 | Fusion kept several open copies of one file (old versions opened as references); a script that picked the document by name edited a stale v6, and its save made no new version | pick the copy whose `dataFile.versionNumber == latestVersionNumber`; close stale copies without saving |
 | `export_prints.export` looked up the parts before `checks.run_all` refreshed the linked modules, so it exported (or failed to find) the old parts | look parts up after the checks |
 | Writing an STL failed with 'Invalid argument': the file was open in Bambu Studio | close it in the slicer first (the error now says so) |
+| A vendor STEP (XL430) left out the horn's centre screw; the coupler printed to sit on the horn landed on its head | look at photos of a bought part for screws/bosses proud of a mating face, model them, and check the fit (`concepts.horn_fit`) |
 
 ## 6. Working agreements with the user
 

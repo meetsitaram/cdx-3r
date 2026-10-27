@@ -71,4 +71,4 @@ ok    q3     End plate HW / M8 x 55 socket head (buy)
 ok    abd    HW abd / M8 x 100 socket head (buy)
 ok    flex   HW flex / M8 x 55 socket head (buy)
 OPEN  elbow  elbow concept B: two printed axles in 6806 bearings, no through-bolt for this check to follow; the lateral axle drives the XL430 horn through the coupler pegs
-source ea7f01f2ada8d4f2
+source 51eebb793f5f73a1

@@ -13,7 +13,7 @@ bearings, the outer axle's 3 × M3 × 8 and the hub inserts, and the 6 inserts t
 |---|---|---|---|
 | `01_servo_case.stl` | 1 | plate down, as exported | the servo drops into its pocket; 6 × M3 × 12 into the old cover's inserts. Round window in the top of the horn-end wall for the servo's red LED |
 | `02_servo_strap.stl` | 1 | flat | across the back of the servo, 2 × M3 × 8 into inserts in the case walls |
-| `03_servo_horn_coupler.stl` | 1 | flat, pegs up | 2 × M2.5 × 6 into the horn; its 3 pegs drop into the axle |
+| `03_servo_horn_coupler.stl` | 1 | flat, pegs up | 2 × M2.5 × 6 into the horn; its 3 pegs drop into the axle. The Ø7 centre hole clears the horn's own centre screw |
 | `04_servo_axle_lateral.stl` | 1 | flat, pilot up | replaces the **outer** `03_bearing_axle`: same screws, deeper screw pockets (the pegs go in above the heads), Ø36 flange outside the bearing |
 
 All outer edges are rounded (inside pocket corners and hole edges stay sharp: they set the fits); the export

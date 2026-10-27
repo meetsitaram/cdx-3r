@@ -63,4 +63,4 @@ ok       21.2 mm3   carrier (buy)/M3 heat-set insert ruthex 5.7, grip (buy) (1) 
 ok       21.2 mm3  3 HW carrier (buy)/M3 heat-set insert ruthex 5.7, grip (buy)  <>  Gripper3 HW carrier (buy)/M3 x 12 socket head, grip (buy)  (insert melts into its hole)
 ok       18.8 mm3  it), loops ~36 apart: trigger return, closes the claws (buy)  <>  Gripper3 carrier (printed)/carrier (printed)  (the return spring loops wrap through the lug holes and stretch as the link moves)
 
-source ea7f01f2ada8d4f2
+source 51eebb793f5f73a1

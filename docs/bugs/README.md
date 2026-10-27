@@ -13,6 +13,7 @@ add a row at the bottom of the table (rows are in the order found).
 | [Fix reported but not made (boss lip)](carriage-boss-lip-claimed-fixed.md) | a round, trust | rule: show the diff |
 | [Carriage base on a 0.6 mm boss](carriage-flat-base.md) | — | rule only |
 | [Carriage web hit link-1 screw heads](link1-lid-screws-vs-web.md) | — | `collision_check.py` |
+| [Servo coupler sat on the horn's centre screw](servo-coupler-on-horn-screw.md) | coupler reprint | `concepts.horn_fit()` |
 | [Rest screw at 90°, slot at 50°](bracket-screw-at-wrong-angle.md) | — | `collision_check.py` |
 | [Docs: backbone 583 mm, model 568 mm](stale-backbone-length.md) | — | rule only |
 | [**Rest bracket held by one screw and a 1.7 mm wall**](rest-bracket-attachment.md) | **9 h print → drill a hole** | `fastener_check.py` (partly) |
