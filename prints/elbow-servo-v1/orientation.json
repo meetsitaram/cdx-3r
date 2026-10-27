@@ -5,9 +5,9 @@
    -0.0,
    -0.0
   ],
-  "base": 2541,
-  "overhang": 72,
-  "on_part": 8,
+  "base": 2273,
+  "overhang": 29,
+  "on_part": 1,
   "height": 44.1
  },
  "02_servo_strap.stl": {
@@ -16,7 +16,7 @@
    -0.0,
    -0.0
   ],
-  "base": 432,
+  "base": 344,
   "overhang": 0,
   "on_part": 0,
   "height": 3.0
@@ -38,7 +38,7 @@
    -0.0,
    -0.0
   ],
-  "base": 943,
+  "base": 869,
   "overhang": 46,
   "on_part": 0,
   "height": 13.0

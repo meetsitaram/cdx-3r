@@ -567,6 +567,49 @@ class Part:
 
 # ---------------------------------------------------------------- checks
 
+def sharp_outer_edges(body, fit_r=16.0, deg=30.0):
+    """Convex edges whose faces meet at more than deg: what feels sharp in the hand. Concave edges (inside corners
+    of a pocket that a part must fit into) are left out, and so are edges on a cylinder of radius <= fit_r mm
+    (holes, counterbores, bores, pins: their edges set fits)."""
+    out = []
+    for e in body.edges:
+        if e.faces.count != 2 or e.length * 10 < 0.2:
+            continue
+        if any(isinstance(f.geometry, adsk.core.Cylinder) and f.geometry.radius * 10 <= fit_r for f in e.faces):
+            continue
+        q = e.pointOnEdge
+        n = []
+        for f in e.faces:
+            ok, v = f.evaluator.getNormalAtPoint(q)
+            if not ok:
+                break
+            n.append(v)
+        if len(n) != 2 or math.degrees(n[0].angleTo(n[1])) <= deg:
+            continue
+        # convex or concave: step from the edge into face 2 (square to the edge, along the face) and see which side
+        # of face 1 that lands on. Convex: behind face 1 (against its outward normal); an inside corner: in front.
+        # (Both normals point into open space at an inside corner too, so a probe along their bisector can't tell.)
+        ev = e.evaluator
+        ok, p0, p1 = ev.getParameterExtents()
+        ok, t = ev.getTangent((p0 + p1) / 2)
+        if not ok:
+            continue
+        f2 = e.faces.item(1)
+        side = None
+        for sg in (1, -1):
+            v = n[1].crossProduct(t)
+            v.normalize()
+            v.scaleBy(sg * 0.03)
+            p = adsk.core.Point3D.create(q.x + v.x, q.y + v.y, q.z + v.z)
+            ok, prm = f2.evaluator.getParameterAtPoint(p)
+            if ok and f2.evaluator.isParameterOnFace(prm):
+                side = v
+                break
+        if side is not None and side.dotProduct(n[0]) < 0:
+            out.append(e)
+    return out
+
+
 def world_bbox(bodies, occ):
     """Bounding box in root space (mm). Assembly-context proxies are reliable for
     nested occurrences, where transform2 is not."""

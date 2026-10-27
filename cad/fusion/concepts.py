@@ -89,7 +89,8 @@ P = dict(
     servo=dict(on=True, body=(28.5, 46.5, 34.04), axis_end=11.25, horn_r=10.4, horn_h=3.86, horn_pcd=16.0,
                plate_t=10.0, wall=3.0, side_wall=8.0, clear=0.25, low_wall=5.0, opening_d=31.0,
                axle_face=79.5, flange_d=36.0, pocket_d=5.6, coupler_d=28.0, peg_d=5.2, peg_len=3.0, under_head=2.0,
-               strap=(10.0, 3.0), strap_z=12.0),
+               strap=(10.0, 3.0), strap_z=12.0, led_r=4.5,
+               round=dict(case=1.5, strap=1.0, coupler=1.0, axle=0.8)),   # outer edges (fit edges stay sharp)
     # forearm door: the front halves of both forearm rings + a 5th pipe; hinged at the wrist ring,
     # pinned shut at the elbow ring. Each joint is a fork and tongue at the ring's side (y = 0):
     # two full-height cheeks on the ring (inner and outer skin) around a slot, the door band's
@@ -728,9 +729,18 @@ def servo_side(ua, fa, hw, ux0, ux1, fx1):
         hw.hole('x', [xt + st / 2, y, zs], 3.4, st + 1, strap, name='strap screw hole')
         insert(hw, 1, y, zs, xt, 5.7, 4.0, 3.0, 'M3 heat-set insert ruthex 5.7, servo case (buy)')
         fastener(hw, 1, y, zs, xt + st, 8.0, 3.0, 5.5, 3.0, 'M3 x 8 socket head, servo strap (buy)')
+    # window for the servo's red LED: a round notch in the top of the horn-end wall (user, 26 Oct)
+    case = hw.cut([case], hw.cyl('z', [xt, 0, (zo0 + zi0) / 2], S['led_r'], S['wall'] + 2, name='LED window'))[0]
+    rr = S['round']
+    for part, b, r in ((hw, case, rr['case']), (hw, strap, rr['strap']), (fa, cpl, rr['coupler']), (fa, ax, rr['axle'])):
+        for _ in range(4):                                 # rounding some edges leaves new sharp ones beside them
+            es = fx.sharp_outer_edges(b)
+            if not es or _fillet(part, es, r)[0] == 0:
+                break
     case.name = 'servo case (print plate down; 6 x M3 x 12 into the old cover inserts)'
     strap.name = 'servo strap (print flat; 2 x M3 x 8)'
-    servo = hw.box(xp1, xp1 + bd, -bw / 2, bw / 2, -S['axis_end'], bl - S['axis_end'], name='servo')[0]
+    servo = hw.box(xp1 + 0.05, xp1 + bd, -bw / 2, bw / 2, -S['axis_end'], bl - S['axis_end'], name='servo')[0]   # 0.05 off
+    # the floor: faces exactly on top of each other overlap a few hundredths in the assembly's copy (17 mm3, 26 Oct)
     servo.name = 'Dynamixel XL430-W250-T servo (buy)'
     return case
 

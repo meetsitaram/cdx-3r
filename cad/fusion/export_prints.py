@@ -72,6 +72,7 @@ SETS['elbow-servo-v1'] = [                     # the XL430 on the elbow's latera
     ('03_servo_horn_coupler', ELBOW, 'Forearm unit: servo horn coupler (print flat, pegs up; 2 x M2.5 x 6 into the horn)'),
     ('04_servo_axle_lateral', ELBOW, 'Forearm unit: servo axle, lateral (print flat, pilot up; 3 x M3 x 8 to hub)'),
 ]
+SMOOTH = {'elbow-servo-v1'}                    # sets whose parts must have no sharp outer edge (fxlib.sharp_outer_edges)
 MODULE_CHECKS = {'gripper3-v1': 'gripper3'}   # sets built in a module doc: run that module's own checks instead
 
 
@@ -157,6 +158,17 @@ def export(name, only=None, start=0, count=None, orient_after=True, waive=()):
             occ.setdefault(o.component.name, o)
     parts = [p for p in SETS[name] if not only or p[0] in only]
     parts = parts[start:None if count is None else start + count]
+    if name in SMOOTH:                            # no sharp outer edge on parts handled every day (user, 26 Oct)
+        import fxlib
+        sharp = []
+        for f, cn, bn in parts:
+            bodies = [x for x in occ[cn].component.bRepBodies if x.isVisible]
+            b = bodies[0] if bn is None else next(x for x in bodies if x.name == bn)
+            k = len(fxlib.sharp_outer_edges(b))
+            if k:
+                sharp.append('%s: %d' % (f, k))
+        if sharp:
+            raise RuntimeError('sharp outer edges, nothing exported: ' + ', '.join(sharp))
     em = d.exportManager
     for f, cn, bn in parts:
         o = occ[cn]

@@ -76,7 +76,7 @@ def build_set(key):
         occ.component.name = n
         occ.component.bRepBodies.add(body).name = n
     set_materials(d, printed=lambda n: _printed(n))
-    ok = doc.saveAs(doc_name, split.folder(), 'Whole %s for stress studies (cad/fusion/fea.py)' % key, '')
+    ok = split.save_new(doc, doc_name, 'Whole %s for stress studies (cad/fusion/fea.py)' % key)
     return doc_name, ok, len(copies)
 
 
@@ -111,7 +111,7 @@ def build(study):
         occ = root.occurrences.addNewComponent(adsk.core.Matrix3D.create())
         occ.component.name = comp
         occ.component.bRepBodies.add(body).name = comp
-    ok = doc.saveAs(doc_name, split.folder(), 'Copies of the parts for the %s stress study (cad/fusion/fea.py)' % study, '')
+    ok = split.save_new(doc, doc_name, 'Copies of the parts for the %s stress study (cad/fusion/fea.py)' % study)
     return doc_name, ok, [c for c, _ in picked]
 
 

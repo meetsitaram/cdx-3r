@@ -78,10 +78,26 @@ def build(module, step=None):
     raise ValueError(module)
 
 
+def save_new(doc, name, description):
+    """Save a newly built document into FOLDER as name. Refuses when a file of that name is already there: Save As
+    never replaces, it adds a second file with the same name (17 stale "CDX-3R gripper 3" copies, 26 Oct). Rebuild
+    an existing module inside its own document and save that (save()) instead."""
+    try:
+        _file(name)
+    except KeyError:
+        return doc.saveAs(name, folder(), description, '')
+    raise RuntimeError('"%s" already exists in %s: open it and rebuild in place, then save() (a new version)'
+                       % (name, FOLDER))
+
+
 def save(module):
+    """A module document already in the cloud gets a new version; only a brand-new one is saved as a file."""
     doc = app().activeDocument
-    ok = doc.saveAs(DOCS[module], folder(), 'Built from cad/fusion scripts (split from CDX-3R shoulder + back v54)', '')
-    return DOCS[module], ok
+    if doc.dataFile is not None:
+        if doc.name != DOCS[module]:
+            raise RuntimeError('active document is "%s", not "%s"' % (doc.name, DOCS[module]))
+        return DOCS[module], doc.save('Rebuilt from cad/fusion scripts')
+    return DOCS[module], save_new(doc, DOCS[module], 'Built from cad/fusion scripts')
 
 
 def _file(name):
