@@ -252,6 +252,8 @@ steps that fit the 60 s MCP limit, contact-sheet the frames, then `python mkgif.
 | `export_prints.export` looked up the parts before `checks.run_all` refreshed the linked modules, so it exported (or failed to find) the old parts | look parts up after the checks |
 | Writing an STL failed with 'Invalid argument': the file was open in Bambu Studio | close it in the slicer first (the error now says so) |
 | A vendor STEP (XL430) left out the horn's centre screw; the coupler printed to sit on the horn landed on its head | look at photos of a bought part for screws/bosses proud of a mating face, model them, and check the fit (`concepts.horn_fit`) |
+| The collar's tail-pin cheeks were sized only to clear the claws: 2 mm of plastic round a loaded pin slot, printed with the pull across the layers; they snapped on the first print | give every loaded hole or slot a ligament rule (plastic on each side, as built), and think about which way the layers run under the load |
+| The grip's screw heads were sealed inside the grip, and the clamp screws were drawn to fit the gap instead of at their real length | every screw head needs a straight way in for the tool (ACCESS rule); draw bought parts at their real size and check what that leaves (clamp travel) |
 
 ## 6. Working agreements with the user
 

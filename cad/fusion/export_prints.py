@@ -59,6 +59,7 @@ SETS = {
         ('01_gripper_base', 'Gripper3 base (printed)', None),
         ('02_gripper_carrier', 'Gripper3 carrier (printed)', None),
         ('03_gripper_grip', 'Gripper3 grip (printed)', None),
+        ('03b_gripper_grip_sleeve', 'Gripper3 grip sleeve (printed)', None),
         ('04_gripper_trigger', 'Gripper3 trigger (printed)', None),
         ('05_gripper_y_link', 'Gripper3 link (printed)', None),
         ('06_gripper_collar', 'Gripper3 collar (printed)', None),

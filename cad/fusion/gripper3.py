@@ -2,7 +2,7 @@
 
 Layout (user brief, 20 Oct 2026):
   * BASE (printed) clamped on the forearm's middle PVC pipe well behind the wrist (two snap clips, each with a
-    thumb screw pressing on the pipe): loosen them and the whole gripper slides along the pipe to set its distance
+    screw pressing on the pipe): loosen them and the whole gripper slides along the pipe to set its distance
     from the wrist (anywhere in a 50 mm range forward of the shortest setting). Its front rides over the wrist ring to the HINGE CHEEKS.
   * CARRIER (printed), everything in front of the hinge: the grip, the trigger and the claw head. In use it is latched
     straight out (index plunger); to stow it, pull the plunger and flip the carrier up and back over the forearm,
@@ -51,8 +51,9 @@ P = dict(
     claw=dict(xp=209.0, rp=22.0, L=95.0, root_in=15.0, pad=0.82, cup=14.0, pad_rise=1.2, apex=0.3, wedge_gap=0.1, tooth=(1.0, 4.0), teeth_from=30.0, cells=(9.0, 84.0, 9.0, 2.0, 2.0, 2.2, 3.0), t=14.0,
               root_depth=14.0, tip_depth=9.0, outer_bulge=12.0,
               alphas=(0.0, 120.0, 240.0), tail=(-7.0, 10.0), open_deg=32.0),
-    collar=dict(x=(182.0, 194.0), skirt=(206.0, 29.0), r=(27.8, 36.0), lug_z=(30.0, 37.3), lobe_r=5.5,
-                pad=(26.3, 10.0)),   # bore clears the nose (27.5); 3 pads (inner r, width) ride the hub, pass the claw slots
+    collar=dict(x=(182.0, 194.0), skirt=(207.5, 29.0), r=(27.8, 36.0), lug_z=(30.0, 37.3), lobe_r=5.5,
+                pad=(26.3, 10.0),    # bore clears the nose (27.5); 3 pads (inner r, width) ride the hub, pass the claw slots
+                skirt_r=40.0),       # the tail cheeks reach out to this radius (36 broke, 27 Oct)
     link=dict(h=10.0, w=6.0, split=124.0, kink=152.0, diag_w=12.0, arm_z=(37.6, 43.6)),   # Y: stem, 2 angled arms
     spring=dict(rise=11.8, od=10.0, link_hook=115.0, link_holes=(115.0, 120.0, 125.0), hub_hook=160.0, free=36.0,
                 max_ext=15.0, rate=2.0, init=4.0),   # Keadic kit 1.2 x 10 x 45 (loops ~36 apart): measure, pick a hole   # return spring:
@@ -339,7 +340,7 @@ def _base(g):
         p.prism([x0, 0, 0], XF, 0, x1 - x0, sh.rect(-30, g2.P['ring_top'], -40, 40), name='ring clearance', op=CUT,
                 targets=[body])                                  # slides over the wrist ring's pipe sockets
     p.prism([0, 0, 0], ZF, -20, 20, sh.rect(-200, 20, -30, c['open_y']), name='clip openings', op=CUT, targets=[body])
-    for xc in P['clips']:                                           # thumb screw: insert from the top, tip on the pipe
+    for xc in P['clips']:                                           # clamp screw: insert from the top, tip on the pipe
         p.prism([xc, b['y'][1], 0], YF, -12, 1, sh.circle(1.7), name='clamp screw hole', op=CUT, targets=[body])
         p.prism([xc, b['y'][1], 0], YF, -5.9, 1, sh.circle(2.0), name='clamp insert hole', op=CUT, targets=[body])
     p.prism([hg['x'], hg['y'], -zk - ct - 2], ZF, 0, 2 * (zk + ct) + 4, sh.circle(hg['pin_d'] / 2 + 0.2),
@@ -562,6 +563,16 @@ def _slot_r(a, r0, r1, w):
     return draw
 
 
+def _cheek_pad(p, co, al):
+    """Thickens the skirt round one claw tail's pair of cheeks, out to skirt_r, with a 45 deg underside so it prints
+    on the ring (the collar prints ring down). Only there: the Y link's arms pass the collar's sides at r ~38."""
+    x1, r0, r1, xp, sx = co['x'][1], co['r'][1], co['skirt_r'], P['claw']['xp'], co['skirt'][0]
+    w = TAIL_CHEEK[1] + 0.5
+    return p.prism(to_xyz(0, 0, al), claw_frame(al), -w, w,
+                   _poly([(x1 - (r1 - r0) - xp, r0 - 0.5), (x1 - (r1 - r0) - xp, r0), (x1 - xp, r1), (sx - xp, r1),
+                          (sx - xp, r0 - 0.5)]), name='cheek pad').bodies.item(0)
+
+
 def _collar(g):
     """Collar (printed, one piece): a ring sliding on the hub with a skirt over the nose, slotted for the three claw
     tails (each tail's pin crosses its slot), and two round side lobes for the Y link's pins. Pulled back, it drags
@@ -585,19 +596,23 @@ def _collar(g):
                       _poly([(co['x'][0] - c['xp'], pr), (co['x'][1] - c['xp'], pr), (co['x'][1] - c['xp'], co['r'][0] + 0.5),
                              (co['x'][0] - c['xp'], co['r'][0] + 0.5)]), name='centring pad').bodies.item(0)
         body = p.join([body, pad])[0]
+    body = p.join([body] + [_cheek_pad(p, co, al) for al in c['alphas']])[0]   # cheeks out to skirt_r, 45 deg below
     ta, tr = c['tail']
     for al in c['alphas']:
         p.prism(to_xyz(0, 0, al), claw_frame(al), -TAIL_CHEEK[0], TAIL_CHEEK[0],
-                _poly([(co['x'][1] - c['xp'] - 1, sr - 1), (sx - c['xp'] + 1, sr - 1), (sx - c['xp'] + 1, co['r'][1] + 1),
-                       (co['x'][1] - c['xp'] - 1, co['r'][1] + 1)]), name='tail slot', op=CUT, targets=[body])
+                _poly([(co['x'][1] - c['xp'] - 1, sr - 1), (sx - c['xp'] + 1, sr - 1), (sx - c['xp'] + 1, co['skirt_r'] + 3),
+                       (co['x'][1] - c['xp'] - 1, co['skirt_r'] + 3)]), name='tail slot', op=CUT, targets=[body])
         p.prism(to_xyz(0, 0, al), claw_frame(al), -TAIL_CHEEK[1] - 1, TAIL_CHEEK[1] + 1, _slot_r(ta, c['rp'] + 4.0, c['rp'] + tr + 0.3, 3.4),
                 name='tail pin slot', op=CUT, targets=[body])
         for sg in (1, -1):                                          # open beside the two cheeks: screw + nut reachable
             z_a, z_b = sorted((sg * TAIL_CHEEK[1], sg * 22.0))
             p.prism(to_xyz(0, 0, al), claw_frame(al), z_a, z_b,
                     _poly([(co['x'][1] - c['xp'] + 2.0, sr - 4), (sx - c['xp'] + 1, sr - 4),
-                           (sx - c['xp'] + 1, co['r'][1] + 1), (co['x'][1] - c['xp'] + 2.0, co['r'][1] + 1)]),
+                           (sx - c['xp'] + 1, co['skirt_r'] + 3), (co['x'][1] - c['xp'] + 2.0, co['skirt_r'] + 3)]),
                     name='open beside the tail cheeks', op=CUT, targets=[body])
+        p.prism(to_xyz(0, 0, al), claw_frame(al), -TAIL_CHEEK[1] - 1, TAIL_CHEEK[1] + 1,   # round the claw's root disc
+                lambda sk, to: sk.sketchCurves.sketchCircles.addByCenterRadius(to(0, c['rp']), (CLAW_DISC_R + 0.6) / 10.0),
+                name='claw root clearance', op=CUT, targets=[body])
     for sg in (1, -1):
         p.prism([sum(co['x']) / 2, hy, sg * z1], ZF, *sorted((-sg * 6.0, 0.5 * sg)), sh.circle(2.0), name='insert hole',
                 op=CUT, targets=[body])
@@ -692,8 +707,12 @@ def _grip(g):
     gr, tv, cr = P['grip'], P['trigger'], P['carrier']
     px_, py_ = tv['pivot']
     p = Part(g, 'Gripper3 grip (printed)', color=PRINT)
-    grip = p.prism([0, gr['y'][1], 0], YF, gr['y'][0] - gr['y'][1], -0.1,
-                   _oval_xz(gr['x'], gr['z'], gr['r'], gr['r'] * 1.08), name='grip').bodies.item(0)
+    cx_, hw_, (bx, bz) = GRIP_POST                                  # cross post: two blades between the 4 screws
+    yb = gr['y'][1] - 12                                            # under the plate
+    yf = gr['y'][0] + GRIP_FLOOR                                    # post foot: on the sleeve's floor
+    blades = [p.box(cx_ - bx, cx_ + bx, yf, yb + 0.1, -hw_, hw_, name='post blade (front-back)')[0],
+              p.box(cx_ - hw_, cx_ + hw_, yf, yb + 0.1, -bz, bz, name='post blade (side-side)')[0]]
+    grip = p.join(blades)[0]
     zc = tv['z'][1] + 4.5                                           # plate: back half of the grip oval, a straight
     back = [(gr['x'] + gr['r'] * math.cos(math.radians(k)), gr['z'] + gr['r'] * 1.08 * math.sin(math.radians(k)))
             for k in range(90, 271, 10)]                                # taper to the cheeks, straight along them
@@ -710,21 +729,42 @@ def _grip(g):
     for xx in GRIP_SCREWS:
         for zz in (-7.0, 7.0):
             p.prism([xx, gr['y'][1], zz], YF, -13, 1, sh.circle(1.7), name='screw hole', op=CUT, targets=[body])
-            p.prism([xx, gr['y'][1] - 12, zz], YF, -1, 4, sh.circle(3.0), name='head counterbore', op=CUT,
+            p.prism([xx, gr['y'][1] - 13, zz], YF, 0, 5, sh.circle(3.25), name='head counterbore (open below)', op=CUT,
                     targets=[body])
-    _soften(p, body, 6.0, lambda e: _mm(e)[1] < gr['y'][0] + 1.0)      # round bottom rim
+    p.prism([cx_, yf - 1, 0], YF, 0, 9.0, sh.circle(2.0), name='insert hole (the sleeve screws on here)', op=CUT,
+            targets=[body])
     body.name = 'grip (printed)'
     p.finish()
+    q = Part(g, 'Gripper3 grip sleeve (printed)', color=PRINT)     # slides up over the post once the 4 screws are in
+    sv = q.prism([0, yb - 0.2, 0], YF, gr['y'][0] - yb + 0.2, 0,
+                 _oval_xz(gr['x'], gr['z'], gr['r'], gr['r'] * 1.08), name='grip sleeve').bodies.item(0)
+    c_ = GRIP_FIT
+    for x0, x1, z0, z1 in ((cx_ - bx - c_, cx_ + bx + c_, -hw_ - c_, hw_ + c_), (cx_ - hw_ - c_, cx_ + hw_ + c_, -bz - c_, bz + c_)):
+        sv = q.cut([sv], [q.box(x0, x1, yf, yb + 1, z0, z1, name='bore (the post)')[0]])[0]
+        sv = q.cut([sv], [q.box(x0 - 0.5, x1 + 0.5, yb - 0.8, yb + 1, z0 - 0.5, z1 + 0.5,   # mouth relief: it prints
+                                name='bore mouth relief')[0]])[0]                       # mouth down (elephant foot)
+    q.prism([cx_, gr['y'][0] - 1, 0], YF, 0, GRIP_FLOOR + 2, sh.circle(1.7), name='screw hole', op=CUT, targets=[sv])
+    q.prism([cx_, gr['y'][0] - 1, 0], YF, 0, 4.0, sh.circle(3.0), name='head counterbore', op=CUT, targets=[sv])
+    _soften(q, sv, 6.0, lambda e: _mm(e)[1] < gr['y'][0] + 1.0)        # round bottom rim
+    sv.name = 'grip sleeve (printed)'
+    q.finish()
     return 'grip ok'
 
 
+CLAMP_SCREW = 12.0                             # mm: pipe clamp screw length (M3 x 10 thumb screws couldn't clamp)
 GRIP_SCREWS = (58.0, 73.0)                     # rear pair far enough in that the counterbores stay inside the grip
+GRIP_POST = (65.5, 3.5, (12.5, 13.0))          # grip for now (user, 27 Oct: the screw heads were sealed inside the
+                                               # grip): a cross post between the 4 screws, x centre, blade half-width,
+                                               # half-lengths (front-back, side-side); a sleeve slides over it
+GRIP_FLOOR, GRIP_FIT = 4.0, 0.25               # sleeve: floor under the post's foot; bore clearance per side
 CLAW_DISC_R = 7.4                              # claw root disc: covers the outline's root corners (15..29 at a=0)
 TRIGGER_EYE_R = 6.0                            # trigger's pivot ring radius
 FORK_TOP = 5.8                                 # link slot top above the pull pin, under the pivot ring
 FORK_TOP_FRONT = 7.6                           # ... and further forward, where the tilting link needs room
 CHEEK_NECK = 32.0                              # mm: narrowest width of a base hinge cheek (between bridge and knuckle)
-TAIL_CHEEK = (3.4, 7.4)                       # collar cheeks either side of a claw tail: inner, outer |t|
+TAIL_CHEEK = (3.4, 9.4)                       # collar cheeks either side of a claw tail: inner, outer |t| (4 mm broke)
+CHEEK_MIN = 3.5                                # mm: least plastic round the tail pin's slot, every side (rule)
+CHEEK_W = 5.5                                  # mm: least cheek width along the pin (4 broke)
 PIVOT_HEAD_T = 15.0                            # claw pivot screw head sits this far out (tangential) in the nose
 PIVOT_INSERT = (9.7, 5.7)                      # far-wall insert: starts this far out (tangential), length
 WALL = 7.6                                     # claw slot wall carrying a pivot: from the slot to the head's spot face
@@ -828,8 +868,8 @@ def _hw(g):
     pl = base_hw.join([pl, pin, knob])[0]
     pl.name = 'index plunger M8-1.25, pull ring, pin 5 mm, screwed into the cheek + its lock nut: fold latch (buy)'
     for xc in P['clips']:                                           # loosen both, slide the gripper, tighten
-        sh.hw_bolt(base_hw, [xc, P['base']['y'][1], 0], up, 9.25 + 0.0, (10.0, 5.0),
-                   'M3 x 10 knurled thumb screw, pipe clamp (buy)', dia=3.0)
+        sh.hw_bolt(base_hw, [xc, P['base']['y'][1], 0], up, P['base']['y'][1] - g2.P['pipe_r'], (5.5, 3.0),   # tip
+                   'M3 x %.0f socket head, pipe clamp (buy)' % CLAMP_SCREW, dia=3.0)          # on the pipe, head up
         ins = base_hw.cyl('y', [xc, P['base']['y'][1] - 2.85, 0], 2.0, 5.7, name='insert')[0]
         ins.name = 'M3 heat-set insert ruthex 5.7, pipe clamp (buy)'
     vc = P['velcro']
@@ -850,6 +890,10 @@ def _hw(g):
             sh.hw_bolt(car, [xx, gr['y'][1] - 9, zz], down, 12.0, (5.5, 3.0), 'M3 x 12 socket head, grip (buy)', dia=3.0)
             ins = car.cyl('y', [xx, gr['y'][1] + 2.85, zz], 2.0, 5.7, name='insert')[0]
             ins.name = 'M3 heat-set insert ruthex 5.7, grip (buy)'
+    yf = gr['y'][0] + GRIP_FLOOR                                     # the sleeve: one screw up into the post's foot
+    sh.hw_bolt(car, [GRIP_POST[0], gr['y'][0] + 3.0, 0], down, 8.0, (5.5, 3.0), 'M3 x 8 socket head, grip sleeve (buy)',
+               dia=3.0)
+    car.cyl('y', [GRIP_POST[0], yf + 2.85, 0], 2.0, 5.7, name='insert')[0].name =         'M3 heat-set insert ruthex 5.7, grip sleeve (buy)'
     sp, sy = P['spring'], spring_y()
     xa, xb = sp['link_hook'] + 4.0, sp['hub_hook'] - 4.0               # coil between the lugs, hooks through them
     parts = [car.ann('x', [(xa + xb) / 2, sy, 0], sp['od'] / 2, sp['od'] / 2 - 0.8, xb - xa, name='coil')[0]]
@@ -879,8 +923,8 @@ def _hw(g):
     ta, tr = c['tail']
     for al in c['alphas']:
         e = claw_frame(al)[2]
-        sh.hw_bolt(col, to_xyz(ta, c['rp'] + tr, al, -TAIL_CHEEK[1]), sh.frame_of(e), 20.0, (5.5, 3.0),
-                   'M3 x 20 socket head, claw tail pin, through both cheeks (buy)', dia=3.0)
+        sh.hw_bolt(col, to_xyz(ta, c['rp'] + tr, al, -TAIL_CHEEK[1]), sh.frame_of(e), 25.0, (5.5, 3.0),
+                   'M3 x 25 socket head, claw tail pin, through both cheeks (buy)', dia=3.0)
         nut = col.prism(to_xyz(ta, c['rp'] + tr, al, TAIL_CHEEK[1]), claw_frame(al), 0, 2.4, sh.circle(3.2),
                         name='nut').bodies.item(0)
         col.prism(to_xyz(ta, c['rp'] + tr, al, TAIL_CHEEK[1] - 1), claw_frame(al), 0, 4.4, sh.circle(1.5),
@@ -1082,6 +1126,27 @@ def slide_rules():
              % (L, need, e, MU_SLIDE), 'collar on hub')]
 
 
+def tail_cheek_rules():
+    """The collar's cheeks carry the claw tails' pins (the spring's pull, all the time): each needs plastic all round
+    the pin's slot. The first print's cheeks broke there (27 Oct): 2 mm outside the slot, 2.3 mm in front of it."""
+    c, co = P['claw'], P['collar']
+    ta, tr = c['tail']
+    slot_top = c['rp'] + tr + 0.3 + 1.7                  # the slot: r up to rp + tr + 0.3, 3.4 wide
+    sides = dict(outside=co['skirt_r'] - slot_top, front=co['skirt'][0] - (c['xp'] + ta) - 1.7,
+                 width=TAIL_CHEEK[1] - TAIL_CHEEK[0])
+    need = dict(outside=CHEEK_MIN, front=CHEEK_MIN, width=CHEEK_W)
+    return [('ok  ' if v >= need[k] else 'FAIL', 'collar tail cheek %s of the pin slot: %.1f mm (>= %.1f)'
+             % (k, v, need[k]), 'collar') for k, v in sides.items()]
+
+
+def clamp_rules():
+    """A clamp screw must reach past the pipe's surface with travel to spare, or its head lands on the base before its
+    tip presses (27 Oct: the M3 x 10 thumb screws reached 0.75 mm past the pipe and could not clamp)."""
+    reach = CLAMP_SCREW - (P['base']['y'][1] - g2.P['pipe_r'])
+    return [('ok  ' if reach >= 1.5 else 'FAIL', 'pipe clamp screw M3 x %.0f reaches %.2f mm past the pipe (>= 1.5)'
+             % (CLAMP_SCREW, reach), 'base')]
+
+
 def spring_rules():
     """The trigger return spring (extension) must already pull at rest, so the claws close and the trigger comes back,
     and must not be stretched past its limit at full squeeze."""
@@ -1156,7 +1221,8 @@ def sharp_edge_rules():
     d = adsk.fusion.Design.cast(adsk.core.Application.get().activeProduct)
     hy, c = pull_point(0.0)[1], P['claw']
     zones = [('trigger', 'Gripper3 trigger', lambda q: q[1] < hy - 7.0),
-             ('grip bottom', 'Gripper3 grip', lambda q: q[1] < P['grip']['y'][0] + 12.0),
+             ('grip bottom', 'Gripper3 grip', lambda q: q[1] < P['grip']['y'][0] + 12.0 and   # outside only (the
+              ((q[0] - P['grip']['x']) / P['grip']['r']) ** 2 + (q[2] / (P['grip']['r'] * 1.08)) ** 2 > 0.8),  # bore isn't)
              ('claw tips', 'Gripper3 claw', lambda q: q[0] > c['xp'] + c['L'] - 7.0),   # the cap's front, past teeth + cells
              ('base', 'Gripper3 base', lambda q: True)]                    # all of it (hole edges excepted: fits)
     out = []
@@ -1304,7 +1370,7 @@ def one_body_rules():
     return out
 
 
-RULES = dict(geometry=[one_body_rules, claw_root_rules, closed_claw_rules, slide_rules, spring_rules, ring_clear_rules, finray_rules, tip_rules, grip_force_rules, trigger_neck_rules, insertion_rules, knuckle_neck_rules,
+RULES = dict(geometry=[one_body_rules, claw_root_rules, closed_claw_rules, slide_rules, tail_cheek_rules, clamp_rules, spring_rules, ring_clear_rules, finray_rules, tip_rules, grip_force_rules, trigger_neck_rules, insertion_rules, knuckle_neck_rules,
                        sharp_edge_rules], 
     anchor='Gripper3 base',
     rest=(0.0, 0.0),

@@ -14,6 +14,10 @@ add a row at the bottom of the table (rows are in the order found).
 | [Carriage base on a 0.6 mm boss](carriage-flat-base.md) | — | rule only |
 | [Carriage web hit link-1 screw heads](link1-lid-screws-vs-web.md) | — | `collision_check.py` |
 | [Servo coupler sat on the horn's centre screw](servo-coupler-on-horn-screw.md) | coupler reprint | `concepts.horn_fit()` |
+| [Gripper collar tail-pin cheeks broke off](gripper-collar-cheeks-broke.md) | collar reprint | `gripper3.tail_cheek_rules()` |
+| [Gripper grip screws sealed inside the grip](gripper-grip-screws-sealed-in.md) | grip reprint | `fastener_check` ACCESS |
+| [Gripper clamp screws too short to clamp](gripper-clamp-screws-too-short.md) | — | `gripper3.clamp_rules()` |
+| [Rest pivot head may sit under the root arm](rest-pivot-head-under-root-arm.md) (open) | — | `fastener_check` ACCESS (waived for now) |
 | [Rest screw at 90°, slot at 50°](bracket-screw-at-wrong-angle.md) | — | `collision_check.py` |
 | [Docs: backbone 583 mm, model 568 mm](stale-backbone-length.md) | — | rule only |
 | [**Rest bracket held by one screw and a 1.7 mm wall**](rest-bracket-attachment.md) | **9 h print → drill a hole** | `fastener_check.py` (partly) |

@@ -389,29 +389,30 @@ Print files: [prints/gripper3-v1](../prints/gripper3-v1/) (pre-oriented, checked
 |---|---|---|---|
 | 01_gripper_base | PETG | 1 | supports on |
 | 02_gripper_carrier | PETG | 1 | on its side, tree supports under the hub and dome |
-| 03_gripper_grip | PETG | 1 | |
+| 03_gripper_grip | PETG | 1 | top plate + cross post |
+| 03b_gripper_grip_sleeve | PETG | 1 | slides over the post |
 | 04_gripper_trigger | PETG | 1 | lies on its flat back face |
 | 05_gripper_y_link | PETG | 1 | |
 | 06_gripper_collar | PETG | 1 | |
 | 07_gripper_claw_TPU_x3 | TPU 95A | 3 | flat, slow (20–30 mm/s) |
 
-Hardware ([BOM](../BOM.md), gripper prototype 3): 11 ruthex M3 inserts, M3 × 12 (6), M3 × 20 (3), M3 × 25 (1), M3 × 30 (3),
-M3 × 35 (1), M3 nylocs (5), 2 M3 × 10 knurled thumb screws, M8 × 55 + nyloc, the M8 index plunger (pull ring), one extension spring
+Hardware ([BOM](../BOM.md), gripper prototype 3): 12 ruthex M3 inserts, M3 × 8 (1), M3 × 12 (8), M3 × 25 (4), M3 × 30 (3),
+M3 × 35 (1), M3 nylocs (5), M8 × 55 + nyloc, the M8 index plunger (pull ring), one extension spring
 (1.2 × 10 × 45 mm, from the Keadic kit), two 22 mm hook-and-loop dots.
 
 </details>
 
 > ⚠ **Inserts first** (soldering iron): 2 in the base's clamp holes (from the top), 4 in the bridge's underside, 3 in
-> the dome from the outside (claw pivots), 2 in the collar's side lobes. Every one is hard to reach later.
+> the dome from the outside (claw pivots), 2 in the collar's side lobes, 1 in the foot of the grip's post (from below). Every one is hard to reach later.
 
 ### 11.1 Base on the pipe
 
 ![Base](images/gripper3/1_base.png)
 
-**Parts:** base, 2 M3 × 10 thumb screws
+**Parts:** base, 2 M3 × 12
 
-Snap the two clips onto the forearm's **middle** pipe, behind the wrist ring. Thumb screws in from the top until their
-tips touch the pipe. Loosen them to slide the whole gripper up to 50 mm forward or back; tighten where it suits your hand.
+Snap the two clips onto the forearm's **middle** pipe, behind the wrist ring. M3 × 12 in from the top, into the inserts,
+until they press on the pipe (hex key). Loosen them to slide the whole gripper up to 50 mm forward or back; tighten where it suits your hand.
 
 ### 11.2 Fold hinge and lock
 
@@ -436,20 +437,21 @@ claw slots (they pass through them). Push it back past where it will sit, about 
 
 ![Claws](images/gripper3/3_claws.png)
 
-**Parts:** 3 TPU claws, 3 M3 × 30, 3 M3 × 20 + 3 nylocs
+**Parts:** 3 TPU claws, 3 M3 × 30, 3 M3 × 25 + 3 nylocs
 
 - Each claw's round root into its slot in the dome; M3 × 30 in through the wide entry, through the claw, into the
   insert in the far wall. Snug only: the claw must swing.
-- Slide the collar forward again so each claw's tail sits between a pair of cheeks. M3 × 20 through the cheeks and the
+- Slide the collar forward again so each claw's tail sits between a pair of cheeks. M3 × 25 through the cheeks and the
   tail's slot, nyloc on the far side, snug: the tail must slide in its slot.
 
 ### 11.5 Grip and trigger
 
 ![Grip and trigger](images/gripper3/5_grip_trigger.png)
 
-**Parts:** grip, trigger, 4 M3 × 12, M3 × 35 + nyloc
+**Parts:** grip, grip sleeve, trigger, 4 M3 × 12, M3 × 8, M3 × 35 + nyloc
 
-Grip's top plate up under the bridge, 4 × M3 × 12 into the inserts. Trigger between the grip's two cheeks, M3 × 35
+Grip's top plate up under the bridge, 4 × M3 × 12 into the inserts: reach them from below, past the cross post.
+Then slide the sleeve up over the post to the plate, M3 × 8 up through its floor into the post's foot. Trigger between the grip's two cheeks, M3 × 35
 through as its pivot, nyloc on the far side, snug: the trigger must swing freely.
 
 ### 11.6 Y link and spring

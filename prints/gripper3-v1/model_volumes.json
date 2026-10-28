@@ -1,9 +1,10 @@
 {
  "01_gripper_base": 140624.4,
  "02_gripper_carrier": 208709.3,
- "03_gripper_grip": 101859.8,
+ "03_gripper_grip": 45774.6,
+ "03b_gripper_grip_sleeve": 53187.7,
  "04_gripper_trigger": 11560.1,
  "05_gripper_y_link": 15485.7,
- "06_gripper_collar": 29364.0,
+ "06_gripper_collar": 33697.5,
  "07_gripper_claw_TPU_x3": 12733.1
 }

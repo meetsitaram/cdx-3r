@@ -15,6 +15,9 @@ hold it, so nothing held it, and the grip test passed because the bolt's tip was
     screws named 'cuts its own thread' are exempt. '+ nyloc' in a name is not enough: model the nut.
   * HELD: every printed part a fastener passes must have material between the head and the far face of its nut or
     insert (the clamped stack). A part reached only beyond the nut is not held by it.
+  * ACCESS: a key must reach the head: KEY_REACH mm straight out from the head along its axis free of printed parts
+    (docs/bugs/gripper-grip-screws-sealed-in.md: the grip's 4 screw heads sat in closed pockets inside the grip).
+    Parts fitted after a screw (FITTED_AFTER) don't count.
 
     import fastener_check as fc
     fc.run_check(log_path)       # returns the number of failures
@@ -36,6 +39,13 @@ NO_ANCHOR_OK = re.compile(r'(self-tapping|Clevis pin|R-clip|cuts its own thread)
 BEARING = re.compile(r'(608|6806|6808)', re.I)
 BEARING_OD = {'6806': 42.0, '6808': 52.0, '608': 22.0}     # mm (6806/6808 first: '608' is in neither)
 BEARING_RINGS = [x / 10.0 for x in (5.0, 6.5, 9.0, 16.0, 21.0)]   # cm from the axis: 608 inner ring .. 6808 rings
+KEY_REACH = 15.0                                          # mm: a hex key's short arm, into the head
+FITTED_AFTER = {                                          # screw name prefix -> parts (or bodies) fitted after it
+    'M3 x 12 socket head, grip': ('grip sleeve',),        # the sleeve slides over the post once the 4 are in
+    'M2.5 x 6 socket head, coupler': ('*',),              # on the bench: coupler onto the loose servo's horn
+    'M3 x 8 socket head (buy)': ('servo horn coupler', 'XL430'),   # servo axle screws: coupler + servo go in after
+    'M6 x 65 socket head, bracket pivot': ('Rest root arm',),   # OPEN: docs/bugs/rest-pivot-head-under-root-arm.md
+}
 JOINTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sim_joints.json')
 
 
@@ -118,8 +128,34 @@ def check(design, min_grip=MIN_GRIP):
                 grip += step
             k += step
         probs, info = _held(px, c, v, t0, t1, r, near, anchors, bearings, printed, name)
+        probs += _access(c, v, t0, printed, name)
         out.append((comp, name, round(grip * 10, 1), probs, info))
     return out
+
+
+def _access(c, v, t0, printed, name):
+    """ACCESS rule: the first printed part on the head's axis, going out from the head (KEY_REACH mm)."""
+    later = next((p for k, p in FITTED_AFTER.items() if k in name), ())
+    if '*' in later:                                        # fitted on the bench, before everything else
+        return []
+    u = [1.0, 0.0, 0.0] if abs(v[0]) < 0.9 else [0.0, 1.0, 0.0]
+    e1 = [v[1] * u[2] - v[2] * u[1], v[2] * u[0] - v[0] * u[2], v[0] * u[1] - v[1] * u[0]]
+    s = math.sqrt(sum(x * x for x in e1))
+    e1 = [x / s for x in e1]
+    e2 = [v[1] * e1[2] - v[2] * e1[1], v[2] * e1[0] - v[0] * e1[2], v[0] * e1[1] - v[1] * e1[0]]
+    for i in range(1, int(KEY_REACH) + 1):
+        k = t0 - 0.1 * i                                    # cm, out from the head's end face
+        pts = [[c[j] + v[j] * k + 0.1 * (a * e1[j] + b * e2[j]) for j in range(3)]
+               for a, b in ((0, 0), (1, 0), (-1, 0), (0, 1), (0, -1))]   # the key: 1 mm round the axis
+        for b in printed:
+            o = b.assemblyContext
+            comp = o.component.name if o else b.name
+            if any(x in comp or x in b.name for x in later):
+                continue
+            if any(_inside(b, q) for q in pts):
+                return ['ACCESS: no way in for a key: %s / %s is in the way %d mm out from the head'
+                        % (comp[:30], b.name[:40], i)]
+    return []
 
 
 def _inside(b, q):
@@ -200,7 +236,7 @@ def run_check(log_path, min_grip=MIN_GRIP, joints=True):
     jbad = [j for j in jres if j[1] == 'FAIL']
     with open(log_path, 'w') as f:
         f.write('fasteners %d, failing %d (grip < %.1f mm; THREAD: ends in a nut or insert; HELD: every part it passes '
-                'is clamped; JOINTS: every sim joint is real hardware)\n' % (len(res), len(bad) + len(jbad), min_grip))
+                'is clamped; ACCESS: a key reaches the head; JOINTS: every sim joint is real hardware)\n' % (len(res), len(bad) + len(jbad), min_grip))
         for comp, name, g, probs, _ in sorted(res, key=lambda r: (not r[3], r[2])):
             f.write('%s %6.1f mm  %s / %s\n' % ('FAIL' if g < min_grip or probs else 'ok  ', g, comp[:34], name[:44]))
             for x in probs:

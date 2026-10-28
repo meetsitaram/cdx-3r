@@ -1,13 +1,13 @@
 {
  "01_gripper_base.stl": {
   "up": [
-   0.0,
    -0.0,
+   0.0,
    -1.0
   ],
   "base": 1902,
-  "overhang": 5219,
-  "on_part": 2596,
+  "overhang": 5225,
+  "on_part": 2416,
   "height": 44.8
  },
  "02_gripper_carrier.stl": {
@@ -16,10 +16,10 @@
    0.0,
    -1.0
   ],
-  "base": 71,
-  "overhang": 6201,
-  "on_part": 1411,
-  "height": 55.0
+  "base": 74,
+  "overhang": 6241,
+  "on_part": 1373,
+  "height": 54.9
  },
  "03_gripper_grip.stl": {
   "up": [
@@ -27,10 +27,21 @@
    -1.0,
    -0.0
   ],
-  "base": 1394,
-  "overhang": 127,
-  "on_part": 58,
-  "height": 110.9
+  "base": 1392,
+  "overhang": 14,
+  "on_part": 14,
+  "height": 106.9
+ },
+ "03b_gripper_grip_sleeve.stl": {
+  "up": [
+   -0.0,
+   -1.0,
+   -0.0
+  ],
+  "base": 481,
+  "overhang": 378,
+  "on_part": 0,
+  "height": 98.8
  },
  "04_gripper_trigger.stl": {
   "up": [
@@ -38,9 +49,9 @@
    0.314,
    -0.0
   ],
-  "base": 806,
-  "overhang": 100,
-  "on_part": 60,
+  "base": 820,
+  "overhang": 90,
+  "on_part": 58,
   "height": 12.2
  },
  "05_gripper_y_link.stl": {
@@ -49,8 +60,8 @@
    1.0,
    -0.0
   ],
-  "base": 1409,
-  "overhang": 68,
+  "base": 1416,
+  "overhang": 70,
   "on_part": 54,
   "height": 20.3
  },
@@ -60,10 +71,10 @@
    -0.0,
    -0.0
   ],
-  "base": 1709,
-  "overhang": 137,
-  "on_part": 137,
-  "height": 24.0
+  "base": 1708,
+  "overhang": 218,
+  "on_part": 200,
+  "height": 25.5
  },
  "07_gripper_claw_TPU_x3.stl": {
   "up": [
@@ -71,7 +82,7 @@
    0.0,
    1.0
   ],
-  "base": 680,
+  "base": 679,
   "overhang": 36,
   "on_part": 0,
   "height": 14.0

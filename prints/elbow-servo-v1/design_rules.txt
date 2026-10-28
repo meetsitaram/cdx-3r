@@ -1,4 +1,4 @@
-design rules 81, failing 0 (modules: gripper3)
+design rules 86, failing 0 (modules: gripper3)
 ok   trigger drive: 0.00 mm                                     trigger (printed) -> pull pin
 ok   trigger drive: 0.10 mm                                     pull pin -> link (printed)
 ok   trigger drive: 0.00 mm                                     link (printed) -> yoke pin
@@ -34,11 +34,12 @@ ok   Gripper3 claw 1 (TPU) is one body (1)                      Gripper3 claw 1 
 ok   Gripper3 claw 2 (TPU) is one body (1)                      Gripper3 claw 2 (TPU)
 ok   Gripper3 claw 3 (TPU) is one body (1)                      Gripper3 claw 3 (TPU)
 ok   Gripper3 link (printed) is one body (1)                    Gripper3 link (printed)
-ok   Gripper3 grip (printed) is one body (1)                    Gripper3 grip (printed)
 ok   Gripper3 trigger (printed) is one body (1)                 Gripper3 trigger (printed)
 ok   Gripper3 carrier (printed) is one body (1)                 Gripper3 carrier (printed)
 ok   Gripper3 base (printed) is one body (1)                    Gripper3 base (printed)
 ok   Gripper3 collar (printed) is one body (1)                  Gripper3 collar (printed)
+ok   Gripper3 grip (printed) is one body (1)                    Gripper3 grip (printed)
+ok   Gripper3 grip sleeve (printed) is one body (1)             Gripper3 grip sleeve (printed)
 ok   claw root: outline corners 0.4 mm inside the root disc (>= 0.2) claw_outline
 ok   claws closed: ridges meet at the axis at the tip (0.30 mm off) claw_curves
 ok   claws closed: tip pad (last 17 mm) within 2 mm of the axis (worst 1.5) claw_curves
@@ -47,6 +48,10 @@ ok   claws: C-cup, inner surface bows 7.6 mm out past root-tip line (>= 4) claw_
 ok   claws closed: wedge faces meet at the tips (gap 0.1 mm per face) sector cut
 ok   gripping edge has teeth (14)                               claw_outline
 ok   collar slides without jamming: 12 mm long, needs >= 4 (pull 7 mm off axis, mu 0.25) collar on hub
+ok   collar tail cheek outside of the pin slot: 6.0 mm (>= 3.5) collar
+ok   collar tail cheek front of the pin slot: 3.8 mm (>= 3.5)   collar
+ok   collar tail cheek width of the pin slot: 6.0 mm (>= 5.5)   collar
+ok   pipe clamp screw M3 x 12 reaches 2.75 mm past the pipe (>= 1.5) base
 ok   return spring: 45.0 mm between hooks at rest, pulling (free 36) spring
 ok   return spring: stretched 13.4 mm at full squeeze (max 15)  spring
 ok   base clear of the ring and the wrist, slid +0 mm: 0 mm3 below ring top base
@@ -80,4 +85,4 @@ ok   strength SF 10.9 (55.1 MPa, steel)                         fold hinge pin M
 ok   strength SF 8.9 (5.0 MPa, PETG along layers)               base hinge cheeks (both), 60 N sideways on the grip, at their neck: 60 N at 72.5 mm
 ok   strength SF 5.7 (8.0 MPa, PETG along layers)               base front beam over the wrist (plate + top rib), 60 N at the grip, from the front clamp: 60 N at 165 mm
 ok   strength SF 30.8 (1.5 MPa, PETG along layers)              carrier neck at the knuckle, as built (60 N steering at the grip): 60 N at 70 mm
-source 51eebb793f5f73a1
+source b66036cd857f8148

@@ -18,7 +18,7 @@ OUT = 40.0                                   # mm: claws start this far out of t
 C1 = '1. Slide the collar on over the front: its 3 inner pads pass through the 3 claw slots'
 C2 = '2. Push it about 7 mm past its seat, up to the bridge (room for the claws)'
 C3 = '3. Each claw root into its slot; M3 x 30 pivot through it'
-C4 = '4. Slide the collar forward: the claw tails go between its cheeks; M3 x 20 through each'
+C4 = '4. Slide the collar forward: the claw tails go between its cheeks; M3 x 25 through each'
 C5 = 'Done: the collar rides on its pads, 0.3 mm off the hub'
 SEQ = ([(x, None, C1) for x in (70, 60, 50, 40, 30, 20, 10, 0)] + [(-PARK / 2, None, C2), (-PARK, None, C2)] * 1 +
        [(-PARK, r, C3) for r in (OUT, 30, 20, 10, 5, 0)] + [(-PARK * 2 / 3, 0, C4), (-PARK / 3, 0, C4), (0, 0, C4)] +
