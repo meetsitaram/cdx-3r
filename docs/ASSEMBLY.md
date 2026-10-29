@@ -143,11 +143,14 @@ slide into the test hole snug, no wobble. If not, fix the printer settings befor
 3. An axle (03) through each bearing into the hub; 3 × M3 × 8 each, snug.
 4. A cover (04) each side, 6 × M3 × 8 each.
 5. Forearm pipes into the bottom (they lean in toward the wrist on purpose), wrist ring on their ends, cuff on with the
-   4 mm pin (drop of glue at one end).
+   4 mm pin (drop of glue at one end). Latch side: screw the M8 index plunger into the ring's thick knuckle (the one
+   toward the elbow) until its end is flush with the knuckle's underside, then lock it with its nut. Pull the ring, close
+   the cuff, let go: the pin drops into the cuff's knuckle. Wrist ring + cuff with the plunger and rounded edges:
+   [prints/wrist-ring-v2](../prints/wrist-ring-v2/).
 6. Upper-arm pipes into the top. 2 pipe screws per pipe end.
 
-**Check:** bends smoothly from straight to 135° and stops at both ends. The cuff's latch isn't designed yet: hold it
-with a strap.
+**Check:** bends smoothly from straight to 135° and stops at both ends. The cuff opens with a pull on the plunger's
+ring and locks by itself when let go.
 
 </details>
 

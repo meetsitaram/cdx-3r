@@ -73,7 +73,11 @@ SETS['elbow-servo-v1'] = [                     # the XL430 on the elbow's latera
     ('03_servo_horn_coupler', ELBOW, 'Forearm unit: servo horn coupler (print flat, pegs up; 2 x M2.5 x 6 into the horn)'),
     ('04_servo_axle_lateral', ELBOW, 'Forearm unit: servo axle, lateral (print flat, pilot up; 3 x M3 x 8 to hub)'),
 ]
-SMOOTH = {'elbow-servo-v1'}                    # sets whose parts must have no sharp outer edge (fxlib.sharp_outer_edges)
+SMOOTH = {'elbow-servo-v1', 'wrist-ring-v2'}                    # sets whose parts must have no sharp outer edge (fxlib.sharp_outer_edges)
+SETS['wrist-ring-v2'] = [                      # wrist ring + cuff: plunger latch, rounded edges (user, 28 Oct)
+    ('01_wrist_ring', ELBOW, 'Forearm unit: far ring (print flat)'),
+    ('02_wrist_cuff', ELBOW, 'Wrist cuff (print flat): wrist cuff (print flat)'),
+]
 MODULE_CHECKS = {'gripper3-v1': 'gripper3'}   # sets built in a module doc: run that module's own checks instead
 
 

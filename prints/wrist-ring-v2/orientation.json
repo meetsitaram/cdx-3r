@@ -1,0 +1,24 @@
+{
+ "01_wrist_ring.stl": {
+  "up": [
+   0.0,
+   -0.21,
+   0.978
+  ],
+  "base": 1299,
+  "overhang": 291,
+  "on_part": 204,
+  "height": 25.0
+ },
+ "02_wrist_cuff.stl": {
+  "up": [
+   -0.0,
+   -0.21,
+   0.978
+  ],
+  "base": 163,
+  "overhang": 208,
+  "on_part": 0,
+  "height": 25.0
+ }
+}

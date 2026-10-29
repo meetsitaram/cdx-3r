@@ -105,8 +105,11 @@ P = dict(
     # clasp, locked by a 3 mm pin through each fork); the elbow end is left for a soft strap.
     door_elbow=False, lock_pin_d=3.0, lock_pin_r=6.5,
     # wrist cuff: barrel hinges along the forearm at both sides of the wrist ring
-    cuff_knuckle_r=6.0, cuff_pin_d=4.0, cuff_latch_d=5.0,   # hinge: Ø4 x 25 dowel; latch (+X): Ø5 ball-lock,
-                                                          # 30 mm usable (METERXITY), clears the 25 mm knuckle stack
+    cuff_knuckle_r=6.0, cuff_pin_d=4.0, cuff_latch_d=5.0,   # hinge: Ø4 x 25 dowel; latch (+X): Ø5.2 for the pin
+    # latch (+X, user 28 Oct): the gripper's spring index plunger (M8-1.25, 5 mm pin, pull ring) screwed into the ring's
+    # elbow-side knuckle, made thicker for its thread; its pin drops into the cuff's knuckle. Pull to open, let go to lock
+    cuff_plunger=dict(boss_r=8.0, hole_d=6.8, pin_out=5.0, knob=(14.0, 10.0), nut=(13.0, 5.0)),
+    wrist_round=(2.0, 2.5),         # wrist ring + cuff: skin-side and outer circular edges, nearly a full round (5 mm band)
     # Flexion hard stop: a block on each upper-arm hub catches the forearm shell's leading edge.
     # stop_gap_deg trims where contact happens (the lead estimate is conservative by a few deg);
     # measured: -3.5 touches at 134, +2 at 140, so -2 puts first contact just past 135
@@ -298,12 +301,21 @@ def along(line):
     return ex, fx.cross(ez, ex), ez
 
 
-def ring(p, d, zc, lines, flange=None, open_deg=None, gap_deg=90):
+def donut_band(p, band, d, rr):
+    """Round a C-band's circular edges, skin side rr[0], outside rr[1]: nearly a full round, like a donut (user,
+    28 Oct). Done on the bare band: once the bosses and knuckles join it, Fusion can't round the arcs between them."""
+    soft_ledge(p, band, -1e4, 1e4, d / 2 - 0.5, d / 2 + 0.5, rr[0])
+    soft_ledge(p, band, -1e4, 1e4, band_out(d) - 0.5, band_out(d) + 0.5, rr[1])
+
+
+def ring(p, d, zc, lines, flange=None, open_deg=None, gap_deg=90, donut=None):
     """Thin C-band + pipe bosses (+ a posterior flange the elbow shell stands on), holes cut
     along each pipe's line."""
     h = P['ring_h']
     open_deg = open_deg or P['open_deg']
     body = p.cring('z', [0, 0, zc], d / 2, band_out(d), h, gap_deg, open_deg, name='band')
+    if donut:                                        # (skin side, outside): round the band before anything joins it
+        donut_band(p, body[0], d, donut)
     parts = list(body)
     for line in lines:
         c = point_at(line, zc)
@@ -368,7 +380,8 @@ def unit(parent, name, d, sign, far, color, flange, far_open=None, d_far=None, f
     near = ring(p, d, zn, lines, flange, ng[1], ng[0])
     near.name = 'near ring (print flat)'
     if far_ring:
-        ring(p, d_far or d, zf, lines, open_deg=far_open, gap_deg=far_gap).name = 'far ring (print flat)'
+        ring(p, d_far or d, zf, lines, open_deg=far_open, gap_deg=far_gap,
+             donut=P['wrist_round'] if d_far else None).name = 'far ring (print flat)'
     # a leaning pipe's square-cut end dips by r*tan(lean) on one side: start it that much higher
     # so the end rests on the shell edge instead of cutting into it
     dip = P['pipe_od'] / 2 * math.tan(lean) + (0.1 if lean else 0)
@@ -542,25 +555,42 @@ def wrist_cuff(g, fa, d, sign, far):
         return [b for s in sides for a, c in zs for b in
                 p.cyl('z', [s * xk, 0, (a + c) / 2], r, c - a + grow, name='knuckle')]
 
-    def pin_holes(p, body):                         # hinge (-X) Ø4 dowel; latch (+X) Ø5 quick-release
+    def pin_holes(p, body):                         # hinge (-X) Ø4 dowel; latch (+X) Ø5.2 for the plunger's pin
         body = p.cut([body], barrels(p, [(z0 - 1, z1 + 1)], (P['cuff_pin_d'] + 0.2) / 2, sides=(-1,)))[0]
         return p.cut([body], barrels(p, [(z0 - 1, z1 + 1)], (P['cuff_latch_d'] + 0.2) / 2, sides=(1,)))[0]
 
     cp = Part(g, 'Wrist cuff (print flat)', color=FA_COLOR)
     arc = cp.cring('z', [0, 0, zc], d / 2, band_out(d), h, 270, 180 + 2 * kerf_deg, name='cuff arc')
+    donut_band(cp, arc[0], d, P['wrist_round'])
     body = cp.join(arc + barrels(cp, cuff_z, kr))[0]
     body = cp.cut([body], barrels(cp, ring_z, kr + 0.5, 0.8))[0]            # room for the ring's knuckles
+    pk = P['cuff_plunger']
+    body = cp.cut([body], barrels(cp, ring_z[1:], max(pk['boss_r'] + 0.5, xk - d / 2 + 1.0), 0.8, sides=(1,)))[0]
+    # room for the plunger boss: through the band, not to within a sliver of its inside (a 0.5 mm skin, 28 Oct)
     body = pin_holes(cp, body)
     fillet_vertical(cp, body, P['edge_fillet'])
     body.name = 'wrist cuff (print flat)'
 
     ring = next(b for b in fa.comp.bRepBodies if 'far ring' in b.name)
-    ring = fa.join([ring] + barrels(fa, ring_z, kr))[0]
+    ring = fa.join([ring] + barrels(fa, ring_z, kr) + barrels(fa, ring_z[1:], pk['boss_r'], sides=(1,)))[0]
     ring = fa.cut([ring], barrels(fa, cuff_z, kr + 0.5, 0.8))[0]               # room for the cuff's knuckle
-    pin_holes(fa, ring)
+    ring = pin_holes(fa, ring)
+    zb = ring_z[1][0]                                # plunger: threaded into the elbow-side knuckle, pin toward the hand
+    fa.cut([ring], [fa.cyl('z', [xk, 0, (ring_z[1][0] + ring_z[1][1]) / 2], pk['hole_d'] / 2, third + 2,
+                           name='plunger hole (6.8: the M8 plunger cuts its own thread)')[0]])
+    zt = ring_z[1][1] + pk['nut'][1] + 1.0           # thread through the knuckle and the nut; the knob above
+    pl = fa.join(fa.cyl('z', [xk, 0, (zb + zt) / 2], pk['hole_d'] / 2, zt - zb, name='plunger (thread core: it cuts its own)')
+                 + fa.cyl('z', [xk, 0, zb - pk['pin_out'] / 2 + 0.01], 2.5, pk['pin_out'] + 0.02, name='pin')
+                 + fa.cyl('z', [xk, 0, zt + pk['knob'][1] / 2], pk['knob'][0] / 2, pk['knob'][1], name='knob'))[0]
+    pl.name = 'index plunger M8-1.25, pull ring, pin 5 mm, screwed into the ring + its lock nut: cuff latch (buy)'
+    pl.appearance = fx.appearance(HW_COLOR)
+    nut = fa.cyl('z', [xk, 0, ring_z[1][1] + pk['nut'][1] / 2], pk['nut'][0] / 2, pk['nut'][1], name='nut')[0]
+    nut = fa.cut([nut], [fa.cyl('z', [xk, 0, ring_z[1][1] + pk['nut'][1] / 2], 4.0, pk['nut'][1] + 1)[0]])[0]
+    nut.name = 'M8 lock nut of the plunger, cuff latch (buy)'
+    nut.appearance = fx.appearance(HW_COLOR)
 
     pin = cp.cyl('z', [-xk, 0, zc], P['cuff_pin_d'] / 2, h)[0]
-    pin.name = 'hinge pin 4 x 25 dowel (buy); the +X side takes a 5 mm ball-lock quick-release pin'
+    pin.name = 'hinge pin 4 x 25 dowel (buy)'
     pin.appearance = fx.appearance(HW_COLOR)
     cp.hinge = ([-xk, 0.0, zc], 'z')                 # medial barrel: the cuff opens about this
     return cp
@@ -914,7 +944,27 @@ def variant(parent, key, offset):
         for b in list(part.comp.bRepBodies):
             if '(buy)' in b.name or b.name.startswith('PVC') or 'axle' in b.name or b.name == 'arm ghost':
                 continue
-            soft[part.comp.name[:12] + ' / ' + b.name[:26]] = soft_edges(part, b, P['skin_fillet'])
+            wrist = b.name.startswith(('far ring', 'wrist cuff')) and dp is not None and part in (fa, dp)
+            soft[part.comp.name[:12] + ' / ' + b.name[:26]] = soft_edges(part, b, P['wrist_round'][0] if wrist
+                                                                          else P['skin_fillet'])
+    if dp is not None:                               # wrist ring + cuff: donut-round outer edges, then any sharp rest
+        bo = band_out(P['wrist_d'])
+        for part, key in ((fa, 'far ring'), (dp, 'wrist cuff')):
+            b = next(b for b in part.comp.bRepBodies if b.name.startswith(key))
+            soft[key + ' outer'] = soft_ledge(part, b, -1e4, 1e4, bo - 0.5, bo + 0.5, P['wrist_round'][1])
+            for rr in (1.0, 1.0, 0.6, 0.3):              # smaller where a 1 mm round has no room (notch floors)
+                es = fx.sharp_outer_edges(b)
+                if not es:
+                    break
+                _fillet(part, es, rr)
+            for e in fx.sharp_outer_edges(b):            # last: one at a time with tangent chaining on (a notch
+                ff = part.comp.features.filletFeatures       # floor's arc only took it that way, 28 Oct)
+                fi = ff.createInput()
+                fi.edgeSetInputs.addConstantRadiusEdgeSet(fx.coll([e]), fx.VI.createByReal(0.05), True)
+                try:
+                    ff.add(fi)
+                except Exception:
+                    pass
     fb = next(b for b in fa.comp.bRepBodies if 'forearm: near ring' in b.name)
     soft['stop ledge'] = soft_ledge(fa, fb, -12.0, 0.0, fx1 - 1, ux1, 1.0)
     variant.soft_report = soft

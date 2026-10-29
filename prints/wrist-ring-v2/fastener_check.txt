@@ -1,0 +1,75 @@
+fasteners 61, failing 0 (grip < 3.0 mm; THREAD: ends in a nut or insert; HELD: every part it passes is clamped; ACCESS: a key reaches the head; JOINTS: every sim joint is real hardware)
+ok      4.0 mm  Elbow concept B (copy of CDX-3R el / Forearm unit: M2.5 x 6 socket head, coupler 
+ok      4.0 mm  Elbow concept B (copy of CDX-3R el / Forearm unit: M2.5 x 6 socket head, coupler 
+ok      5.0 mm  Tower HW (buy) / #4 x 3/8" pan-head self-tapping screw (buy)
+ok      5.0 mm  Tower HW (buy) / #4 x 3/8" pan-head self-tapping screw (buy) 
+ok      6.0 mm  HW frame (buy) / M3 x 8 socket head (buy)
+ok      6.0 mm  HW frame (buy) / M3 x 8 socket head (buy) (1)
+ok      6.0 mm  HW frame (buy) / M3 x 8 socket head (buy) (2)
+ok      6.0 mm  HW frame (buy) / M3 x 8 socket head (buy) (3)
+ok      6.0 mm  HW frame (buy) / M3 x 8 socket head (buy) (4)
+ok      6.0 mm  HW frame (buy) / M3 x 8 socket head (buy) (5)
+ok      6.0 mm  HW frame (buy) / M3 x 8 socket head (buy) (6)
+ok      6.0 mm  HW frame (buy) / M3 x 8 socket head (buy) (7)
+ok      6.0 mm  Tower HW (buy) / M3 x 8 socket head (buy)
+ok      6.0 mm  Tower HW (buy) / M3 x 8 socket head (buy) (1)
+ok      6.0 mm  Tower HW (buy) / M3 x 8 socket head (buy) (2)
+ok      6.0 mm  Tower HW (buy) / M3 x 8 socket head (buy) (3)
+ok      6.0 mm  Elbow concept B (copy of CDX-3R el / Forearm unit: M3 x 8 socket head (buy)
+ok      6.0 mm  Elbow concept B (copy of CDX-3R el / Forearm unit: M3 x 8 socket head (buy) (1)
+ok      6.0 mm  Elbow concept B (copy of CDX-3R el / Forearm unit: M3 x 8 socket head (buy) (2)
+ok      6.0 mm  Elbow concept B (copy of CDX-3R el / Forearm unit: M3 x 8 socket head (buy) (3)
+ok      6.0 mm  Elbow concept B (copy of CDX-3R el / Forearm unit: M3 x 8 socket head (buy) (1) (
+ok      6.0 mm  Elbow concept B (copy of CDX-3R el / Forearm unit: M3 x 8 socket head (buy) (2) (
+ok      6.0 mm  Gripper3 HW base (buy) / M3 x 12 socket head, pipe clamp (buy)
+ok      6.0 mm  Gripper3 HW base (buy) / M3 x 12 socket head, pipe clamp (buy) (1)
+ok      6.0 mm  Gripper3 HW carrier (buy) / M3 x 8 socket head, grip sleeve (buy)
+ok      7.0 mm  Gripper3 HW carrier (buy) / M3 x 12 socket head, grip (buy)
+ok      7.0 mm  Gripper3 HW carrier (buy) / M3 x 12 socket head, grip (buy) (1)
+ok      7.0 mm  Gripper3 HW carrier (buy) / M3 x 12 socket head, grip (buy) (2)
+ok      7.0 mm  Gripper3 HW carrier (buy) / M3 x 12 socket head, grip (buy) (3)
+ok      8.0 mm  SCARA link 1 HW (buy) / M3 x 12 socket head (buy)
+ok      8.0 mm  SCARA link 1 HW (buy) / M3 x 12 socket head (buy) (1)
+ok      8.0 mm  SCARA link 1 HW (buy) / M3 x 12 socket head (buy) (2)
+ok      8.0 mm  SCARA link 1 HW (buy) / M3 x 12 socket head (buy) (3)
+ok      8.0 mm  SCARA link 2 HW (buy) / M3 x 12 socket head (buy)
+ok      8.0 mm  SCARA link 2 HW (buy) / M3 x 12 socket head (buy) (1)
+ok      8.0 mm  SCARA link 2 HW (buy) / M3 x 12 socket head (buy) (2)
+ok      8.0 mm  SCARA link 2 HW (buy) / M3 x 12 socket head (buy) (3)
+ok      8.0 mm  Carriage HW + pulley P0 (buy) / M6 x 16 socket head (buy)
+ok      8.0 mm  Tower HW (buy) / M6 x 16 socket head (buy)
+ok      8.0 mm  Gripper3 HW collar (buy) / M3 x 12 socket head, yoke pin (buy)
+ok      8.0 mm  Gripper3 HW collar (buy) / M3 x 12 socket head, yoke pin (buy) (1)
+ok      9.0 mm  Gripper3 HW collar (buy) / M3 x 25 socket head, claw tail pin, through 
+ok     10.0 mm  Gripper3 HW collar (buy) / M3 x 25 socket head, claw tail pin, through 
+ok     10.0 mm  Gripper3 HW collar (buy) / M3 x 25 socket head, claw tail pin, through 
+ok     13.0 mm  Gripper3 HW trigger (buy) / M3 x 25 socket head, pull pin (buy)
+ok     16.0 mm  Carriage HW + pulley P0 (buy) / M8 x 55 socket head (buy)
+ok     16.0 mm  Carriage HW + pulley P0 (buy) / M8 x 55 socket head (buy) (1)
+ok     16.0 mm  Carriage HW + pulley P0 (buy) / M8 x 55 socket head (buy) (2)
+ok     16.0 mm  Tower HW (buy) / M8 x 55 socket head (buy)
+ok     16.0 mm  Tower HW (buy) / M8 x 55 socket head (buy) (1)
+ok     16.0 mm  Gripper3 HW trigger (buy) / M3 x 35 socket head, trigger pivot (buy)
+ok     24.0 mm  HW flex (buy) / M8 x 55 socket head (buy)
+ok     25.0 mm  Elbow spool: bolt + pulleys PA/PB  / M8 x 100 socket head, cut to 75 (buy)
+ok     25.0 mm  End plate HW + pulley P2 (buy) / M8 x 55 socket head (buy)
+ok     28.0 mm  Gripper3 HW base (buy) / M8 x 55 socket head, fold hinge (buy)
+ok     29.0 mm  Rest HW (buy) / Clevis pin M6 x 70 + R-clip (buy), 70 needed
+ok     29.0 mm  Rest HW (buy) / Clevis pin M6 x 70 + R-clip (buy), 70 needed
+ok     29.0 mm  Rest HW (buy) / Clevis pin M6 x 70 + R-clip (buy), 70 needed
+ok     29.0 mm  Rest HW (buy) / Clevis pin M6 x 70 + R-clip (buy), 70 needed
+ok     33.0 mm  Rest HW (buy) / M6 x 65 socket head, bracket pivot (buy)
+ok     47.0 mm  HW abd (buy) / M8 x 100 socket head (buy)
+sim joints (cad/sim/exo_sim.py) against their hardware (sim_joints.json):
+ok    lift   Tower HW / M8 x 55 socket head (buy)
+ok    lift2  Tower HW / M8 x 55 socket head (buy) (1)
+ok    carr   Carriage HW / M8 x 55 socket head (buy) (1)
+ok    carr   Carriage HW / M8 x 55 socket head (buy) (2)
+ok    q1     Carriage HW / M8 x 55 socket head (buy)
+ok    qs     Elbow spool / M8 x 100 socket head, cut to 75 (buy)
+ok    q2     Elbow spool / M8 x 100 socket head, cut to 75 (buy)
+ok    q3     End plate HW / M8 x 55 socket head (buy)
+ok    abd    HW abd / M8 x 100 socket head (buy)
+ok    flex   HW flex / M8 x 55 socket head (buy)
+OPEN  elbow  elbow concept B: two printed axles in 6806 bearings, no through-bolt for this check to follow; the lateral axle drives the XL430 horn through the coupler pegs
+source 51810946df08facd
