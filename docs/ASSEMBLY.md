@@ -34,7 +34,10 @@ and cutting PVC.
 Print everything in PETG. Write the part's name on it as it comes off the printer.
 
 **Elbow** ([prints/elbow-test-v10](../prints/elbow-test-v10/)): fit-test pieces (print first), 01 upper-arm elbow
-piece, 02 forearm elbow piece, 03 bearing axle × 2, 04 round cover × 2, 05 wrist ring, 06 wrist cuff.
+piece, 02 forearm elbow piece, 03 bearing axle × 2 (one if you fit the servo), 04 round cover (one; two without the
+servo). **Wrist** ([prints/wrist-ring-v2](../prints/wrist-ring-v2/)): 01 wrist ring, 02 wrist cuff (replace v10's 05
+and 06). **Elbow servo** ([prints/elbow-servo-v1](../prints/elbow-servo-v1/)): 01 servo case, 02 strap, 03 horn
+coupler, 04 servo axle (outer side, in place of one 03 and one 04).
 
 **Frame, shoulder and rest** (folder named when the print files are exported; each part's print orientation is in its
 README):
@@ -133,7 +136,9 @@ slide into the test hole snug, no wobble. If not, fix the printer settings befor
 
 ![Elbow assembly animation](images/assembly/step1-elbow.gif)
 
-**Parts:** 01–06, 2 × 6806, 18 inserts, 18 M3 × 8, 18 pipe screws, 4 mm pin · **Cut:** 3 × 185 mm, 3 × 127 mm
+![Wrist cuff latch animation](images/assembly/step1b-wrist-latch.gif)
+
+**Parts:** elbow 01–04, wrist ring + cuff (v2), M8 index plunger, 2 × 6806, 18 inserts, 18 M3 × 8, 18 pipe screws, 4 mm pin · **Cut:** 3 × 185 mm, 3 × 127 mm
 
 <details markdown="1">
 <summary>Details</summary>
@@ -146,11 +151,18 @@ slide into the test hole snug, no wobble. If not, fix the printer settings befor
    4 mm pin (drop of glue at one end). Latch side: screw the M8 index plunger into the ring's thick knuckle (the one
    toward the elbow) until its end is flush with the knuckle's underside, then lock it with its nut. Pull the ring, close
    the cuff, let go: the pin drops into the cuff's knuckle. Wrist ring + cuff with the plunger and rounded edges:
-   [prints/wrist-ring-v2](../prints/wrist-ring-v2/).
+   [prints/wrist-ring-v2](../prints/wrist-ring-v2/); animation (frame by frame): [elbow/wrist_latch.html](elbow/wrist_latch.html).
+7. **Elbow servo (outer side, optional):** in place of the outer cover and axle. Servo axle (04) through the bearing,
+   3 × M3 × 8 back into the hub's inserts. Case (01) plate onto the 6 cover inserts, 6 × M3 × 12 (before the servo:
+   two sit under it). Coupler (03) onto the centred servo's horn, 2 × M2.5 × 6 (its centre hole clears the horn's own
+   screw). Servo into the case horn first, turning the forearm until the 3 pegs drop into the axle; strap (02) across
+   the back, 2 × M3 × 8 into inserts. Never force the elbow with the servo unpowered. Details:
+   [prints/elbow-servo-v1](../prints/elbow-servo-v1/README.md).
 6. Upper-arm pipes into the top. 2 pipe screws per pipe end.
 
 **Check:** bends smoothly from straight to 135° and stops at both ends. The cuff opens with a pull on the plunger's
-ring and locks by itself when let go.
+ring and locks by itself when let go. With the servo: it turns the forearm smoothly by hand only when powered in a
+low-current mode.
 
 </details>
 
